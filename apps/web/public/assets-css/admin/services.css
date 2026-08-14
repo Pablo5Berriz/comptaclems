@@ -1,0 +1,133 @@
+:root {
+  --primary:       var(--navy-800);
+  --primary-light: var(--navy-700);
+  --primary-dark:  var(--navy-900);
+  --accent:        var(--gold-400);
+  --accent-hover:  var(--gold-500);
+  --success:       #10b981;
+  --danger:        #ef4444;
+  --warning:       #f59e0b;
+  --info:          #3b82f6;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg-subtle);
+}
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .animate-slideIn {
+      animation: slideIn 0.2s ease-out;
+    }
+    
+    /* Toast notifications */
+    .toast {
+      animation: slideIn 0.3s ease-out;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.02);
+    }
+    
+    /* Modal */
+    .modal-enter {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    /* Scrollbar personnalisée */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+    
+    /* Table hover effects */
+    .service-row {
+      transition: all 0.2s ease;
+    }
+    
+    .service-row:hover {
+      background-color: #f8fafc;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* Boutons */
+    .btn-primary {
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(145deg, var(--primary-light), var(--primary));
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(15,23,42,0.2);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: white;
+      border: 1px solid #e2e8f0;
+      color: var(--primary);
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+    
+    /* Badges */
+    .badge-active {
+      background: linear-gradient(145deg, #d1fae5, #a7f3d0);
+      color: #065f46;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .badge-inactive {
+      background: linear-gradient(145deg, #fee2e2, #fecaca);
+      color: #991b1b;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }

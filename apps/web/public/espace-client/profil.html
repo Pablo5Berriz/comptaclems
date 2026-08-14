@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>Profil client | ComptaClems — Espace sécurisé</title>
+  <meta name="description" content="Gérez votre profil et suivez votre dossier fiscal en toute sécurité" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/clients/profil.css" />
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <script src="/assets-js/global/header.js"></script>
+
+  <main>
+
+    <!-- HERO -->
+    <div class="hero-premium animate-slideIn">
+      <div class="hero-inner">
+        <div class="hero-content-row">
+
+          <div class="hero-icon-wrap">
+            <i class="fas fa-user-circle"></i>
+          </div>
+
+          <div class="hero-text">
+            <div class="hero-badge">
+              <span class="hero-badge-dot"></span>
+              Espace client sécurisé
+            </div>
+            <h1 class="hero-title">Mon profil</h1>
+            <p class="hero-sub">
+              Suivez l'évolution de votre dossier fiscal et gérez vos informations personnelles en toute sécurité.
+            </p>
+            <div class="hero-chips">
+              <span class="hero-chip"><i class="fas fa-shield-alt"></i> Données chiffrées</span>
+              <span class="hero-chip"><i class="fas fa-clock"></i> Support prioritaire</span>
+            </div>
+          </div>
+
+          <span id="sessionPill" class="session-pill" style="display:none;">
+            <span class="session-dot"><span class="session-dot-ping"></span></span>
+            <span>Session active</span>
+            <i class="fas fa-lock"></i>
+          </span>
+
+        </div>
+
+        <div class="session-pill-mobile-wrap">
+          <span id="sessionPillMobile" class="session-pill">
+            <span class="session-dot"><span class="session-dot-ping"></span></span>
+            <span>Session active</span>
+            <i class="fas fa-lock"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION PRINCIPALE -->
+    <section class="profil-section">
+      <div class="profil-container">
+
+        <!-- LOADER -->
+        <div id="loading" class="hidden">
+          <div class="loader-card">
+            <div class="loader"></div>
+            <div>
+              <p class="loader-title">Chargement de votre profil</p>
+              <p class="loader-sub">Veuillez patienter un instant…</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFIL -->
+        <div id="profileSection" class="hidden animate-slideIn">
+          <div class="profil-grid">
+
+            <!-- COLONNE GAUCHE -->
+            <div class="profil-col-left">
+              <div class="profile-card-premium">
+
+                <div class="profile-header">
+                  <div class="profile-header-bg"></div>
+                  <div class="profile-header-content">
+                    <div class="avatar-wrap">
+                      <div id="pInitialsContainer" class="avatar-initials">
+                        <span id="pInitials">—</span>
+                      </div>
+                      <span class="avatar-online"></span>
+                    </div>
+                    <div class="profile-info">
+                      <div class="profile-label">Client</div>
+                      <div id="pFullName" class="profile-name">—</div>
+                      <div class="profile-meta">
+                        <i class="fas fa-envelope"></i>
+                        <span id="pEmail">—</span>
+                      </div>
+                      <div id="pPhoneContainer" class="profile-meta" style="display:none;">
+                        <i class="fas fa-phone"></i>
+                        <span id="pPhone">—</span>
+                      </div>
+                      <div class="profile-meta profile-since">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Client depuis :</span>
+                        <span id="pMemberSince" class="profile-since-val">—</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="profile-body">
+
+                  <div class="stat-grid">
+                    <div class="stat-card">
+                      <div class="stat-icon stat-icon--navy">
+                        <i class="fas fa-calendar-alt"></i>
+                      </div>
+                      <div>
+                        <p class="stat-label">Année fiscale</p>
+                        <p class="stat-value" id="pFiscalYear">—</p>
+                      </div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-icon stat-icon--gold">
+                        <i class="fas fa-folder"></i>
+                      </div>
+                      <div>
+                        <p class="stat-label">N° dossier</p>
+                        <p class="stat-value" id="pSubmissionId">—</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="status-block">
+                    <div class="status-block-top">
+                      <div>
+                        <p class="status-block-label">Statut du dossier</p>
+                        <span id="pStatus" class="status-badge status-not_started">
+                          <i class="fas fa-clock"></i> Chargement…
+                        </span>
+                      </div>
+                      <div class="status-block-icon">
+                        <i class="fas fa-file-invoice"></i>
+                      </div>
+                    </div>
+                    <div class="status-block-meta">
+                      <span><i class="fas fa-clock"></i> Dernière mise à jour</span>
+                      <strong id="pUpdatedAt">—</strong>
+                    </div>
+                  </div>
+
+                  <div class="profil-actions">
+                    <a id="btnContinueDeclaration" href="#" class="profil-btn profil-btn--navy">
+                      <i id="btnDeclarationIcon" class="fas fa-file-contract"></i>
+                      <span id="btnDeclarationLabel" class="btn-label">Chargement…</span>
+                      <i class="fas fa-arrow-right btn-arrow"></i>
+                    </a>
+
+                    <a href="/espace-client/documents.html" class="profil-btn profil-btn--gold">
+                      <i class="fas fa-folder-open"></i>
+                      <span class="btn-label">Mes documents</span>
+                      <span id="documentsBadge" class="btn-badge">0</span>
+                    </a>
+
+                    <a href="/espace-client/document-gouvernemental.html" class="profil-btn profil-btn--teal">
+                      <i class="fas fa-landmark"></i>
+                      <span class="btn-label">Documents gouvernementaux</span>
+                      <span id="govDocsBadge" class="hidden btn-badge"></span>
+                    </a>
+
+                    <a href="/espace-client/messages.html" class="profil-btn profil-btn--navy">
+                      <i class="fas fa-envelope"></i>
+                      <span class="btn-label">Mes messages</span>
+                      <span id="messagesBadge" class="hidden btn-badge">0</span>
+                    </a>
+
+                    <a href="/espace-client/factures.html" class="profil-btn profil-btn--gold">
+                      <i class="fas fa-file-invoice-dollar"></i>
+                      <span class="btn-label">Mes factures</span>
+                      <span id="facturesBadge" class="hidden btn-badge">0</span>
+                    </a>
+
+                    <a href="/" class="profil-btn profil-btn--outline">
+                      <i class="fas fa-house"></i>
+                      <span>Retour au site</span>
+                    </a>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- COLONNE DROITE -->
+            <div class="profil-col-right">
+
+              <!-- Prochaines étapes -->
+              <div class="profil-card">
+                <div class="profil-card-head">
+                  <div>
+                    <h2 class="profil-card-title">
+                      <i class="fas fa-flag-checkered"></i>
+                      Prochaines étapes
+                    </h2>
+                    <p class="profil-card-sub">Actions recommandées pour votre dossier</p>
+                  </div>
+                  <span class="badge-pill">Prioritaire</span>
+                </div>
+                <div class="profil-card-body">
+                  <div id="nextSteps"></div>
+                </div>
+              </div>
+
+              <!-- Documents gouvernementaux -->
+              <div class="gov-docs-card">
+                <div class="gov-docs-stripe"></div>
+                <div class="gov-docs-inner">
+                  <div class="gov-docs-icon">
+                    <i class="fas fa-landmark"></i>
+                  </div>
+                  <div class="gov-docs-content">
+                    <div class="gov-docs-title-row">
+                      <h3 class="gov-docs-title">Documents gouvernementaux</h3>
+                      <span id="govDocsCardBadge" class="hidden">
+                        <i class="fas fa-file-lines"></i>
+                        <span id="govDocsCardCount">0</span> document<span id="govDocsCardPlural"></span>
+                      </span>
+                    </div>
+                    <p class="gov-docs-desc">
+                      Consultez et téléchargez les documents de <strong>Revenu Québec</strong> et <strong>Revenu Canada</strong> déposés par votre comptable.
+                    </p>
+                    <div id="govDocsLastDate" class="hidden">
+                      <i class="fas fa-clock"></i>
+                      <span id="govDocsLastDateText">—</span>
+                    </div>
+                  </div>
+                  <a href="/espace-client/document-gouvernemental.html" class="profil-btn profil-btn--navy gov-docs-btn">
+                    <i class="fas fa-folder-open"></i>
+                    Accéder
+                    <i class="fas fa-arrow-right btn-arrow"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Messages + Factures -->
+              <div class="mini-cards-grid">
+                <div class="security-card">
+                  <div class="mini-card-head">
+                    <div class="mini-card-icon" style="background:var(--navy,#1a2b5f);color:#fff;">
+                      <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                      <h3 class="mini-card-title">Messages</h3>
+                      <p class="mini-card-sub">Échangez avec votre comptable</p>
+                    </div>
+                  </div>
+                  <div class="mini-card-items">
+                    <div class="mini-card-item" id="messagesPreview">
+                      <i class="fas fa-comment-dots"></i> Chargement…
+                    </div>
+                  </div>
+                  <a href="/espace-client/messages.html" class="mini-card-cta">
+                    <i class="fas fa-envelope-open"></i>
+                    Voir les messages
+                    <i class="fas fa-arrow-right" style="margin-left:auto;"></i>
+                  </a>
+                </div>
+
+                <div class="support-card">
+                  <div class="mini-card-head">
+                    <div class="mini-card-icon" style="background:var(--gold,#c9a84c);color:#fff;">
+                      <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <div>
+                      <h3 class="mini-card-title">Factures</h3>
+                      <p class="mini-card-sub">Paiements Interac</p>
+                    </div>
+                  </div>
+                  <div class="mini-card-items">
+                    <div class="mini-card-item" id="facturesPreview">
+                      <i class="fas fa-dollar-sign"></i> Chargement…
+                    </div>
+                  </div>
+                  <a href="/espace-client/factures.html" class="mini-card-cta">
+                    <i class="fas fa-file-invoice"></i>
+                    Voir les factures
+                    <i class="fas fa-arrow-right" style="margin-left:auto;"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Sécurité + Support -->
+              <div class="mini-cards-grid">
+                <div class="security-card">
+                  <div class="mini-card-head">
+                    <div class="mini-card-icon">
+                      <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <div>
+                      <h3 class="mini-card-title">Sécurité</h3>
+                      <p class="mini-card-sub">Protection renforcée</p>
+                    </div>
+                  </div>
+                  <div class="mini-card-items">
+                    <div class="mini-card-item">
+                      <i class="fas fa-check-circle"></i> Authentification sécurisée
+                    </div>
+                    <div class="mini-card-item">
+                      <i class="fas fa-check-circle"></i> Données chiffrées
+                    </div>
+                  </div>
+                  <a href="/espace-client/parametres.html" class="mini-card-cta">
+                    <i class="fas fa-cog"></i>
+                    Paramètres du compte
+                    <i class="fas fa-arrow-right" style="margin-left:auto;"></i>
+                  </a>
+                </div>
+
+                <div class="support-card">
+                  <div class="mini-card-head">
+                    <div class="mini-card-icon">
+                      <i class="fas fa-headset"></i>
+                    </div>
+                    <div>
+                      <h3 class="mini-card-title">Support</h3>
+                      <p class="mini-card-sub">Assistance dédiée</p>
+                    </div>
+                  </div>
+                  <div class="mini-card-items">
+                    <div class="mini-card-item">
+                      <i class="fas fa-clock"></i> Réponse sous 24h ouvrées
+                    </div>
+                    <div class="mini-card-item">
+                      <i class="fas fa-envelope"></i> comptaclems@gmail.com
+                    </div>
+                  </div>
+                  <a href="/contact/index.html#contact" class="mini-card-cta">
+                    <i class="fas fa-message"></i>
+                    Contacter le support
+                    <i class="fas fa-arrow-right" style="margin-left:auto;"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Activité récente -->
+              <div class="profil-card">
+                <div class="profil-card-head">
+                  <div>
+                    <h2 class="profil-card-title">
+                      <i class="fas fa-history"></i>
+                      Activité récente
+                    </h2>
+                    <p class="profil-card-sub">Dernières actions sur votre compte</p>
+                  </div>
+                  <button id="refreshActivityBtn" class="refresh-btn" aria-label="Rafraîchir">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                </div>
+                <div class="profil-card-body">
+                  <div id="activityTimeline" class="timeline">
+                    <div class="timeline-empty">
+                      <div class="loader"></div>
+                      <p>Chargement des activités…</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/espace-client/profil.js" defer></script>
+  <script defer>
+    // Chargement des badges Messages & Factures
+    async function loadMessagesFacturesBadges() {
+      try {
+        const [msgRes, facRes] = await Promise.allSettled([
+          fetch('/api/client/espace-client/messages/unread-count', { credentials: 'include' }),
+          fetch('/api/client/espace-client/invoices-stats',        { credentials: 'include' }),
+        ]);
+
+        if (msgRes.status === 'fulfilled' && msgRes.value.ok) {
+          const { unread_count } = await msgRes.value.json();
+          const badge    = document.getElementById('messagesBadge');
+          const preview  = document.getElementById('messagesPreview');
+          if (badge && unread_count > 0) {
+            badge.textContent = unread_count;
+            badge.classList.remove('hidden');
+          }
+          if (preview) {
+            preview.innerHTML = unread_count > 0
+              ? `<i class="fas fa-bell"></i> <strong>${unread_count}</strong> message${unread_count > 1 ? 's' : ''} non lu${unread_count > 1 ? 's' : ''}`
+              : `<i class="fas fa-check-circle"></i> Aucun message non lu`;
+          }
+        }
+
+        if (facRes.status === 'fulfilled' && facRes.value.ok) {
+          const json    = await facRes.value.json();
+          const stats   = json.stats || json;
+          const pending = stats.en_attente || 0;
+          const badge   = document.getElementById('facturesBadge');
+          const preview = document.getElementById('facturesPreview');
+          if (badge && pending > 0) {
+            badge.textContent = pending;
+            badge.classList.remove('hidden');
+          }
+          if (preview) {
+            const amount = stats.montant_en_attente
+              ? `${parseFloat(stats.montant_en_attente).toFixed(2)} $`
+              : '0.00 $';
+            preview.innerHTML = pending > 0
+              ? `<i class="fas fa-clock"></i> <strong>${pending}</strong> facture${pending > 1 ? 's' : ''} en attente — ${amount}`
+              : `<i class="fas fa-check-circle"></i> Aucune facture en attente`;
+          }
+        }
+      } catch (e) {
+        console.warn('[profil] badges messages/factures:', e.message);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadMessagesFacturesBadges);
+  </script>
+</body>
+</html>

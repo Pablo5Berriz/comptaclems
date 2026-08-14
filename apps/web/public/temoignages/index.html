@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Découvrez les témoignages de clients accompagnés par ComptaClems pour leurs déclarations d'impôts et leur comptabilité au Québec." />
+  <title>Témoignages clients | ComptaClems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/temoignages.css" />
+  <script>(function(){var t=localStorage.getItem('cc_theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}})();</script>
+</head>
+<body>
+
+  <button id="scrollTop" aria-label="Retour en haut de page">
+    <i class="fas fa-chevron-up" aria-hidden="true"></i>
+  </button>
+
+  <script src="/assets-js/global/header.js"></script>
+
+  <section class="tm-hero" aria-labelledby="tm-page-title">
+    <div class="tm-hero__inner">
+      <span class="tm-hero__badge">
+        <i class="fas fa-star" aria-hidden="true"></i>
+        Avis clients authentiques
+      </span>
+      <h1 class="tm-hero__title" id="tm-page-title">
+        Ce que disent<br><em>nos clients</em>
+      </h1>
+      <p class="tm-hero__desc">
+        Retours authentiques de clients accompagnés pour leurs déclarations fiscales et leur comptabilité au Québec.
+      </p>
+    </div>
+  </section>
+
+  <main class="tm-section">
+
+    <div id="testimonialsGrid" aria-live="polite" aria-label="Liste des témoignages"></div>
+
+    <nav id="pagination" class="hidden" aria-label="Pagination des témoignages">
+      <button id="prevPage" aria-label="Page précédente" disabled>
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        Précédent
+      </button>
+      <span id="pageInfo" aria-live="polite"></span>
+      <button id="nextPage" aria-label="Page suivante">
+        Suivant
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+      </button>
+    </nav>
+  </main>
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/pages/temoignages.js" defer></script>
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      var btn = document.getElementById('scrollTop');
+      if (!btn) return;
+      window.addEventListener('scroll', function () { btn.classList.toggle('visible', window.scrollY > 200); }, { passive: true });
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    });
+  </script>
+
+</body>
+</html>

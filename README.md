@@ -1,23 +1,91 @@
-# comptaclems
+# ComptaClems
 
-ComptaClems est une plateforme web destinée à faciliter la production des déclarations d’impôts de particuliers. Elle permet de gérer les clients, les documents fiscaux, les dossiers, les statuts de traitement et le suivi administratif.
+Application web de gestion comptable, administrative et documentaire pour une agence de services comptables.
 
-Le projet vise à organiser le travail d’un service de préparation d’impôts en centralisant les informations nécessaires, les pièces justificatives, les notes internes et les étapes de traitement. Il peut aussi permettre aux clients de soumettre leurs documents en ligne de façon structurée.
+## Objectif du projet
 
-ComptaClems est conçu pour améliorer la productivité, réduire les erreurs de suivi et offrir une expérience plus professionnelle aux particuliers.
+ComptaClems vise à centraliser la gestion des clients, des documents, des services comptables, des déclarations et des demandes administratives dans une plateforme web simple, sécurisée et professionnelle.
 
-Fonctionnalités principales :
+Le projet est destiné à faciliter le suivi des dossiers clients, réduire les échanges manuels par courriel et offrir un espace client clair pour le dépôt et la consultation de documents.
 
-* Gestion des clients
-* Création de dossiers fiscaux
-* Téléversement de documents
-* Suivi du statut des déclarations
-* Notes internes
-* Liste de documents requis
-* Tableau de bord administratif
-* Historique des dossiers
-* Notifications
-* Espace client sécurisé
+## Fonctionnalités prévues
 
-Topics GitHub :
-tax-platform, accounting, tax-return, client-portal, document-management, nextjs, saas, dashboard, finance, admin-tool
+### Espace public
+
+- Page d’accueil
+- Présentation des services
+- Page à propos
+- Page contact
+- Formulaire de demande de service
+- Présentation de l’agence
+
+### Espace client
+
+- Connexion sécurisée
+- Tableau de bord client
+- Consultation du profil
+- Dépôt de documents
+- Suivi des demandes
+- Historique des services
+- Notifications liées aux dossiers
+
+### Espace administrateur
+
+- Tableau de bord admin
+- Gestion des clients
+- Gestion des services
+- Gestion des documents
+- Gestion des déclarations
+- Suivi des demandes
+- Statuts de traitement
+- Recherche et filtrage des dossiers
+
+## Services couverts
+
+- Tenue de livres
+- Comptes payables
+- Comptes recevables
+- Conciliation bancaire
+- Paie
+- Déclarations TPS/TVQ
+- Déclarations d’impôts
+- Soutien administratif
+- Organisation documentaire
+
+## Stack technique prévue
+
+Le projet pourra évoluer selon les besoins, mais la base technique prévue est :
+
+- Front-end : HTML, CSS, JavaScript ou framework moderne
+- Back-end : Node.js / Express
+- Base de données : PostgreSQL
+- Authentification : sessions sécurisées ou JWT
+- Stockage documents : local sécurisé ou service de stockage externe
+- Déploiement : serveur privé / Proxmox / conteneur Linux
+- Reverse proxy : Nginx
+- Versioning : Git + GitHub
+
+## Structure prévue du projet
+
+```txt
+comptaclems/
+├── public/
+│   ├── assets/
+│   ├── css/
+│   └── js/
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   └── utils/
+├── views/
+├── docs/
+├── tests/
+├── .env.example
+├── .gitignore
+├── package.json
+├── server.js
+└── README.md

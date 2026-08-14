@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>Campagnes marketing | Administration ComptaClems</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets-css/tw.min.css" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="icon" href="/assets/favicon/favicon.ico" />
+
+  <!-- Styles personnalisés -->
+  <link rel="stylesheet" href="/assets-css/admin/dashboard.css" />
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches))
+        document.documentElement.setAttribute('data-theme','dark');
+    })();
+  </script>
+
+  <style>
+    :root {
+      --navy-900:#0f172a;--navy-800:#1e2d4a;--navy-700:#243354;
+      --navy-600:#2d4270;--gold-400:#d4a843;--gold-500:#c9a030;
+    }
+    .status-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .75rem;border-radius:9999px;font-size:.75rem;font-weight:700;}
+    .status-draft     {background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;}
+    .status-sending   {background:#fef3c7;color:#92400e;border:1px solid #fde68a;}
+    .status-sent      {background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}
+    .status-paused    {background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;}
+    .status-cancelled {background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+    .status-scheduled {background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;}
+    .type-testimonial_request{background:#fef9c3;color:#713f12;}
+    .type-newsletter         {background:#dbeafe;color:#1e40af;}
+    .type-promotion          {background:#fce7f3;color:#9d174d;}
+    .type-custom             {background:#f1f5f9;color:#475569;}
+    .stat-card{background:#fff;border-radius:16px;padding:20px 24px;border:1px solid #e2e8f0;transition:box-shadow .2s;}
+    .stat-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);}
+    .tab-btn{padding:.5rem 1.25rem;border-radius:.75rem;font-size:.875rem;font-weight:600;transition:all .15s;border:2px solid transparent;}
+    .tab-btn.active{background:var(--navy-800);color:#fff;}
+    .tab-btn:not(.active){color:#64748b;}
+    .tab-btn:not(.active):hover{background:#f1f5f9;}
+  </style>
+
+  <script src="/assets-js/admin/adminGuard.js" defer></script>
+</head>
+
+<body class="min-h-screen flex antialiased">
+  
+  <!-- Toast Container - Notifications globales -->
+  <div id="toastHost" class="fixed top-6 right-6 z-50 space-y-3 w-80"></div>
+
+  <!-- Sidebar - Version Premium -->
+  <aside class="w-72 text-white flex flex-col shadow-2xl" style="background: linear-gradient(160deg, var(--navy-900) 0%, var(--navy-800) 100%);">
+    <!-- Logo et branding -->
+    <div class="px-6 py-6" style="border-bottom: 1px solid rgba(212,175,55,0.15);">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg animate-float" style="background: linear-gradient(135deg, var(--navy-600), var(--gold-400));">
+          <i class="fas fa-calculator text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white">
+            ComptaClems
+          </h1>
+          <p class="text-xs mt-0.5 flex items-center gap-1" style="color: rgba(212,175,55,0.7);">
+            <i class="fas fa-shield-alt text-xs"></i>
+            Espace administrateur
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="sidebar-nav flex-1 px-4 py-6 space-y-1.5 text-sm overflow-y-auto" id="adminSidebarNav">
+      <div class="text-xs font-semibold uppercase tracking-wider px-4 mb-2" style="color: rgba(255,255,255,0.35);">
+        Tableau de bord
+      </div>
+
+      <a href="/admin/adminDashboard.html" data-nav="settings.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-chart-pie" style="color: var(--gold-300);"></i>
+        </div>
+        <span class="font-semibold">Dashboard</span>
+      </a>
+
+      <div class="text-xs font-semibold uppercase tracking-wider px-4 mt-4 mb-2" style="color: rgba(255,255,255,0.35);">
+        Gestion
+      </div>
+
+      <a href="/admin/adminAdministrateurs.html" data-nav="administrateurs.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-user-shield" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Administrateurs</span>
+      </a>
+
+      <a href="/admin/adminClients.html" data-nav="clients.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-users" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Clients</span>
+      </a>
+
+      <a href="/admin/adminServices.html" data-nav="services.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-cogs" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Services</span>
+      </a>
+
+      <a href="/admin/adminDeclarations.html" data-nav="declarations.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-file-alt" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Déclarations</span>
+      </a>
+
+      <a href="/admin/adminDocuments.html" data-nav="documents.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-folder-open" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Documents</span>
+      </a>
+
+      <a href="/admin/adminTemoignages.html" data-nav="temoignages.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-comments" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Témoignages</span>
+      </a>
+
+      <div class="text-xs font-semibold uppercase tracking-wider px-4 mt-4 mb-2" style="color: rgba(255,255,255,0.35);">
+        Configuration
+      </div>
+
+      <a href="/admin/adminSettings.html" data-nav="settings.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-sliders-h" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Paramètres</span>
+      </a>
+    </nav>
+
+    <!-- Profil et déconnexion -->
+    <div class="px-4 py-6 mt-auto" style="border-top: 1px solid rgba(212,175,55,0.15);">
+      <div class="flex items-center gap-3 mb-4 px-2">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, var(--navy-600), var(--gold-500));">
+          <span class="text-white font-bold text-lg" id="adminInitials">AD</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium truncate text-white" id="adminName">Administrateur</p>
+          <p class="text-xs truncate flex items-center gap-1" style="color: rgba(255,255,255,0.45);">
+            <i class="fas fa-shield-alt text-xs"></i>
+            <span id="adminRole">Super Admin</span>
+          </p>
+        </div>
+      </div>
+
+      <button id="adminLogoutBtn" class="w-full flex items-center justify-center px-4 py-3 rounded-xl transition-all group" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.08);">
+        <i class="fas fa-sign-out-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── CONTENU ──────────────────────────────────────────── -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between shadow-sm">
+      <div>
+        <h1 class="text-xl font-bold text-slate-900">Campagnes marketing</h1>
+        <p class="text-sm text-slate-500 mt-0.5">Invitations témoignages, newsletters et promotions</p>
+      </div>
+      <button id="newCampaignBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-lg transition"
+              style="background:linear-gradient(135deg,#1e2d4a,#2d4270);">
+        <i class="fas fa-plus"></i> Nouvelle campagne
+      </button>
+    </header>
+
+    <!-- Stats -->
+    <div class="px-8 py-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="stat-card">
+        <p class="text-xs text-slate-500 mb-1 font-medium">Total campagnes</p>
+        <p class="text-2xl font-bold text-slate-900" id="statTotal">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs text-slate-500 mb-1 font-medium">Envoyées</p>
+        <p class="text-2xl font-bold text-emerald-600" id="statSent">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs text-slate-500 mb-1 font-medium">Emails envoyés</p>
+        <p class="text-2xl font-bold text-blue-600" id="statTotalSent">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs text-slate-500 mb-1 font-medium">Brouillons</p>
+        <p class="text-2xl font-bold text-slate-600" id="statDraft">—</p>
+      </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="px-8 pb-4 flex items-center gap-3 flex-wrap">
+      <button class="tab-btn active" data-filter-type="">Toutes</button>
+      <button class="tab-btn" data-filter-type="testimonial_request">⭐ Témoignages</button>
+      <button class="tab-btn" data-filter-type="newsletter">📧 Newsletter</button>
+      <button class="tab-btn" data-filter-type="promotion">🎁 Promotions</button>
+      <button class="tab-btn" data-filter-type="custom">✏️ Personnalisées</button>
+      <button id="refreshBtn" class="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition">
+        <i class="fas fa-sync-alt"></i> Actualiser
+      </button>
+    </div>
+
+    <!-- Liste -->
+    <div class="flex-1 overflow-y-auto px-8 pb-8">
+      <div id="campaignsList">
+        <div class="text-center text-slate-400 py-16">
+          <div class="w-8 h-8 border-2 border-slate-300 border-t-blue-500 rounded-full animate-spin mx-auto mb-3"></div>
+          Chargement…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODAL — Créer / Éditer une campagne
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="modalOverlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 sticky top-0 bg-white z-10">
+        <h2 class="font-bold text-slate-900 text-lg" id="modalTitle">Nouvelle campagne</h2>
+        <button id="closeModal" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 transition">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="campaignForm" class="p-6 space-y-5">
+        <input type="hidden" id="fCampaignId" />
+
+        <!-- Nom + Type -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nom de la campagne <span class="text-red-500">*</span></label>
+            <input id="fName" type="text" required placeholder="Ex: Invitation témoignages Mars 2026"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:border-blue-400 transition" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Type</label>
+            <select id="fType" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:border-blue-400 transition">
+              <option value="testimonial_request">⭐ Demande de témoignage</option>
+              <option value="newsletter">📧 Newsletter</option>
+              <option value="promotion">🎁 Promotion</option>
+              <option value="custom">✏️ Personnalisée</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Audience -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Audience cible</label>
+          <select id="fAudience" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:border-blue-400 transition">
+            <option value="all_clients">Tous les clients</option>
+            <option value="completed_declarations">Clients avec déclaration terminée</option>
+          </select>
+          <p class="text-xs text-slate-400 mt-1.5">Pour les invitations témoignages, recommandez "Déclarations terminées".</p>
+        </div>
+
+        <!-- Objet -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Objet de l'email <span class="text-red-500">*</span></label>
+          <input id="fSubject" type="text" required placeholder="Ex: Partagez votre avis sur ComptaClems ⭐"
+            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:border-blue-400 transition" />
+        </div>
+
+        <!-- Corps HTML -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-sm font-semibold text-slate-700">Corps de l'email (HTML) <span class="text-red-500">*</span></label>
+            <button type="button" id="useTemplateBtn" class="text-xs px-3 py-1.5 rounded-lg bg-yellow-100 text-yellow-800 font-medium hover:bg-yellow-200 transition">
+              <i class="fas fa-magic mr-1"></i> Utiliser le modèle témoignage
+            </button>
+          </div>
+          <textarea id="fBodyHtml" rows="8" required
+            placeholder="Collez votre HTML ici. Utilisez {{nom}} pour le prénom du client et {{lien}} pour le lien d'invitation."
+            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:border-blue-400 transition resize-y font-mono text-xs"></textarea>
+          <p class="text-xs text-slate-400 mt-1">Variables disponibles : <code class="bg-slate-100 px-1 rounded">{{nom}}</code> et <code class="bg-slate-100 px-1 rounded">{{lien}}</code></p>
+        </div>
+
+        <!-- Boutons -->
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="cancelModal" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+            Annuler
+          </button>
+          <button type="submit" id="saveDraftBtn" class="px-6 py-3 rounded-xl border-2 border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition">
+            <i class="fas fa-save mr-1"></i> Sauvegarder
+          </button>
+          <button type="button" id="saveAndTestBtn" class="px-5 py-3 rounded-xl border-2 border-blue-400 text-blue-700 text-sm font-semibold hover:bg-blue-50 transition">
+            <i class="fas fa-flask mr-1"></i> Test
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/assets-js/admin/adminSidebarPatch.js" defer></script>
+  <script defer>
+  'use strict';
+
+  /* ─── Helpers ──────────────────────────────────────────────────────────── */
+  function getAuth() { try { return JSON.parse(localStorage.getItem('cc_admin_auth')||'{}'); } catch { return {}; } }
+  function authHeaders() { return {'Content-Type':'application/json', Authorization:`Bearer ${getAuth().token||''}`}; }
+  async function apiFetch(url, opts={}) {
+    const r = await fetch(url, {...opts, headers:{...authHeaders(),...(opts.headers||{})}});
+    if (r.status === 401) { localStorage.removeItem('cc_admin_auth'); location.href='/admin/adminLogin.html'; }
+    return r;
+  }
+  function toast(msg, type='info') {
+    const h = document.getElementById('toastHost');
+    const el = document.createElement('div');
+    el.className = `px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white ${type==='error'?'bg-red-500':type==='success'?'bg-emerald-600':'bg-slate-700'}`;
+    el.textContent = msg; h.prepend(el); setTimeout(()=>el.remove(), 4000);
+  }
+  function fmtDate(d) { return d ? new Date(d).toLocaleString('fr-CA',{day:'2-digit',month:'short',year:'numeric'}) : '—'; }
+
+  const TYPE_LABELS = {
+    testimonial_request: '⭐ Témoignage',
+    newsletter: '📧 Newsletter',
+    promotion: '🎁 Promotion',
+    custom: '✏️ Personnalisée'
+  };
+  const AUDIENCE_LABELS = {
+    all_clients: 'Tous les clients',
+    completed_declarations: 'Déclarations terminées',
+    specific_clients: 'Clients spécifiques',
+    manual_list: 'Liste manuelle'
+  };
+
+  function statusBadge(s) {
+    const map = {
+      draft:'<span class="status-badge status-draft"><i class="fas fa-pen-to-square"></i>Brouillon</span>',
+      sending:'<span class="status-badge status-sending"><i class="fas fa-spinner fa-spin"></i>Envoi en cours</span>',
+      sent:'<span class="status-badge status-sent"><i class="fas fa-check-circle"></i>Envoyée</span>',
+      paused:'<span class="status-badge status-paused"><i class="fas fa-pause-circle"></i>En pause</span>',
+      cancelled:'<span class="status-badge status-cancelled"><i class="fas fa-ban"></i>Annulée</span>',
+      scheduled:'<span class="status-badge status-scheduled"><i class="fas fa-clock"></i>Planifiée</span>',
+    };
+    return map[s] || `<span class="status-badge status-draft">${s}</span>`;
+  }
+
+  /* ─── Admin info ────────────────────────────────────────────────────────── */
+  (function(){
+    const auth = getAuth();
+    if (auth.admin) {
+      const name = `${auth.admin.first_name||''} ${auth.admin.last_name||''}`.trim();
+      document.getElementById('adminName').textContent = name || 'Administrateur';
+      document.getElementById('adminRole').textContent = auth.admin.role || '';
+      document.getElementById('adminInitials').textContent = name ? name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : 'Ad';
+    }
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      localStorage.removeItem('cc_admin_auth'); location.href='/admin/adminLogin.html';
+    });
+  })();
+
+  /* ─── Données ───────────────────────────────────────────────────────────── */
+  let allCampaigns = [];
+  let activeTypeFilter = '';
+
+  async function loadStats() {
+    try {
+      const r = await apiFetch('/api/admin/campaigns/stats');
+      if (!r.ok) return;
+      const d = await r.json();
+      document.getElementById('statTotal').textContent     = d.total     || 0;
+      document.getElementById('statSent').textContent      = d.sent      || 0;
+      document.getElementById('statTotalSent').textContent = d.total_sent || 0;
+      document.getElementById('statDraft').textContent     = d.draft     || 0;
+    } catch {}
+  }
+
+  async function loadCampaigns() {
+    try {
+      const url = '/api/admin/campaigns' + (activeTypeFilter ? `?type=${activeTypeFilter}` : '');
+      const r   = await apiFetch(url);
+      const d   = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Erreur');
+      allCampaigns = d.campaigns || [];
+      renderCampaigns(allCampaigns);
+    } catch (e) {
+      toast('Erreur chargement campagnes', 'error');
+    }
+  }
+
+  function renderCampaigns(camps) {
+    const el = document.getElementById('campaignsList');
+    if (!camps.length) {
+      el.innerHTML = `<div class="text-center text-slate-400 py-16">
+        <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-bullhorn text-3xl text-slate-300"></i>
+        </div>
+        <p class="font-medium">Aucune campagne</p>
+        <p class="text-sm mt-1">Créez votre première campagne avec le bouton ci-dessus</p>
+      </div>`;
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-slate-100 bg-slate-50 text-left">
+              <th class="px-6 py-4 font-semibold text-slate-600">Campagne</th>
+              <th class="px-6 py-4 font-semibold text-slate-600">Type</th>
+              <th class="px-6 py-4 font-semibold text-slate-600">Audience</th>
+              <th class="px-6 py-4 font-semibold text-slate-600">Résultats</th>
+              <th class="px-6 py-4 font-semibold text-slate-600">Statut</th>
+              <th class="px-6 py-4 font-semibold text-slate-600">Date</th>
+              <th class="px-6 py-4 font-semibold text-slate-600 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            ${camps.map(c => `
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-6 py-4">
+                  <p class="font-semibold text-slate-900">${c.name}</p>
+                  <p class="text-xs text-slate-400 truncate max-w-xs">${c.subject}</p>
+                  <p class="text-xs text-slate-400">${c.created_by_name ? 'Par ' + c.created_by_name : ''}</p>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium type-${c.type}">
+                    ${TYPE_LABELS[c.type] || c.type}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-slate-600 text-xs">${AUDIENCE_LABELS[c.target_audience] || c.target_audience}</td>
+                <td class="px-6 py-4">
+                  <div class="flex flex-col gap-0.5 text-xs text-slate-600">
+                    <span><i class="fas fa-users text-slate-400 w-4"></i>${c.total_recipients || 0} destinataires</span>
+                    <span><i class="fas fa-paper-plane text-emerald-400 w-4"></i>${c.sent_count || 0} envoyés</span>
+                    ${c.error_count > 0 ? `<span><i class="fas fa-exclamation-circle text-red-400 w-4"></i>${c.error_count} erreur(s)</span>` : ''}
+                  </div>
+                </td>
+                <td class="px-6 py-4">${statusBadge(c.status)}</td>
+                <td class="px-6 py-4 text-xs text-slate-500">
+                  <div>${fmtDate(c.created_at)}</div>
+                  ${c.sent_at ? `<div class="text-emerald-600">Envoyée le ${fmtDate(c.sent_at)}</div>` : ''}
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                    ${['draft','paused','scheduled'].includes(c.status) ? `
+                      <button onclick="editCampaign(${c.id})"
+                        class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    ` : ''}
+                    ${['draft','paused','scheduled'].includes(c.status) ? `
+                      <button onclick="sendCampaign(${c.id}, '${c.name.replace(/'/g,'\\\'')}')"
+                        class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold transition">
+                        <i class="fas fa-paper-plane mr-1"></i>Envoyer
+                      </button>
+                    ` : ''}
+                    <button onclick="testCampaign(${c.id})"
+                      class="px-3 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium transition">
+                      <i class="fas fa-flask"></i>
+                    </button>
+                    ${c.status === 'draft' ? `
+                      <button onclick="deleteCampaign(${c.id})"
+                        class="px-3 py-1.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 text-xs font-medium transition">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    ` : ''}
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  /* ─── Actions ───────────────────────────────────────────────────────────── */
+  async function sendCampaign(id, name) {
+    if (!confirm(`Envoyer la campagne "${name}" maintenant ?\nCette action est irréversible.`)) return;
+    try {
+      const r = await apiFetch(`/api/admin/campaigns/${id}/send`, { method: 'POST' });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Erreur');
+      toast(d.message || 'Campagne envoyée', 'success');
+      await Promise.all([loadStats(), loadCampaigns()]);
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
+  async function testCampaign(id) {
+    const email = prompt('Email de test (laissez vide pour utiliser votre email admin) :');
+    try {
+      const r = await apiFetch(`/api/admin/campaigns/${id}/test`, {
+        method: 'POST',
+        body: JSON.stringify({ test_email: email || undefined })
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Erreur');
+      toast(d.message || 'Email de test envoyé', 'success');
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
+  async function deleteCampaign(id) {
+    if (!confirm('Supprimer cette campagne ?')) return;
+    try {
+      const r = await apiFetch(`/api/admin/campaigns/${id}`, { method: 'DELETE' });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Erreur');
+      toast('Campagne supprimée', 'success');
+      await loadCampaigns();
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
+  async function editCampaign(id) {
+    try {
+      const r = await apiFetch(`/api/admin/campaigns/${id}`);
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error);
+      const c = d.campaign;
+      document.getElementById('fCampaignId').value = c.id;
+      document.getElementById('fName').value        = c.name;
+      document.getElementById('fType').value        = c.type;
+      document.getElementById('fAudience').value    = c.target_audience;
+      document.getElementById('fSubject').value     = c.subject;
+      document.getElementById('fBodyHtml').value    = c.body_html;
+      document.getElementById('modalTitle').textContent = 'Modifier la campagne';
+      openModal();
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
+  /* ─── Template témoignage par défaut ──────────────────────────────────── */
+  const TEMPLATE_TEMOIGNAGE_HTML = `<p>Bonjour {{nom}},</p>
+<p>Nous espérons que votre expérience avec ComptaClems a été à la hauteur de vos attentes.</p>
+<p>Votre avis est précieux — il nous aide à nous améliorer et à aider d'autres clients à nous trouver.</p>
+<p><a href="{{lien}}" style="background:#d4a843;color:#0f172a;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">⭐ Laisser mon avis</a></p>
+<p style="color:#94a3b8;font-size:12px;">Ce lien est personnel et valide 30 jours.</p>`;
+
+  document.getElementById('useTemplateBtn').addEventListener('click', () => {
+    document.getElementById('fBodyHtml').value = TEMPLATE_TEMOIGNAGE_HTML;
+    document.getElementById('fType').value     = 'testimonial_request';
+    document.getElementById('fAudience').value = 'completed_declarations';
+    if (!document.getElementById('fSubject').value)
+      document.getElementById('fSubject').value = 'Partagez votre expérience avec ComptaClems ⭐';
+    toast('Modèle témoignage appliqué', 'success');
+  });
+
+  /* ─── Modal ─────────────────────────────────────────────────────────────── */
+  function openModal() {
+    document.getElementById('modalOverlay').classList.remove('hidden');
+    document.getElementById('modalOverlay').classList.add('flex');
+    document.getElementById('fName').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.add('hidden');
+    document.getElementById('modalOverlay').classList.remove('flex');
+    document.getElementById('campaignForm').reset();
+    document.getElementById('fCampaignId').value = '';
+    document.getElementById('modalTitle').textContent = 'Nouvelle campagne';
+  }
+
+  document.getElementById('newCampaignBtn').addEventListener('click', openModal);
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('cancelModal').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  });
+
+  document.getElementById('campaignForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const campId = document.getElementById('fCampaignId').value;
+    const body = {
+      name:            document.getElementById('fName').value.trim(),
+      type:            document.getElementById('fType').value,
+      target_audience: document.getElementById('fAudience').value,
+      subject:         document.getElementById('fSubject').value.trim(),
+      body_html:       document.getElementById('fBodyHtml').value.trim(),
+    };
+
+    const btn = document.getElementById('saveDraftBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Sauvegarde…';
+
+    try {
+      const url    = campId ? `/api/admin/campaigns/${campId}` : '/api/admin/campaigns';
+      const method = campId ? 'PATCH' : 'POST';
+      const r = await apiFetch(url, { method, body: JSON.stringify(body) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Erreur');
+      toast(campId ? 'Campagne mise à jour' : 'Campagne créée', 'success');
+      closeModal();
+      await loadCampaigns();
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save mr-1"></i>Sauvegarder';
+    }
+  });
+
+  document.getElementById('saveAndTestBtn').addEventListener('click', async () => {
+    // Soumettre d'abord, puis envoyer le test
+    const campId = document.getElementById('fCampaignId').value;
+    if (!campId) {
+      toast('Sauvegardez d\'abord la campagne avant de tester', 'error');
+      return;
+    }
+    await testCampaign(campId);
+  });
+
+  /* ─── Filtres par type ──────────────────────────────────────────────────── */
+  document.querySelectorAll('[data-filter-type]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-filter-type]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTypeFilter = btn.dataset.filterType;
+      loadCampaigns();
+    });
+  });
+
+  /* ─── Init ──────────────────────────────────────────────────────────────── */
+  document.getElementById('refreshBtn').addEventListener('click', () => Promise.all([loadStats(), loadCampaigns()]));
+
+  // Expose pour les boutons inline
+  window.sendCampaign   = sendCampaign;
+  window.testCampaign   = testCampaign;
+  window.deleteCampaign = deleteCampaign;
+  window.editCampaign   = editCampaign;
+
+  Promise.all([loadStats(), loadCampaigns()]);
+  </script>
+</body>
+</html>

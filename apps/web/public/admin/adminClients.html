@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  
+  <title>Clients | Administration ComptaClems</title>
+  <meta name="description" content="Gestion des comptes clients - Interface d'administration ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- Polices & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="/assets-css/tw.min.css" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon/favicon.ico">
+
+  <!-- Styles personnalisés -->
+  <link rel="stylesheet" href="/assets-css/admin/clients.css" />
+
+  <!-- Dark mode init -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+  
+  <!-- Scripts -->
+  <script src="/assets-js/admin/adminGuard.js" defer></script>
+  <script src="/assets-js/admin/adminClients.js" defer></script>
+</head>
+
+<body class="min-h-screen flex antialiased">
+  
+  <!-- Toast Container - Notifications globales -->
+  <div id="toastHost" class="fixed top-6 right-6 z-50 space-y-3 w-80"></div>
+  
+  <!-- Modal de confirmation (suppression / activation) -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="confirmBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fadeIn">
+      <div class="flex items-center gap-4 text-amber-600 mb-4">
+        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+          <i class="fas fa-exclamation-triangle text-2xl"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-900" id="confirmTitle">Confirmer l'action</h3>
+          <p class="text-sm text-slate-500" id="confirmSubtitle">Cette action est irréversible</p>
+        </div>
+      </div>
+      <p class="text-slate-600 mb-6" id="confirmMessage">Voulez-vous continuer ?</p>
+      <div class="flex justify-end gap-3">
+        <button id="confirmCancel" class="px-5 py-2.5 border-2 border-slate-300 rounded-xl hover:bg-slate-50 font-medium transition">
+          Annuler
+        </button>
+        <button id="confirmAction" class="px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl hover:from-red-700 hover:to-red-600 font-medium transition shadow-lg shadow-red-500/30">
+          <i class="fas fa-trash mr-2" id="confirmIcon"></i>
+          <span id="confirmButtonText">Confirmer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar - Version Premium -->
+  <aside class="w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white flex flex-col shadow-2xl">
+    <!-- Logo et branding -->
+    <div class="px-6 py-6 border-b border-slate-700/50">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+          <i class="fas fa-calculator text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-black tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            ComptaClems
+          </h1>
+          <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+            <i class="fas fa-shield-alt text-xs"></i>
+            Espace administrateur
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="flex-1 px-4 py-6 space-y-1.5 text-sm overflow-y-auto" id="adminSidebarNav">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mb-2">
+        Tableau de bord
+      </div>
+      
+      <a href="/admin/adminDashboard.html" data-nav="dashboard.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-chart-pie text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mt-4 mb-2">
+        Gestion
+      </div>
+
+      <a href="/admin/adminAdministrateurs.html" data-nav="administrateurs.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-user-shield text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Administrateurs</span>
+      </a>
+
+      <a href="/admin/adminClients.html" data-nav="clients.html" class="flex items-center px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-700/30 group">
+        <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center mr-3">
+          <i class="fas fa-folder-open text-white"></i>
+        </div>
+        <span class="font-semibold">Clients</span>
+      </a>
+
+      <a href="/admin/adminDocuments.html" data-nav="documents.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-comments text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Documents</span>
+      </a>
+
+      <a href="/admin/adminServices.html" data-nav="services.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-cogs text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Services</span>
+      </a>
+
+      <a href="/admin/adminDeclarations.html" data-nav="declarations.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-file-alt text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Déclarations</span>
+      </a>
+
+      <a href="/admin/adminTemoignages.html" data-nav="temoignages.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-comments text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Témoignages</span>
+      </a>
+
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mt-4 mb-2">
+        Configuration
+      </div>
+
+      <a href="/admin/adminSettings.html" data-nav="settings.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-sliders-h text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Paramètres</span>
+      </a>
+    </nav>
+
+    <!-- Profil et déconnexion -->
+    <div class="px-4 py-6 border-t border-slate-700/50 mt-auto">
+      <div class="flex items-center gap-3 mb-4 px-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+          <span class="text-white font-bold text-lg" id="adminInitials">AD</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium truncate" id="adminName">Administrateur</p>
+          <p class="text-xs text-slate-400 truncate flex items-center gap-1">
+            <i class="fas fa-shield-alt text-xs"></i>
+            <span id="adminRole">Super Admin</span>
+          </p>
+        </div>
+      </div>
+      
+      <button id="adminLogoutBtn" class="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-red-600/90 text-slate-300 hover:text-white transition-all group">
+        <i class="fas fa-sign-out-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100">
+    
+    <!-- ====================================
+         HEADER - EN-TÊTE DE PAGE
+    ==================================== -->
+    <header class="flex items-center justify-between mb-10">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center shadow-xl">
+            <i class="fas fa-users text-white text-xl"></i>
+          </div>
+          <div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Clients</h2>
+            <p class="text-slate-500 mt-1 flex items-center gap-2">
+              <i class="fas fa-user-circle text-xs"></i>
+              Gestion des comptes clients et abonnements
+            </p>
+          </div>
+        </div>
+        
+        <!-- Fil d'Ariane -->
+        <div class="flex items-center gap-2 text-sm text-slate-500 ml-2">
+          <i class="fas fa-home text-xs"></i>
+          <span>Accueil</span>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span>Administration</span>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span class="text-slate-800 font-medium">Clients</span>
+        </div>
+      </div>
+
+      <!-- Stats rapides -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-2xl shadow-lg border border-white/50">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+              <i class="fas fa-user-check text-blue-600 text-lg"></i>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-slate-500 uppercase tracking-wider">Actifs</p>
+              <p class="text-2xl font-bold text-slate-900" id="activeClientsCount">0</p>
+            </div>
+          </div>
+          <div class="w-px h-8 bg-slate-200"></div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+              <i class="fas fa-user-plus text-emerald-600 text-lg"></i>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-slate-500 uppercase tracking-wider">Nouveaux (30j)</p>
+              <p class="text-2xl font-bold text-emerald-600" id="newClientsCount">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avatar admin -->
+        <div class="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-5 py-2.5 rounded-2xl shadow-lg border border-white/50">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+            <span class="text-white font-bold text-sm" id="headerAdminInitials">AD</span>
+          </div>
+          <div class="text-sm">
+            <p class="font-semibold text-slate-900" id="headerAdminName">Admin</p>
+            <p class="text-xs text-slate-500" id="headerAdminRole">Super Admin</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================
+         ALERTES ET NOTIFICATIONS
+    ==================================== -->
+    <div id="pageAlert" class="hidden mb-8 rounded-2xl border px-5 py-4 text-sm items-start gap-3 animate-slideIn" role="alert"></div>
+
+    <!-- ====================================
+         SECTION FILTRES AVANCÉS
+    ==================================== -->
+    <section class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 mb-8 border border-slate-200/80">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+          <i class="fas fa-filter text-white text-sm"></i>
+        </div>
+        <h3 class="font-bold text-slate-900">Filtres avancés</h3>
+        <span class="text-xs bg-slate-200 px-3 py-1.5 rounded-full text-slate-700 font-semibold" id="activeFiltersCount">0 filtre actif</span>
+      </div>
+
+      <div class="flex flex-col lg:flex-row lg:items-end gap-6 justify-between">
+        <!-- Grille de filtres -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-1">
+          <!-- Recherche -->
+          <div class="lg:col-span-2">
+            <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+              <i class="fas fa-search text-slate-400"></i>
+              Recherche client
+            </label>
+            <div class="relative">
+              <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+              <input
+                id="q"
+                type="text"
+                class="form-input w-full pl-10 pr-4 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10 transition text-base placeholder:text-slate-400"
+                placeholder="Nom, prénom, email, téléphone..."
+              />
+            </div>
+          </div>
+
+          <!-- Statut -->
+          <div>
+            <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+              <i class="fas fa-circle text-slate-400"></i>
+              Statut
+            </label>
+            <div class="relative">
+              <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+              <select
+                id="status"
+                class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10 transition text-base appearance-none"
+              >
+                <option value="all">Tous les clients</option>
+                <option value="active">Actifs uniquement</option>
+                <option value="inactive">Inactifs uniquement</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Type de client -->
+          <div>
+            <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+              <i class="fas fa-tag text-slate-400"></i>
+              Type
+            </label>
+            <div class="relative">
+              <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+              <select
+                id="client_type"
+                class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10 transition text-base appearance-none"
+              >
+                <option value="all">Tous les types</option>
+                <option value="particulier">Particulier</option>
+                <option value="travailleur_autonome">Travailleur autonome</option>
+                <option value="pme">PME</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions filtres -->
+        <div class="flex items-center gap-3 lg:ml-4">
+          <button id="searchBtn" class="btn-primary px-6 py-3.5 rounded-xl shadow-lg flex items-center gap-2 text-base whitespace-nowrap">
+            <i class="fas fa-filter"></i>
+            Appliquer
+          </button>
+          <button id="resetFiltersBtn" class="btn-secondary px-6 py-3.5 rounded-xl flex items-center gap-2 text-base whitespace-nowrap border-2">
+            <i class="fas fa-rotate-left"></i>
+            Réinitialiser
+          </button>
+          <button id="refreshBtn" class="px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 shadow-md">
+            <i class="fas fa-sync-alt"></i>
+            <span class="hidden sm:inline">Actualiser</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtres actifs (tags) -->
+      <div id="activeFiltersTags" class="hidden items-center gap-2 mt-5 pt-5 border-t border-slate-200">
+        <span class="text-xs text-slate-500 font-medium">Filtres actifs:</span>
+        <div class="flex flex-wrap gap-2" id="filterTagsContainer"></div>
+      </div>
+    </section>
+
+    <!-- ====================================
+         TABLEAU DES CLIENTS
+    ==================================== -->
+    <section class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200/80">
+      <!-- En-tête du tableau -->
+      <div class="bg-gradient-to-r from-slate-50 to-white px-6 py-5 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+              <i class="fas fa-list-ul text-white text-sm"></i>
+            </div>
+            <span class="text-sm font-bold text-slate-900">Liste des clients</span>
+          </div>
+          <span class="text-xs bg-slate-200 px-3 py-1.5 rounded-full text-slate-700 font-semibold" id="totalCount">0</span>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-slate-600">Lignes par page:</span>
+            <div class="relative">
+              <select
+                id="limit"
+                class="px-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10 transition text-sm appearance-none pr-10"
+              >
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+            </div>
+          </div>
+          
+          <!-- Indicateur de chargement -->
+          <div id="loadingIndicator" class="hidden">
+            <div class="flex items-center gap-2 text-sm text-slate-500 bg-slate-100 px-4 py-2 rounded-xl">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Chargement...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tableau responsive -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center gap-1">
+                  <i class="fas fa-user-circle"></i>
+                  Client
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center gap-1">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center gap-1">
+                  <i class="fas fa-phone"></i>
+                  Téléphone
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center gap-1">
+                  <i class="fas fa-badge-check"></i>
+                  Vérifié
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center gap-1">
+                  <i class="fas fa-clock"></i>
+                  Dernière connexion
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center gap-1">
+                  <i class="fas fa-circle"></i>
+                  Statut
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-4 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                <div class="flex items-center justify-end gap-1">
+                  <i class="fas fa-bolt"></i>
+                  Actions
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="clientsTbody" class="bg-white divide-y divide-slate-200">
+            <!-- Injecté dynamiquement -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pied du tableau - Pagination -->
+      <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 text-xs text-slate-600">
+            <i class="fas fa-shield-alt"></i>
+            <span>Espace sécurisé</span>
+          </div>
+          <span class="text-slate-300">|</span>
+          <p id="pageInfo" class="text-xs text-slate-500">Chargement...</p>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <p class="text-xs text-slate-500" id="showingInfo">—</p>
+          <div class="flex items-center gap-2">
+            <button id="prevPage" class="w-10 h-10 rounded-xl border-2 border-slate-200 hover:bg-slate-50 transition flex items-center justify-center text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent" disabled>
+              <i class="fas fa-chevron-left text-sm"></i>
+            </button>
+            <span class="text-sm font-medium text-slate-700 px-3" id="currentPageDisplay">1</span>
+            <button id="nextPage" class="w-10 h-10 rounded-xl border-2 border-slate-200 hover:bg-slate-50 transition flex items-center justify-center text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent">
+              <i class="fas fa-chevron-right text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================
+         DRAWER - DÉTAILS CLIENT
+    ==================================== -->
+    <div id="drawerBackdrop" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"></div>
+
+    <aside
+      id="drawer"
+      class="drawer fixed right-0 top-0 h-full w-full sm:w-[500px] bg-white shadow-2xl z-50 flex flex-col translate-x-full"
+    >
+      <!-- En-tête du drawer -->
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 px-6 py-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur">
+              <i class="fas fa-user-circle text-white text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white">Détails client</h3>
+              <p class="text-xs text-slate-300 mt-0.5" id="drawerSubtitle">Informations complètes</p>
+            </div>
+          </div>
+          <button id="drawerClose" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition backdrop-blur">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenu du drawer -->
+      <div class="flex-1 overflow-y-auto p-6">
+        <!-- Badge type client -->
+        <div class="flex items-center justify-between mb-6">
+          <span id="drawerClientType" class="type-badge type-particulier">
+            <i class="fas fa-user"></i>
+            Particulier
+          </span>
+          <span id="drawerClientStatus" class="status-active">
+            <i class="fas fa-check-circle"></i>
+            Actif
+          </span>
+        </div>
+
+        <!-- Informations client -->
+        <div class="space-y-4">
+          <!-- Identité -->
+          <div class="bg-gradient-to-br from-slate-50 to-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg" id="drawerInitials">
+                JD
+              </div>
+              <div class="flex-1">
+                <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Nom complet</p>
+                <p class="text-xl font-bold text-slate-900" id="drawerName">—</p>
+                <p class="text-sm text-slate-500 mt-1" id="drawerEmail">—</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coordonnées -->
+          <div class="grid grid-cols-1 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                  <i class="fas fa-phone text-amber-600"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Téléphone</p>
+                  <p class="text-lg font-bold text-slate-900 mt-1" id="drawerPhone">—</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates importantes -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                  <i class="fas fa-calendar-plus text-blue-600 text-sm"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500">Créé le</p>
+                  <p class="text-sm font-semibold text-slate-900 mt-0.5" id="drawerCreatedAt">—</p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <i class="fas fa-sign-in-alt text-emerald-600 text-sm"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500">Dernière connexion</p>
+                  <p class="text-sm font-semibold text-slate-900 mt-0.5" id="drawerLastLogin">—</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Statistiques additionnelles -->
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-5 rounded-2xl mt-4">
+            <div class="flex items-center gap-2 mb-3">
+              <i class="fas fa-chart-simple text-white/70 text-sm"></i>
+              <p class="text-xs font-semibold text-white/70 uppercase tracking-wider">Statistiques</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-xs text-slate-400">Déclarations</p>
+                <p class="text-2xl font-bold text-white mt-1" id="drawerDeclarationsCount">0</p>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400">Témoignages</p>
+                <p class="text-2xl font-bold text-white mt-1" id="drawerTestimonialsCount">0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pied du drawer - Actions -->
+      <div class="p-6 border-t border-slate-200 bg-slate-50">
+        <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+          <i class="fas fa-cog"></i>
+          Actions sur le compte
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <button id="toggleActiveBtn" class="btn-secondary px-5 py-3 rounded-xl flex items-center gap-2 flex-1 justify-center">
+            <i class="fas fa-ban"></i>
+            <span id="toggleActiveBtnText">Désactiver</span>
+          </button>
+
+          <button id="resetPasswordBtn" class="btn-secondary px-5 py-3 rounded-xl flex items-center gap-2 flex-1 justify-center">
+            <i class="fas fa-key"></i>
+            Réinitialiser MDP
+          </button>
+
+          <button id="deleteClientBtn" class="px-5 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 transition flex items-center gap-2 shadow-lg shadow-red-500/30 flex-1 justify-center">
+            <i class="fas fa-trash-alt"></i>
+            Supprimer
+          </button>
+        </div>
+        <p class="text-xs text-slate-500 mt-4 flex items-center gap-1.5">
+          <i class="fas fa-info-circle"></i>
+          La désactivation empêche le client de se connecter, la suppression est définitive.
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Script de déconnexion amélioré -->
+  <script>
+    (function() {
+      'use strict';
+      
+      // Déconnexion sécurisée
+      const logoutBtn = document.getElementById('adminLogoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Déconnexion...';
+          this.disabled = true;
+          
+          setTimeout(() => {
+            localStorage.removeItem('cc_admin_auth');
+            localStorage.removeItem('cc_admin_user');
+            sessionStorage.clear();
+            window.location.href = '/admin/adminLogin.html?logout=success';
+          }, 300);
+        });
+      }
+
+      // Initials de l'admin
+      try {
+        const auth = JSON.parse(localStorage.getItem('cc_admin_auth') || '{}');
+        if (auth.admin?.first_name && auth.admin?.last_name) {
+          const fullName = `${auth.admin.first_name} ${auth.admin.last_name}`;
+          const firstName = auth.admin.first_name;
+          const initials = (auth.admin.first_name[0] + (auth.admin.last_name[0] || '')).toUpperCase();
+          
+          const adminInitials = document.getElementById('adminInitials');
+          const headerAdminInitials = document.getElementById('headerAdminInitials');
+          const adminName = document.getElementById('adminName');
+          const headerAdminName = document.getElementById('headerAdminName');
+          const adminRole = document.getElementById('adminRole');
+          const headerAdminRole = document.getElementById('headerAdminRole');
+          
+          if (adminInitials) adminInitials.textContent = initials;
+          if (headerAdminInitials) headerAdminInitials.textContent = initials;
+          if (adminName) adminName.textContent = fullName;
+          if (headerAdminName) headerAdminName.textContent = firstName;
+          
+          const roleText = auth.admin.role === 'superadmin' ? 'Super Admin' : 
+                          auth.admin.role === 'admin' ? 'Admin' : 'Support';
+          if (adminRole) adminRole.textContent = roleText;
+          if (headerAdminRole) headerAdminRole.textContent = auth.admin.role === 'superadmin' ? 'Super Administrateur' : 'Administrateur';
+        }
+      } catch (e) {
+        console.error('Erreur chargement profil:', e);
+      }
+    })();
+  </script>
+  <script src="/assets-js/admin/adminSidebarPatch.js" defer></script>
+</body>
+</html>

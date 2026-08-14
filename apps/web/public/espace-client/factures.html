@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes factures — ComptaClems</title>
+
+  <script>
+    (function(){
+      const t = localStorage.getItem('cc_theme') ||
+        (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <link rel="icon" href="/assets/favicon/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/clients/factures.css" />
+
+</head>
+<body>
+    <!-- Header global -->
+    <script src="/assets-js/global/header.js"></script>
+
+  <main class="factures-container">
+    <h1 class="page-title"><i class="fa-solid fa-file-invoice-dollar"></i> Mes factures</h1>
+    <p class="page-subtitle">Consultez vos factures et effectuez vos paiements par Interac e-Transfert.</p>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Factures au total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statEnAttente" style="color:#f59e0b;">0</div>
+        <div class="stat-label">En attente de paiement</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statMontant" style="color:#f59e0b;">0,00 $</div>
+        <div class="stat-label">Montant dû</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statPaye" style="color:#16a34a;">0</div>
+        <div class="stat-label">Factures payées</div>
+      </div>
+    </div>
+
+    <!-- Instructions Interac globales -->
+    <div class="interac-box" id="interacBox" style="display:none;">
+      <h3>💳 Comment payer par Interac e-Transfert ?</h3>
+      <div class="interac-detail">
+        <span class="interac-key">Envoyer au numéro :</span>
+        <span class="interac-val" id="intPhone">506-252-1410</span>
+        <span class="interac-key">Bénéficiaire :</span>
+        <span class="interac-val" id="intNom">—</span>
+        <span class="interac-key">Question :</span>
+        <span class="interac-val" id="intQuestion">—</span>
+        <span class="interac-key">Réponse :</span>
+        <span class="interac-val" id="intReponse">—</span>
+      </div>
+      <p style="margin: 12px 0 0; font-size: 13px; color: var(--text-muted);">
+        ⚠️ Incluez toujours votre numéro de référence dans la note lors du transfert.
+      </p>
+    </div>
+
+    <div id="loadingIndicator"><i class="fa-solid fa-spinner fa-spin"></i> Chargement…</div>
+    <div class="invoices-list" id="invoicesList" style="display:none;"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <i class="fa-solid fa-file-circle-check"></i>
+      <p>Aucune facture pour l'instant.<br>Elles apparaîtront ici lorsque votre comptable en créera une.</p>
+    </div>
+  </main>
+
+  <<script src="/assets-js/global/footer.js"></script>
+
+  <script src="/assets-js/core/http.js"></script>
+  <script src="/assets-js/global/theme.js"></script>
+
+  <script>
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    function fmt(amount) {
+      return parseFloat(amount).toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+    }
+    function fmtDate(d) {
+      if (!d) return '—';
+      return new Date(d).toLocaleDateString('fr-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    async function loadData() {
+      try {
+        const [invRes, statsRes] = await Promise.all([
+          fetch('/api/client/espace-client/invoices',       { credentials: 'include' }),
+          fetch('/api/client/espace-client/invoices-stats', { credentials: 'include' }),
+        ]);
+
+        if (invRes.status === 401 || statsRes.status === 401) {
+          window.location.href = '/auth/login.html';
+          return;
+        }
+
+        const invData   = await invRes.json();
+        const statsData = await statsRes.json();
+
+        document.getElementById('loadingIndicator').style.display = 'none';
+
+        // Stats
+        if (statsData.success) {
+          const s = statsData.stats;
+          document.getElementById('statTotal').textContent      = s.total || 0;
+          document.getElementById('statEnAttente').textContent  = s.en_attente || 0;
+          document.getElementById('statMontant').textContent    = fmt(s.montant_en_attente || 0);
+          document.getElementById('statPaye').textContent       = s.payees || 0;
+          document.getElementById('statsGrid').style.display    = 'grid';
+        }
+
+        // Interac infos
+        if (invData.success && invData.interac) {
+          const i = invData.interac;
+          document.getElementById('intEmail').textContent    = i.email;
+          document.getElementById('intNom').textContent      = i.nom;
+          document.getElementById('intQuestion').textContent = i.question;
+          document.getElementById('intReponse').textContent  = i.reponse;
+          document.getElementById('interacBox').style.display = 'block';
+        }
+
+        // Factures
+        if (!invData.invoices || !invData.invoices.length) {
+          document.getElementById('emptyState').style.display = 'block';
+          return;
+        }
+
+        const list = document.getElementById('invoicesList');
+        list.innerHTML = invData.invoices.map(inv => {
+          const badge = {
+            pending:   '<span class="badge badge-pending">En attente</span>',
+            paid:      '<span class="badge badge-paid">Payée ✓</span>',
+            cancelled: '<span class="badge badge-cancelled">Annulée</span>',
+            overdue:   '<span class="badge badge-pending" style="background:#fee2e2;color:#dc2626;">En retard</span>',
+          }[inv.status] || '';
+
+          const instructions = inv.status === 'pending' ? `
+            <div class="payment-instructions">
+              <strong>📲 Pour payer cette facture :</strong><br>
+              Envoyez <strong>${fmt(inv.amount)}</strong> par Interac e-Transfert au numéro
+              <strong>506-252-1410</strong><br>
+              Référence à inclure dans la note : <strong>${escapeHtml(inv.payment_reference) || escapeHtml(inv.invoice_number)}</strong>
+            </div>` : '';
+
+          const downloadBtn = inv.status === 'paid' ? `
+            <div class="inv-actions">
+              <a href="/api/client/espace-client/invoices/${inv.id}/pdf"
+                 class="btn-download"
+                 download="facture-${escapeHtml(inv.invoice_number)}.pdf">
+                <i class="fa-solid fa-file-arrow-down"></i> Télécharger la facture PDF
+              </a>
+            </div>` : '';
+
+          return `
+            <div class="invoice-card ${inv.status}">
+              <div class="inv-header">
+                <div>
+                  <div class="inv-number">${escapeHtml(inv.invoice_number)} ${badge}</div>
+                  <div class="inv-desc">${escapeHtml(inv.service_description) || 'Services comptables'}</div>
+                </div>
+                <div class="inv-amount">${fmt(inv.amount)}</div>
+              </div>
+              <div class="inv-ref">Référence : ${escapeHtml(inv.payment_reference) || '—'}</div>
+              <div class="inv-dates">
+                Créée le ${fmtDate(inv.created_at)}
+                ${inv.due_date ? ` · Échéance : ${fmtDate(inv.due_date)}` : ''}
+                ${inv.paid_at ? ` · Payée le ${fmtDate(inv.paid_at)}` : ''}
+              </div>
+              ${instructions}
+              ${downloadBtn}
+            </div>`;
+        }).join('');
+
+        list.style.display = 'flex';
+      } catch (e) {
+        document.getElementById('loadingIndicator').innerHTML =
+          '<p style="color:#dc2626;">Erreur lors du chargement. Veuillez réessayer.</p>';
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

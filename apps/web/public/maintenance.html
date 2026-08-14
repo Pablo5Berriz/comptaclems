@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maintenance — ComptaClems</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+  <!-- Styles -->
+    <link rel="stylesheet" href="/assets-css/maintenance.css" />
+</head>
+
+<body>
+
+  <div class="maintenance-card" role="main">
+
+    <!-- Logo -->
+    <img
+      src="/assets/logo/Comptaclems.png"
+      alt="ComptaClems"
+      class="maintenance-logo"
+    />
+
+    <!-- Icône -->
+    <div class="maintenance-icon" aria-hidden="true">
+      <i class="fas fa-wrench"></i>
+    </div>
+
+    <!-- Eyebrow -->
+    <p class="maintenance-eyebrow">Maintenance en cours</p>
+
+    <!-- Titre -->
+    <h1 class="maintenance-title">Nous revenons bientôt</h1>
+
+    <div class="maintenance-divider"></div>
+
+    <!-- Message dynamique -->
+    <p class="maintenance-message" id="mMessage">
+      Le site est temporairement indisponible pendant nos travaux de maintenance.
+      Merci de votre patience — nous serons de retour très bientôt.
+    </p>
+
+    <!-- CTA -->
+    <button type="button" class="maintenance-btn" id="reloadBtn">
+      <i class="fas fa-rotate-right" aria-hidden="true"></i>
+      Réessayer
+    </button>
+
+    <!-- Statut -->
+    <div class="maintenance-status">
+      <span class="maintenance-status-dot" aria-hidden="true"></span>
+      Code statut : 503
+    </div>
+
+  </div>
+
+  <!-- Copyright -->
+  <p class="maintenance-footer">
+    &copy; <span id="cc-year"></span> ComptaClems. Tous droits réservés.
+  </p>
+
+  <script>
+    /* Année */
+    document.getElementById('cc-year').textContent = new Date().getFullYear();
+
+    /* Message dynamique depuis l'API */
+    async function loadMessage() {
+      try {
+        const r = await fetch('/api/public/maintenance', { cache: 'no-store' });
+        if (!r.ok) return;
+        const data = await r.json().catch(() => null);
+        const msg = data && data.message ? String(data.message).trim() : '';
+        if (msg) document.getElementById('mMessage').textContent = msg;
+      } catch (_) {}
+    }
+
+    /* Bouton réessayer */
+    document.getElementById('reloadBtn').addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    loadMessage();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,945 @@
+/* ==========================================================================
+   COMPTACLEMS — ADMIN LOGIN PAGE v2.2
+   Style premium avec valeurs CSS directes (sans dépendance aux variables)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. VARIABLES LOCALES — Valeurs par défaut (fallback)
+   ========================================================================== */
+
+:root {
+  /* Couleurs principales */
+  --admin-navy-900: #071526;
+  --admin-navy-800: #0A2540;
+  --admin-navy-700: #0D3054;
+  --admin-navy-600: #1A3B5C;
+  --admin-navy-500: #2B4C73;
+  --admin-navy-400: #4A6F99;
+  
+  --admin-gold-600: #A8870E;
+  --admin-gold-500: #C9A817;
+  --admin-gold-400: #D4AF37;
+  --admin-gold-300: #E5C87B;
+  --admin-gold-200: #F0DDAG;
+  --admin-gold-100: #FAF3DC;
+  
+  /* Couleurs sémantiques */
+  --admin-success: #10b981;
+  --admin-danger: #ef4444;
+  --admin-info: #3b82f6;
+  
+  /* Surfaces */
+  --admin-surface: #ffffff;
+  --admin-surface-subtle: #f8fafc;
+  --admin-surface-muted: #f1f5f9;
+  
+  /* Textes */
+  --admin-text-primary: #0f172a;
+  --admin-text-secondary: #334155;
+  --admin-text-tertiary: #64748b;
+  --admin-text-muted: #94a3b8;
+  
+  /* Bordures */
+  --admin-border-default: #e2e8f0;
+  --admin-border-subtle: #f1f5f9;
+  
+  /* Ombres */
+  --admin-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --admin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --admin-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --admin-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --admin-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* Rayons */
+  --admin-radius-sm: 6px;
+  --admin-radius-md: 10px;
+  --admin-radius-lg: 14px;
+  --admin-radius-xl: 20px;
+  --admin-radius-2xl: 28px;
+  --admin-radius-full: 9999px;
+  
+  /* Polices */
+  --admin-font-display: 'DM Serif Display', Georgia, serif;
+  --admin-font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  
+  /* Transitions */
+  --admin-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --admin-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   2. BASE — Body avec effet premium (valeurs directes)
+   ========================================================================== */
+
+body.auth-page {
+  font-family: var(--admin-font-body);
+  background: linear-gradient(135deg, var(--admin-navy-900) 0%, var(--admin-navy-800) 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Grille de points animée */
+body.auth-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  animation: slowDrift 20s linear infinite;
+}
+
+@keyframes slowDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 40px 40px;
+  }
+}
+
+/* Cercle décoratif animé */
+body.auth-page::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatPulse 15s ease-in-out infinite;
+}
+
+@keyframes floatPulse {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-30px, 30px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* ==========================================================================
+   3. CONTENEUR PRINCIPAL
+   ========================================================================== */
+
+.auth-shell {
+  width: 100%;
+  max-width: 1200px;
+  padding: 1.5rem;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   4. CARTE PRINCIPALE — Style premium
+   ========================================================================== */
+
+.auth-card {
+  background: transparent;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: var(--admin-shadow-2xl);
+  backdrop-filter: blur(2px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   5. GRILLE À 2 COLONNES
+   ========================================================================== */
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 640px;
+}
+
+@media (max-width: 1024px) {
+  .auth-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+/* ==========================================================================
+   6. COLONNE FORMULAIRE — Style premium
+   ========================================================================== */
+
+.auth-form {
+  background: var(--admin-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dégradé de fond subtil */
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.02) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Ligne dorée en haut */
+.auth-form::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--admin-gold-400), var(--admin-gold-300), var(--admin-gold-400));
+  opacity: 0.6;
+}
+
+.auth-form-inner {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.auth-form-scroll {
+  overflow-y: auto;
+  max-height: 560px;
+  padding-right: 0.5rem;
+}
+
+/* Style de la scrollbar premium */
+.auth-form-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.auth-form-scroll::-webkit-scrollbar-track {
+  background: var(--admin-border-subtle);
+  border-radius: var(--admin-radius-full);
+}
+
+.auth-form-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--admin-gold-400), var(--admin-gold-300));
+  border-radius: var(--admin-radius-full);
+}
+
+.auth-form-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--admin-gold-500);
+}
+
+/* ==========================================================================
+   7. TITRE DU FORMULAIRE — Style avec dégradé
+   ========================================================================== */
+
+.auth-form-title {
+  font-family: var(--admin-font-display);
+  font-size: 2.25rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--admin-navy-800), var(--admin-gold-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  position: relative;
+  display: inline-block;
+}
+
+.auth-form-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--admin-gold-400), transparent);
+  border-radius: var(--admin-radius-full);
+}
+
+/* ==========================================================================
+   8. ALERTE — Style premium
+   ========================================================================== */
+
+.auth-alert {
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: slideInDown 0.4s var(--admin-ease-out);
+  border-left: 4px solid;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-alert[data-type="error"] {
+  background: rgba(239, 68, 68, 0.08);
+  border-left-color: var(--admin-danger);
+  color: var(--admin-danger);
+}
+
+.auth-alert[data-type="success"] {
+  background: rgba(16, 185, 129, 0.08);
+  border-left-color: var(--admin-success);
+  color: var(--admin-success);
+}
+
+.auth-alert[data-type="info"] {
+  background: rgba(59, 130, 246, 0.08);
+  border-left-color: var(--admin-info);
+  color: var(--admin-info);
+}
+
+.auth-alert i {
+  font-size: 1.125rem;
+}
+
+/* ==========================================================================
+   9. CHAMPS DU FORMULAIRE — Style premium
+   ========================================================================== */
+
+.auth-field {
+  margin-bottom: 1.25rem;
+}
+
+.auth-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid var(--admin-border-default);
+  border-radius: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--admin-text-primary);
+  background: var(--admin-surface-subtle);
+  transition: all 0.25s var(--admin-ease-out);
+  outline: none;
+  font-family: var(--admin-font-body);
+}
+
+.auth-input:hover {
+  border-color: var(--admin-text-tertiary);
+  background: var(--admin-surface);
+}
+
+.auth-input:focus {
+  border-color: var(--admin-gold-400);
+  background: var(--admin-surface);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+  transform: translateY(-1px);
+}
+
+.auth-input::placeholder {
+  color: var(--admin-text-muted);
+  font-weight: 400;
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-tertiary);
+  font-size: 1.125rem;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.auth-input:focus + .auth-input-icon {
+  color: var(--admin-gold-400);
+}
+
+/* ==========================================================================
+   10. BOUTON AFFICHAGE MOT DE PASSE — Style premium
+   ========================================================================== */
+
+#togglePassword {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--admin-text-tertiary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 20;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+}
+
+#togglePassword:hover {
+  color: var(--admin-gold-400);
+  background: var(--admin-border-subtle);
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-tertiary);
+  font-size: 1.125rem;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   11. BOUTON DE SOUMISSION — Style avec effet de shine
+   ========================================================================== */
+
+.auth-submit {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--admin-navy-700), var(--admin-navy-800));
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--admin-ease-spring);
+  position: relative;
+  overflow: hidden;
+  margin-top: 1.5rem;
+  box-shadow: 0 8px 20px -8px rgba(10, 37, 64, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.auth-submit::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  z-index: 0;
+}
+
+.auth-submit:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.auth-submit > * {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-submit:hover {
+  background: linear-gradient(135deg, var(--admin-navy-600), var(--admin-navy-700));
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px rgba(10, 37, 64, 0.5);
+}
+
+.auth-submit:active {
+  transform: translateY(0);
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.auth-submit i {
+  transition: transform 0.3s var(--admin-ease-spring);
+}
+
+.auth-submit:hover i {
+  transform: translateX(4px);
+}
+
+/* Loading state */
+.auth-submit.loading {
+  position: relative;
+  color: transparent;
+}
+
+.auth-submit.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 0.8s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   12. TEXTE DE BAS DE FORMULAIRE — Correction encodage
+   ========================================================================== */
+
+.auth-footer-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--admin-text-tertiary);
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--admin-border-subtle);
+}
+
+.auth-footer-note i {
+  margin-right: 0.375rem;
+  color: var(--admin-gold-400);
+}
+
+/* ==========================================================================
+   13. COLONNE PANEL LATÉRAL — Style premium avec fond bleu
+   ========================================================================== */
+
+.auth-panel {
+  background: linear-gradient(135deg, var(--admin-navy-800) 0%, var(--admin-navy-900) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dégradé animé */
+.auth-panel::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+  animation: rotateSlow 30s linear infinite;
+}
+
+@keyframes rotateSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Grille de points */
+.auth-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.auth-panel-inner {
+  width: 100%;
+  max-width: 340px;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+/* Logo avec effet */
+.auth-panel-inner a {
+  display: inline-block;
+  transition: all 0.3s var(--admin-ease-spring);
+  position: relative;
+}
+
+.auth-panel-inner a:hover {
+  transform: scale(1.02) translateY(-2px);
+}
+
+.auth-panel-inner img {
+  border-radius: 1rem;
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  max-width: 140px;
+  height: auto;
+}
+
+.auth-panel-inner a:hover img {
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* Titre du panel */
+.auth-panel-title {
+  font-family: var(--admin-font-display);
+  font-size: 3.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: white;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: inline-block;
+}
+
+.auth-panel-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--admin-gold-400), transparent);
+  border-radius: var(--admin-radius-full);
+}
+
+/* Sous-titre du panel — CORRECTION ENCODAGE */
+.auth-panel-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Badge sécurité */
+.auth-panel-security {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 0.5rem 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-panel-security:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-2px);
+}
+
+.auth-panel-security i {
+  color: var(--admin-gold-300);
+  font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   14. ANIMATIONS GLOBALES
+   ========================================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-form,
+.auth-panel {
+  animation: fadeInUp 0.6s var(--admin-ease-out) forwards;
+}
+
+.auth-panel {
+  animation-delay: 0.1s;
+}
+
+/* ==========================================================================
+   15. DARK MODE — Support complet
+   ========================================================================== */
+
+[data-theme="dark"] .auth-form {
+  background: #0f1a2b;
+}
+
+[data-theme="dark"] .auth-form-title {
+  background: linear-gradient(135deg, #ffffff, var(--admin-gold-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+[data-theme="dark"] .auth-input {
+  background: #1a2538;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .auth-input:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: #1f2c42;
+}
+
+[data-theme="dark"] .auth-input:focus {
+  border-color: var(--admin-gold-400);
+  background: #1f2c42;
+}
+
+[data-theme="dark"] .auth-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .auth-input-icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .auth-input:focus + .auth-input-icon {
+  color: var(--admin-gold-400);
+}
+
+[data-theme="dark"] #togglePassword:hover {
+  background: #1a2538;
+  color: var(--admin-gold-400);
+}
+
+[data-theme="dark"] .auth-panel {
+  background: linear-gradient(135deg, #0d1a30, #071526);
+}
+
+[data-theme="dark"] .auth-footer-note {
+  color: rgba(255, 255, 255, 0.5);
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .auth-alert[data-type="error"] {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+[data-theme="dark"] .auth-alert[data-type="success"] {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+[data-theme="dark"] .auth-alert[data-type="info"] {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+/* ==========================================================================
+   16. RESPONSIVE — Adaptations mobiles
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .auth-shell {
+    max-width: 600px;
+    padding: 1rem;
+  }
+
+  .auth-card {
+    border-radius: 1.5rem;
+  }
+
+  .auth-panel {
+    display: none;
+  }
+
+  .auth-form {
+    padding: 2.5rem 2rem;
+  }
+
+  .auth-form-title {
+    font-size: 2rem;
+  }
+
+  .auth-form-inner {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-shell {
+    padding: 0.75rem;
+  }
+
+  .auth-form {
+    padding: 2rem 1.25rem;
+  }
+
+  .auth-form-title {
+    font-size: 1.75rem;
+  }
+
+  .auth-form-title::after {
+    width: 45px;
+  }
+
+  .auth-submit {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .auth-input {
+    padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+    font-size: 0.875rem;
+  }
+
+  .auth-input-icon {
+    left: 0.875rem;
+    font-size: 1rem;
+  }
+
+  #togglePassword {
+    right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .auth-footer-note {
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 1.75rem 1rem;
+  }
+
+  .auth-form-title {
+    font-size: 1.5rem;
+  }
+
+  .auth-form-title::after {
+    width: 35px;
+    bottom: -6px;
+  }
+
+  .auth-submit {
+    padding: 0.75rem 1rem;
+  }
+
+  .auth-alert {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ==========================================================================
+   17. RÉDUCTION DES ANIMATIONS
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  body.auth-page::before,
+  body.auth-page::after,
+  .auth-panel::before {
+    animation: none;
+  }
+  
+  .auth-submit:hover,
+  .auth-card:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   18. SUPPORT IMPRESSION
+   ========================================================================== */
+
+@media print {
+  body.auth-page {
+    background: white;
+  }
+
+  body.auth-page::before,
+  body.auth-page::after {
+    display: none;
+  }
+
+  .auth-panel {
+    display: none;
+  }
+
+  .auth-card {
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    transform: none;
+  }
+
+  .auth-submit {
+    display: none;
+  }
+
+  .auth-form {
+    background: white;
+  }
+
+  .auth-form-title {
+    -webkit-text-fill-color: initial;
+    background: none;
+    color: #000;
+  }
+}

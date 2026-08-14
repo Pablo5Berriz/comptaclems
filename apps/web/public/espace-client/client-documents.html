@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mes documents fiscaux — Espace client ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Mes documents fiscaux | ComptaClems — Espace client</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/clients/documents.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- Toasts -->
+  <div id="toastHost" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Header global -->
+  <script src="/assets-js/global/header.js"></script>
+
+  <!-- Modal confirmation -->
+  <div id="confirmModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div id="confirmBackdrop" class="confirm-backdrop" aria-hidden="true"></div>
+    <div class="confirm-inner">
+      <div class="confirm-header">
+        <div class="confirm-header-icon" aria-hidden="true">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div>
+          <p class="confirm-title" id="confirmTitle">Confirmer l'action</p>
+          <p class="confirm-subtitle" id="confirmSubtitle">Cette action est irréversible</p>
+        </div>
+      </div>
+      <p class="confirm-message" id="confirmMessage">Voulez-vous continuer ?</p>
+      <div class="confirm-actions">
+        <button id="confirmCancel" class="btn btn-outline">Annuler</button>
+        <button id="confirmAction" class="btn btn-crimson">
+          <i class="fas fa-trash" id="confirmIcon"></i>
+          <span id="confirmButtonText">Confirmer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal prévisualisation -->
+  <div id="previewModal" class="hidden" role="dialog" aria-modal="true" aria-label="Prévisualisation du document">
+    <div class="preview-inner">
+      <div class="preview-header">
+        <div class="preview-header-left">
+          <div class="preview-icon" id="previewIcon" aria-hidden="true">
+            <i class="fas fa-file-pdf"></i>
+          </div>
+          <div class="min-w-0">
+            <p class="preview-title" id="previewTitle"></p>
+            <p class="preview-meta"  id="previewMeta"></p>
+          </div>
+        </div>
+        <button id="closePreview" class="preview-close" aria-label="Fermer la prévisualisation">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <iframe id="previewFrame" sandbox="allow-same-origin allow-scripts allow-forms" title="Prévisualisation"></iframe>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- ─── En-tête ─── -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-icon" aria-hidden="true">
+          <i class="fas fa-file-invoice"></i>
+        </div>
+        <div>
+          <h1 class="page-title">Documents fiscaux</h1>
+          <p class="page-subtitle">Relevés et documents gouvernementaux</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="refreshBtn" class="btn btn-outline">
+          <i class="fas fa-rotate"></i>
+          Rafraîchir
+        </button>
+        <a href="/espace-client/profil.html" class="btn btn-outline">
+          <i class="fas fa-arrow-left"></i>
+          Retour au profil
+        </a>
+        <button id="logoutBtn" class="btn btn-crimson">
+          <i class="fas fa-right-from-bracket"></i>
+          Déconnexion
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── Stats ─── -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon navy" aria-hidden="true"><i class="fas fa-file"></i></div>
+        <div>
+          <p class="stat-label">Total</p>
+          <p class="stat-value" id="statsTotal">0</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon violet" aria-hidden="true"><i class="fas fa-map-pin"></i></div>
+        <div>
+          <p class="stat-label">Revenu Québec</p>
+          <p class="stat-value violet" id="statsQuebec">0</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon gold" aria-hidden="true"><i class="fas fa-leaf"></i></div>
+        <div>
+          <p class="stat-label">Revenu Canada</p>
+          <p class="stat-value gold" id="statsCanada">0</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon sage" aria-hidden="true"><i class="fas fa-download"></i></div>
+        <div>
+          <p class="stat-label">Téléchargements</p>
+          <p class="stat-value sage" id="statsDownloads">0</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── Filtres ─── -->
+    <div class="filters-panel">
+      <div class="filters-header">
+        <div class="filters-header-icon" aria-hidden="true"><i class="fas fa-filter"></i></div>
+        <span class="filters-header-label">Filtres</span>
+        <span class="filters-count" id="activeFiltersCount">0</span>
+      </div>
+
+      <div class="filters-row">
+
+        <div class="filter-input-wrap">
+          <i class="fas fa-search filter-icon" aria-hidden="true"></i>
+          <input
+            id="searchInput"
+            type="text"
+            class="filter-input"
+            placeholder="Nom du fichier..."
+            aria-label="Rechercher par nom de fichier"
+          />
+        </div>
+
+        <div class="filter-select-wrap">
+          <i class="fas fa-calendar filter-icon" aria-hidden="true"></i>
+          <select id="yearSelect" class="filter-select" aria-label="Filtrer par année">
+            <option value="">Toutes les années</option>
+          </select>
+          <i class="fas fa-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+
+        <div class="filter-select-wrap">
+          <i class="fas fa-building filter-icon" aria-hidden="true"></i>
+          <select id="authoritySelect" class="filter-select" aria-label="Filtrer par autorité">
+            <option value="">Toutes les autorités</option>
+            <option value="REVENU_QUEBEC">Revenu Québec</option>
+            <option value="REVENU_CANADA">Revenu Canada</option>
+            <option value="BOTH">Les deux</option>
+          </select>
+          <i class="fas fa-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+
+        <button id="applyFilters" class="btn btn-navy">
+          <i class="fas fa-filter"></i>
+          Appliquer
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ─── Chargement ─── -->
+    <div id="loading" class="loader-wrap hidden" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p style="font-size:.875rem;color:var(--text-tertiary);">Chargement de vos documents…</p>
+    </div>
+
+    <!-- ─── Liste documents (injectée par JS) ─── -->
+    <div id="list" aria-live="polite"></div>
+
+    <!-- ─── État vide ─── -->
+    <div id="empty" class="state-box hidden">
+      <div class="state-icon-wrap" aria-hidden="true">
+        <i class="fas fa-folder-open"></i>
+      </div>
+      <p class="state-title">Aucun document disponible</p>
+      <p class="state-desc">Vos documents fiscaux apparaîtront ici dès qu'ils seront téléversés par votre administrateur.</p>
+      <p class="state-note">
+        <i class="fas fa-clock" aria-hidden="true"></i>
+        Généralement disponibles sous 24–48 h
+      </p>
+    </div>
+
+    <!-- ─── Pagination ─── -->
+    <div id="pagination" class="hidden" aria-label="Pagination">
+      <p class="pagination-info" id="showingInfo">Affichage de 0 à 0 documents</p>
+      <div class="pagination-controls">
+        <button id="prevPage" class="page-btn" aria-label="Page précédente" disabled>
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-current" id="currentPage" aria-live="polite">1</span>
+        <button id="nextPage" class="page-btn" aria-label="Page suivante">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/espace-client/clientDocuments.js" defer></script>
+
+</body>
+</html>

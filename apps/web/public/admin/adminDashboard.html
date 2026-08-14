@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  
+  <title>Dashboard | Administration ComptaClems</title>
+  <meta name="description" content="Tableau de bord administratif - Vue d'ensemble de la plateforme ComptaClems" />
+  
+  <!-- Polices & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="/assets-css/tw.min.css" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon/favicon.ico">
+
+  <!-- Styles personnalisés -->
+  <link rel="stylesheet" href="/assets-css/admin/dashboard.css" />
+
+  <!-- Dark mode init -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+  
+  <!-- Scripts -->
+  <script src="/assets-js/admin/adminGuard.js" defer></script>
+  <script src="/assets-js/admin/adminDashboard.js" defer></script>
+</head>
+
+<body class="min-h-screen flex antialiased">
+  
+  <!-- Toast Container - Notifications globales -->
+  <div id="toastHost" class="fixed top-6 right-6 z-50 space-y-3 w-80"></div>
+
+  <!-- Sidebar - Version Premium -->
+  <aside class="w-72 text-white flex flex-col shadow-2xl" style="background: linear-gradient(160deg, var(--navy-900) 0%, var(--navy-800) 100%);">
+    <!-- Logo et branding -->
+    <div class="px-6 py-6" style="border-bottom: 1px solid rgba(212,175,55,0.15);">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg animate-float" style="background: linear-gradient(135deg, var(--navy-600), var(--gold-400));">
+          <i class="fas fa-calculator text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white">
+            ComptaClems
+          </h1>
+          <p class="text-xs mt-0.5 flex items-center gap-1" style="color: rgba(212,175,55,0.7);">
+            <i class="fas fa-shield-alt text-xs"></i>
+            Espace administrateur
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="sidebar-nav flex-1 px-4 py-6 space-y-1.5 text-sm overflow-y-auto" id="adminSidebarNav">
+      <div class="text-xs font-semibold uppercase tracking-wider px-4 mb-2" style="color: rgba(255,255,255,0.35);">
+        Tableau de bord
+      </div>
+
+      <a href="/admin/adminDashboard.html" data-nav="dashboard.html" class="flex items-center px-4 py-3 rounded-xl text-white active group" style="background: linear-gradient(135deg, var(--navy-700), var(--navy-600)); border-left: 3px solid var(--gold-400); box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background: rgba(212,175,55,0.15);">
+          <i class="fas fa-chart-pie" style="color: var(--gold-300);"></i>
+        </div>
+        <span class="font-semibold">Dashboard</span>
+      </a>
+
+      <div class="text-xs font-semibold uppercase tracking-wider px-4 mt-4 mb-2" style="color: rgba(255,255,255,0.35);">
+        Gestion
+      </div>
+
+      <a href="/admin/adminAdministrateurs.html" data-nav="administrateurs.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-user-shield" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Administrateurs</span>
+      </a>
+
+      <a href="/admin/adminClients.html" data-nav="clients.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-users" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Clients</span>
+      </a>
+
+      <a href="/admin/adminServices.html" data-nav="services.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-cogs" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Services</span>
+      </a>
+
+      <a href="/admin/adminDeclarations.html" data-nav="declarations.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-file-alt" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Déclarations</span>
+      </a>
+
+      <a href="/admin/adminDocuments.html" data-nav="documents.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-folder-open" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Documents</span>
+      </a>
+
+      <a href="/admin/adminTemoignages.html" data-nav="temoignages.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-comments" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Témoignages</span>
+      </a>
+
+      <div class="text-xs font-semibold uppercase tracking-wider px-4 mt-4 mb-2" style="color: rgba(255,255,255,0.35);">
+        Configuration
+      </div>
+
+      <a href="/admin/adminSettings.html" data-nav="settings.html" class="flex items-center px-4 py-3 rounded-xl transition-all group" style="color: rgba(255,255,255,0.75);">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition" style="background: rgba(255,255,255,0.05);">
+          <i class="fas fa-sliders-h" style="color: rgba(255,255,255,0.5);"></i>
+        </div>
+        <span>Paramètres</span>
+      </a>
+    </nav>
+
+    <!-- Profil et déconnexion -->
+    <div class="px-4 py-6 mt-auto" style="border-top: 1px solid rgba(212,175,55,0.15);">
+      <div class="flex items-center gap-3 mb-4 px-2">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, var(--navy-600), var(--gold-500));">
+          <span class="text-white font-bold text-lg" id="adminInitials">AD</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium truncate text-white" id="adminName">Administrateur</p>
+          <p class="text-xs truncate flex items-center gap-1" style="color: rgba(255,255,255,0.45);">
+            <i class="fas fa-shield-alt text-xs"></i>
+            <span id="adminRole">Super Admin</span>
+          </p>
+        </div>
+      </div>
+
+      <button id="adminLogoutBtn" class="w-full flex items-center justify-center px-4 py-3 rounded-xl transition-all group" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.08);">
+        <i class="fas fa-sign-out-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-y-auto" style="background: var(--color-bg-subtle);">
+    
+    <!-- ====================================
+         HEADER - EN-TÊTE DE PAGE
+    ==================================== -->
+    <header class="flex items-center justify-between mb-10">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl" style="background: linear-gradient(135deg, var(--navy-800), var(--navy-700));">
+            <i class="fas fa-chart-pie text-white text-xl"></i>
+          </div>
+          <div>
+            <h2 class="text-3xl font-bold tracking-tight" style="color: var(--color-text-primary); font-family: var(--font-display);">Dashboard</h2>
+            <p class="mt-1 flex items-center gap-2" style="color: var(--color-text-tertiary); font-size: var(--text-sm);">
+              <i class="fas fa-chart-line text-xs"></i>
+              Vue d'ensemble de la plateforme ComptaClems
+            </p>
+          </div>
+        </div>
+        
+        <!-- Fil d'Ariane -->
+        <div class="flex items-center gap-2 text-sm text-slate-500 ml-2">
+          <i class="fas fa-home text-xs"></i>
+          <span>Accueil</span>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span>Administration</span>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span class="text-slate-800 font-medium">Dashboard</span>
+        </div>
+      </div>
+
+      <!-- Zone utilisateur & notifications -->
+      <div class="flex items-center gap-4">
+        <!-- Date et heure -->
+        <div class="hidden lg:block bg-white/80 backdrop-blur-sm px-5 py-3 rounded-2xl shadow-lg border border-white/50">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+              <i class="fas fa-calendar text-slate-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-900" id="currentDate"></p>
+              <p class="text-xs text-slate-500" id="currentTime"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="relative">
+          <button id="notifBtn" class="relative w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-lg flex items-center justify-center hover:bg-slate-50 transition group">
+            <i class="fa-regular fa-bell text-slate-700 text-xl group-hover:text-slate-900"></i>
+            <span id="notifBadge" class="hidden absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1.5 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white text-xs font-bold items-center justify-center shadow-lg shadow-red-500/30 animate-pulse-slow">0</span>
+          </button>
+          
+          <!-- Panneau de notifications -->
+          <div id="notifPanel" class="hidden absolute right-0 top-14 w-[400px] bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+            <div class="px-5 py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fas fa-bell text-blue-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="font-bold text-slate-900">Notifications</p>
+                    <p class="text-xs text-slate-500">Mises à jour et alertes</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="notifRefresh" class="text-xs text-slate-600 hover:text-slate-900 bg-white px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition flex items-center gap-1">
+                    <i class="fas fa-sync-alt text-xs"></i>
+                    Actualiser
+                  </button>
+                  <button id="notifMarkRead" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition flex items-center gap-1">
+                    <i class="fas fa-check-double text-xs"></i>
+                    Tout lire
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div id="notifList" class="max-h-[400px] overflow-y-auto p-3"></div>
+            
+            <div class="px-5 py-3 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-2">
+              <i class="fas fa-info-circle"></i>
+              Dernière mise à jour: <span id="notifLastUpdate">à l'instant</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================
+         ALERTES ET NOTIFICATIONS
+    ==================================== -->
+    <div id="pageAlert" class="hidden mb-8 rounded-2xl border px-5 py-4 text-sm items-start gap-3 animate-slideIn" role="alert"></div>
+
+    <!-- ====================================
+         CARD DE BIENVENUE
+    ==================================== -->
+    <section class="welcome-card rounded-3xl shadow-2xl p-8 mb-10 text-white relative overflow-hidden">
+      <div class="relative z-10">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center">
+            <i class="fas fa-hand-wave text-3xl"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold mb-1">
+              Bienvenue, <span id="welcomeAdminName">Administrateur</span>
+            </h3>
+            <p class="text-slate-300 max-w-2xl text-sm leading-relaxed">
+              Ce tableau de bord vous offre une vue complète de votre plateforme. 
+              Gérez les déclarations fiscales, les témoignages, les comptes clients 
+              et les accès administrateurs en toute simplicité.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Quick actions -->
+        <div class="flex items-center gap-3 mt-6">
+          <a href="/admin/adminDeclarations.html" class="px-5 py-2.5 bg-white/10 backdrop-blur rounded-xl hover:bg-white/20 transition flex items-center gap-2 text-sm">
+            <i class="fas fa-file-alt"></i>
+            Voir les déclarations
+          </a>
+          <a href="/admin/adminTemoignages.html" class="px-5 py-2.5 bg-white/10 backdrop-blur rounded-xl hover:bg-white/20 transition flex items-center gap-2 text-sm">
+            <i class="fas fa-comments"></i>
+            Gérer les témoignages
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================
+         STATISTIQUES PRINCIPALES
+    ==================================== -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+            <i class="fas fa-chart-simple text-white text-sm"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900">Vue d'ensemble</h3>
+        </div>
+        <button id="refreshStatsBtn" class="px-4 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-sm text-slate-700 shadow-sm">
+          <i class="fas fa-sync-alt"></i>
+          Actualiser
+        </button>
+      </div>
+
+      <!-- Cartes de statistiques -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+
+        <!-- Admins -->
+        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Administrateurs</p>
+              <p class="text-4xl font-black text-slate-900 mt-2" id="statAdmins">—</p>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                <i class="fas fa-shield-alt"></i>
+                Accès autorisés
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <i class="fas fa-user-shield text-white text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <a href="/admin/adminAdministrateurs.html" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+              Gérer les administrateurs
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Clients -->
+        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Clients</p>
+              <p class="text-4xl font-black text-slate-900 mt-2" id="statClients">—</p>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                <i class="fas fa-check-circle"></i>
+                Comptes actifs
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+              <i class="fas fa-users text-white text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <a href="/admin/adminClients.html" class="text-xs text-emerald-600 hover:text-emerald-800 font-medium flex items-center gap-1">
+              Gérer les clients
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Services</p>
+              <p class="text-4xl font-black text-slate-900 mt-2" id="statServices">—</p>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                <i class="fas fa-box"></i>
+                Catalogue actif
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+              <i class="fas fa-cogs text-white text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <a href="/admin/adminServices.html" class="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1">
+              Gérer les services
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Déclarations -->
+        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Déclarations</p>
+              <p class="text-4xl font-black text-slate-900 mt-2" id="statDeclarations">—</p>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                <i class="fas fa-calendar"></i>
+                Cette année
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+              <i class="fas fa-file-invoice text-white text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <a href="/admin/adminDeclarations.html" class="text-xs text-amber-600 hover:text-amber-800 font-medium flex items-center gap-1">
+              Gérer les déclarations
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card Documents gouvernementaux -->
+        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Documents gouvernementaux</p>
+              <p class="text-4xl font-black text-slate-900 mt-2" id="statGovDocs">—</p>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-1" id="statGovDocsClients">
+                <i class="fas fa-users"></i>
+                <span>— clients</span>
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <i class="fas fa-folder-open text-white text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <a href="/admin/adminDocuments.html" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+              Gérer les documents
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================
+         SECTION ANALYTIQUE & DÉTAILS
+    ==================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      
+      <!-- Témoignages - Carte détaillée -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-2xl shadow-xl p-6 h-full border border-slate-200/80">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+              <i class="fas fa-comments text-white"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900">Témoignages</h4>
+              <p class="text-xs text-slate-500">Avis clients</p>
+            </div>
+          </div>
+          
+          <div class="space-y-5">
+            <!-- Statut en attente -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-slate-600 flex items-center gap-1.5">
+                  <i class="fas fa-clock text-amber-500"></i>
+                  En attente
+                </span>
+                <span class="text-2xl font-bold text-slate-900" id="statTestimonialsPending">—</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div class="bg-amber-500 h-2.5 rounded-full progress-bar" id="testimonialsPendingBar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <!-- Statut publiés -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-slate-600 flex items-center gap-1.5">
+                  <i class="fas fa-check-circle text-emerald-500"></i>
+                  Publiés
+                </span>
+                <span class="text-2xl font-bold text-slate-900" id="statTestimonialsPublished">—</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div class="bg-emerald-500 h-2.5 rounded-full progress-bar" id="testimonialsPublishedBar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <!-- Total -->
+            <div class="pt-3 mt-3 border-t border-slate-100">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-medium text-slate-700">Total</span>
+                <span class="text-lg font-bold text-slate-900" id="statTestimonialsTotal">—</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6">
+            <a href="/admin/adminTemoignages.html" class="w-full btn-secondary px-4 py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-medium">
+              <i class="fas fa-arrow-right"></i>
+              Gérer les témoignages
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activité récente -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-200/80 h-full">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+                <i class="fas fa-clock-rotate-left text-white"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900">Activité récente</h4>
+                <p class="text-xs text-slate-500">Dernières actions sur la plateforme</p>
+              </div>
+            </div>
+            <button id="refreshActivityBtn" class="text-sm text-slate-500 hover:text-slate-700 transition">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+
+          <!-- Timeline d'activité -->
+          <div id="activityTimeline" class="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+            <!-- Injecté dynamiquement -->
+            <div class="flex items-center justify-center py-8">
+              <div class="flex flex-col items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+                  <i class="fas fa-spinner fa-spin text-slate-400 text-xl"></i>
+                </div>
+                <p class="text-sm text-slate-500">Chargement des activités...</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <a href="#" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+              Voir toutes les activités
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================
+         RÉPARTITION & STATISTIQUES AVANCÉES
+    ==================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+      
+      <!-- Répartition des clients par type -->
+      <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+            <i class="fas fa-chart-pie text-white"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900">Répartition des clients</h4>
+            <p class="text-xs text-slate-500">Par type de client</p>
+          </div>
+        </div>
+
+        <!-- Graphique en camembert (simulé) -->
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="relative w-40 h-40">
+            <canvas id="clientTypeChart" width="160" height="160" class="rounded-full"></canvas>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center">
+                <span class="text-2xl font-bold text-slate-900" id="totalClientsPie">0</span>
+                <p class="text-xs text-slate-500">clients</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Légende -->
+          <div class="flex-1 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                <span class="text-sm text-slate-600">Particuliers</span>
+              </div>
+              <span class="font-semibold text-slate-900" id="clientParticuliers">0</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-indigo-500"></span>
+                <span class="text-sm text-slate-600">Travailleurs autonomes</span>
+              </div>
+              <span class="font-semibold text-slate-900" id="clientAutonomes">0</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                <span class="text-sm text-slate-600">PME</span>
+              </div>
+              <span class="font-semibold text-slate-900" id="clientPME">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statuts des déclarations -->
+      <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+            <i class="fas fa-file-signature text-white"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900">Déclarations</h4>
+            <p class="text-xs text-slate-500">Répartition par statut</p>
+          </div>
+        </div>
+
+        <!-- Liste des statuts -->
+        <div class="space-y-4">
+          <div>
+            <div class="flex items-center justify-between text-sm mb-1.5">
+              <span class="text-slate-600 flex items-center gap-1.5">
+                <i class="fas fa-inbox text-blue-500"></i>
+                Reçues
+              </span>
+              <span class="font-semibold text-slate-900" id="statDeclarationsRecues">0</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" id="declarationsRecuesBar" style="width: 0%"></div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="flex items-center justify-between text-sm mb-1.5">
+              <span class="text-slate-600 flex items-center gap-1.5">
+                <i class="fas fa-gear text-yellow-500"></i>
+                En traitement
+              </span>
+              <span class="font-semibold text-slate-900" id="statDeclarationsTraitement">0</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+              <div class="bg-yellow-500 h-2 rounded-full" id="declarationsTraitementBar" style="width: 0%"></div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="flex items-center justify-between text-sm mb-1.5">
+              <span class="text-slate-600 flex items-center gap-1.5">
+                <i class="fas fa-file-exclamation text-orange-500"></i>
+                Documents manquants
+              </span>
+              <span class="font-semibold text-slate-900" id="statDeclarationsManquants">0</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+              <div class="bg-orange-500 h-2 rounded-full" id="declarationsManquantsBar" style="width: 0%"></div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="flex items-center justify-between text-sm mb-1.5">
+              <span class="text-slate-600 flex items-center gap-1.5">
+                <i class="fas fa-check-circle text-green-500"></i>
+                Terminées
+              </span>
+              <span class="font-semibold text-slate-900" id="statDeclarationsTerminees">0</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" id="declarationsTermineesBar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-t border-slate-100">
+          <a href="/admin/adminDeclarations.html" class="text-xs text-amber-600 hover:text-amber-800 font-medium flex items-center gap-1">
+            Voir toutes les déclarations
+            <i class="fas fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================
+         PIED DE PAGE - DERNIÈRE SYNCHRONISATION
+    ==================================== -->
+    <div class="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1.5">
+          <i class="fas fa-database"></i>
+          <span>Données temps réel</span>
+        </div>
+        <span class="text-slate-300">|</span>
+        <div class="flex items-center gap-1.5">
+          <i class="fas fa-shield-alt"></i>
+          <span>Environnement sécurisé</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <i class="fas fa-sync-alt text-xs"></i>
+        <span>Dernière mise à jour: <span id="dashboardLastUpdate">à l'instant</span></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Chart.js pour les graphiques -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Script de déconnexion simplifié -->
+  <script>
+    document.getElementById('adminLogoutBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const btn = e.currentTarget;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Déconnexion...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        localStorage.removeItem('cc_admin_auth');
+        localStorage.removeItem('cc_admin_user');
+        window.location.href = '/admin/adminLogin.html';
+      }, 300);
+    });
+  </script>
+  <script src="/assets-js/admin/adminSidebarPatch.js" defer></script>
+</body>
+</html>

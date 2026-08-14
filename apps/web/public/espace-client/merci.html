@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Confirmation de soumission de votre déclaration fiscale - ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Merci pour votre déclaration | ComptaClems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/clients/merci.css" />
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if(t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme:dark)').matches)){
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#main">Aller au contenu</a>
+
+  <!-- Confetti -->
+  <div id="confettiBg" aria-hidden="true"></div>
+
+  <!-- Alerte page -->
+  <div id="pageAlert" class="hidden" role="alert" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Header global -->
+  <script src="/assets-js/global/header.js"></script>
+
+  <main id="main" class="main">
+    <div class="container">
+
+      <!-- ─── Card principale ─── -->
+      <section class="card">
+
+        <!-- En-tête succès -->
+        <div class="success-header">
+          <div class="success-header-left">
+            <div class="success-icon" aria-hidden="true">
+              <i class="fas fa-check"></i>
+            </div>
+            <div>
+              <h1 class="success-title">Soumission réussie</h1>
+              <p id="successLine" class="muted small"></p>
+            </div>
+          </div>
+
+          <span class="pill pill-ok animate-pulse">
+            <i class="fas fa-lock"></i>
+            Reçu avec succès
+          </span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Grille 2 colonnes -->
+        <div class="grid-2-lg">
+
+          <!-- ─ Carte code d'accès ─ -->
+          <div class="card-soft">
+            <h2 class="h4">
+              <i class="fas fa-ticket" aria-hidden="true"></i>
+              Votre code d'accès
+            </h2>
+            <p class="muted small">Ce code est nécessaire pour accéder à votre espace client.</p>
+
+            <div style="margin-top:1.125rem;">
+              <label for="submissionId" class="field-label">Code de suivi (submission_id)</label>
+              <div class="input-with-button">
+                <input
+                  id="submissionId"
+                  class="field"
+                  type="text"
+                  readonly
+                  value=""
+                  placeholder="DEC-XXXXXX"
+                  aria-label="Code de soumission"
+                />
+                <button
+                  id="copyBtn"
+                  class="btn btn-success btn-sm"
+                  type="button"
+                  aria-label="Copier le code"
+                >
+                  <i class="fas fa-copy"></i>
+                  Copier
+                </button>
+              </div>
+              <p id="fiscalYearLine" class="hint"></p>
+            </div>
+
+            <div class="code-security">
+              <i class="fas fa-shield-alt"></i>
+              <span>Conservez ce code — il vous sera demandé à la connexion.</span>
+            </div>
+          </div>
+
+          <!-- ─ Carte prochaine étape ─ -->
+          <div class="card-soft">
+            <h2 class="h4">
+              <i class="fas fa-rocket" aria-hidden="true"></i>
+              Prochaine étape
+            </h2>
+            <p class="muted small">Redirection automatique vers votre espace client dans</p>
+
+            <div class="countdown-wrap">
+              <span class="countdown-circle" id="countdown" aria-live="polite" aria-atomic="true">5</span>
+              <span class="countdown-label">secondes</span>
+            </div>
+
+            <div class="divider" style="margin:1rem 0;"></div>
+
+            <div class="btn-actions">
+              <a id="goNowBtn" class="btn btn-accent" href="/espace-client/profil.html">
+                <i class="fas fa-arrow-right-to-bracket"></i>
+                Accéder à mon profil
+                <i class="fas fa-arrow-right" style="margin-left:auto;"></i>
+              </a>
+              <a href="/" class="btn btn-secondary">
+                <i class="fas fa-house"></i>
+                Retour à l'accueil
+              </a>
+            </div>
+
+            <p class="connect-note">
+              <i class="fas fa-info-circle" aria-hidden="true"></i>
+              Connectez-vous avec votre email et le code ci-dessus.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Callout sécurité -->
+        <div class="callout">
+          <div class="callout-inner">
+            <div class="callout-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div>
+              <h3>Informations de sécurité</h3>
+              <p>Votre NAS n'est jamais affiché ici. Le code de soumission sert uniquement à l'accès à votre espace client sécurisé. Nos agents n'auront jamais besoin de vous demander votre NAS par téléphone ou email.</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ─── Tuiles support ─── -->
+      <div class="support-grid">
+
+        <div class="tile">
+          <div class="tile-icon sage"><i class="fas fa-envelope"></i></div>
+          <div>
+            <p class="tile-title">Email de confirmation</p>
+            <p class="tile-text">Un email récapitulatif vous a été envoyé.</p>
+          </div>
+        </div>
+
+        <div class="tile">
+          <div class="tile-icon navy"><i class="fas fa-clock"></i></div>
+          <div>
+            <p class="tile-title">Délai de traitement</p>
+            <p class="tile-text">48 à 72 heures ouvrées.</p>
+          </div>
+        </div>
+
+        <div class="tile">
+          <div class="tile-icon violet"><i class="fas fa-headset"></i></div>
+          <div>
+            <p class="tile-title">Besoin d'aide ?</p>
+            <p class="tile-text"><a href="/contact/index.html">Contactez le support</a></p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/espace-client/merci.js" defer></script>
+
+</body>
+</html>

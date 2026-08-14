@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>À propos | ComptaClems | Cabinet comptable virtuel</title>
+    <meta name="description" content="Découvrez ComptaClems, cabinet comptable virtuel spécialisé en fiscalité pour particuliers, travailleurs autonomes et PME au Québec et au Canada." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets-css/main.css" />
+    <link rel="stylesheet" href="/assets-css/components.css" />
+    <link rel="stylesheet" href="/assets-css/about.css" />
+
+    <!-- Dark mode init -->
+    <script>
+      (function () {
+        try {
+          var key = 'cc_theme';
+          var saved = localStorage.getItem(key);
+          var mode = (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var shouldDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+          document.documentElement.classList.toggle('dark', shouldDark);
+          document.documentElement.setAttribute('data-theme', shouldDark ? 'dark' : 'light');
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Header -->
+    <script src="/assets-js/global/header.js"></script>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero-about">
+        <div class="hero-container">
+          <div class="hero-badge reveal">
+            <span class="hero-badge-dot"></span>
+            <span class="hero-badge-text">Cabinet comptable virtuel</span>
+          </div>
+
+          <h1 class="hero-title reveal delay-100">
+            Une comptabilité
+            <span>claire, humaine et structurée</span>
+          </h1>
+
+          <p class="hero-sub reveal delay-200">
+            Comptaclems accompagne particuliers, travailleurs autonomes et PME
+            avec une approche simple, transparente et entièrement en ligne.
+          </p>
+        </div>
+      </section>
+
+      <!-- Qui sommes-nous -->
+      <section class="about-section about-section--white">
+        <div class="section-container">
+          <div class="about-grid">
+            <div class="about-content reveal">
+              <h2>Qui est <span>Comptaclems</span></h2>
+              <p>Comptaclems est un cabinet comptable virtuel fondé pour répondre à une réalité simple : la fiscalité ne devrait jamais être floue, stressante ou incompréhensible.</p>
+              <p>Nous combinons expertise comptable, outils numériques sécurisés et accompagnement humain pour offrir une expérience fluide, claire et adaptée à chaque situation.</p>
+              <p>Tous nos services sont accessibles en ligne, partout au Québec et au Canada.</p>
+            </div>
+
+            <div class="about-card reveal delay-200">
+              <ul class="about-list">
+                <li class="about-list-item">
+                  <i class="fas fa-check-circle"></i>
+                  Cabinet 100 % en ligne
+                </li>
+                <li class="about-list-item">
+                  <i class="fas fa-check-circle"></i>
+                  Expertise fiscale QC et Canada
+                </li>
+                <li class="about-list-item">
+                  <i class="fas fa-check-circle"></i>
+                  Processus clairs et documentés
+                </li>
+                <li class="about-list-item">
+                  <i class="fas fa-check-circle"></i>
+                  Communication simple et transparente
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notre approche -->
+      <section class="about-section about-section--subtle">
+        <div class="section-container">
+          <div class="section-header reveal">
+            <span class="eyebrow">Notre approche</span>
+            <h2>Notre <span>approche</span></h2>
+            <p>Une méthode structurée pour éviter les erreurs et maximiser la clarté.</p>
+          </div>
+
+          <div class="approche-grid">
+            <div class="approche-card reveal">
+              <div class="approche-icon">
+                <i class="fas fa-search"></i>
+              </div>
+              <h3>Analyse</h3>
+              <p>Compréhension complète de ta situation fiscale et financière.</p>
+            </div>
+
+            <div class="approche-card reveal delay-100">
+              <div class="approche-icon">
+                <i class="fas fa-cogs"></i>
+              </div>
+              <h3>Structuration</h3>
+              <p>Organisation des données, documents et obligations.</p>
+            </div>
+
+            <div class="approche-card reveal delay-200">
+              <div class="approche-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3>Conformité</h3>
+              <p>Déclarations exactes, sécurisées et transmises dans les délais.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Valeurs -->
+      <section class="about-section about-section--white">
+        <div class="section-container">
+          <div class="section-header reveal">
+            <span class="eyebrow">Nos valeurs</span>
+            <h2>Nos <span>valeurs</span></h2>
+          </div>
+
+          <div class="valeurs-grid">
+            <div class="valeur-card reveal">
+              <h3>Clarté</h3>
+              <p>Tu comprends ce qui est fait, pourquoi et comment.</p>
+            </div>
+
+            <div class="valeur-card reveal delay-100">
+              <h3>Rigueur</h3>
+              <p>Chaque dossier est traité avec précision et méthode.</p>
+            </div>
+
+            <div class="valeur-card reveal delay-200">
+              <h3>Confiance</h3>
+              <p>Sécurité des données et respect des obligations fiscales.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta-section">
+        <div class="cta-container">
+          <h2 class="cta-title reveal">Prêt à simplifier ta comptabilité</h2>
+          <p class="cta-text reveal delay-100">
+            Découvre nos services et choisis l'accompagnement adapté à ta situation.
+          </p>
+          <a href="/services/index.html" class="cta-button reveal delay-200">
+            Voir nos services
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <script src="/assets-js/global/footer.js"></script>
+    <script src="/assets-js/core/http.js" defer></script>
+    <script src="/assets-js/global/global.js" defer></script>
+  </body>
+</html>

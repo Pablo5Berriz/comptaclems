@@ -1,0 +1,223 @@
+<!-- apps/web/public/espace-client/pme.html -->
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PME - ComptaClems</title>
+    <meta name="description" content="Services pour PME - Bientôt disponible" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Polices — DM Serif Display + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/favicon/favicon.ico">
+
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="/assets-css/main.css" />
+    <link rel="stylesheet" href="/assets-css/components.css" />
+    <link rel="stylesheet" href="/assets-css/clients/pme.css" />
+
+    <!-- Dark mode init -->
+    <script>
+      (function () {
+        try {
+          var key = 'cc_theme';
+          var saved = localStorage.getItem(key);
+          var mode = (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var shouldDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+          document.documentElement.classList.toggle('dark', shouldDark);
+          document.documentElement.setAttribute('data-theme', shouldDark ? 'dark' : 'light');
+        } catch (_) {}
+      })();
+    </script>
+
+    <!-- Guard d'authentification — redirige vers login si session absente -->
+    <script src="/assets-js/auth/clientAuthGuard.js"></script>
+</head>
+
+<body>
+    <!-- Header global -->
+    <script src="/assets-js/global/header.js"></script>
+
+    <!-- Contenu principal -->
+    <div class="pme-page">
+        <div class="pme-container">
+
+            <!-- Animation / Icône -->
+            <div class="icon-wrapper">
+                <div class="icon-backdrop"></div>
+                <div class="icon-main">
+                    <i class="fas fa-building"></i>
+                </div>
+            </div>
+
+            <!-- Titre -->
+            <h1 class="pme-title">
+                Solutions <span>PME</span>
+            </h1>
+
+            <!-- Badge "À venir" -->
+            <div class="coming-badge">
+                <i class="fas fa-hourglass-half"></i>
+                <span>Service à venir</span>
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+
+            <!-- Message principal -->
+            <p class="pme-message">
+                Nous développons actuellement des solutions adaptées aux PME.
+            </p>
+            <p class="pme-submessage">Notre plateforme pour les entreprises inclura prochainement :</p>
+
+            <!-- Fonctionnalités à venir -->
+            <div class="features-grid">
+                <div class="feature-card" style="--delay: 0.25s">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Tableaux de bord</h3>
+                    <p>Indicateurs clés en temps réel</p>
+                </div>
+                <div class="feature-card" style="--delay: 0.3s">
+                    <i class="fas fa-users"></i>
+                    <h3>Gestion multi-utilisateurs</h3>
+                    <p>Accès par rôle</p>
+                </div>
+                <div class="feature-card" style="--delay: 0.35s">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h3>Comptabilité</h3>
+                    <p>Intégration bancaire</p>
+                </div>
+                <div class="feature-card" style="--delay: 0.4s">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Analyses financières</h3>
+                    <p>Rapports personnalisés</p>
+                </div>
+            </div>
+
+            <!-- Message de disponibilité -->
+            <div class="availability-box">
+                <div class="availability-content">
+                    <div class="availability-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="availability-text">
+                        <h4>Lancement prévu au cours de cette année</h4>
+                        <p>
+                            Notre équipe travaille activement sur cette offre.
+                            Laissez-nous vos coordonnées pour être contacté(e) en priorité.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <a href="/services/index.html" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour aux services
+                </a>
+
+                <button id="notifyBtn" class="btn btn-gradient">
+                    <i class="fas fa-bell"></i>
+                    M'informer de l'ouverture
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer global -->
+    <script src="/assets-js/global/footer.js"></script>
+
+    <!-- Scripts globaux -->
+    <script src="/assets-js/core/http.js"></script>
+    <script src="/assets-js/global/global.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function showNotification(type, message, duration = 5000) {
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-content notification-${type}">
+                    <div class="notification-inner">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} notification-icon"></i>
+                        <div class="notification-body">
+                            <div class="notification-title">${type === 'success' ? 'Succès' : 'Erreur'}</div>
+                            <div class="notification-message">${message}</div>
+                        </div>
+                        <button onclick="this.closest('.notification').remove()" class="notification-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, duration);
+        }
+        const notifyBtn = document.getElementById('notifyBtn');
+        if (!notifyBtn) return;
+
+        notifyBtn.addEventListener('click', async function () {
+            if (!window.ccState?.isAuthenticated) {
+                const redirect = encodeURIComponent('/espace-client/pme.html');
+                window.location.href = '/auth/login.html?redirect=' + redirect;
+                return;
+            }
+
+            notifyBtn.disabled = true;
+            notifyBtn.classList.add('btn-disabled');
+            const originalHTML = notifyBtn.innerHTML;
+            notifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Inscription en cours...';
+
+            try {
+                const response = await fetch('/api/interest/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ service: 'pme' })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showNotification('success', data.message || "Merci ! Vous serez informé(e) de l'ouverture.", 6000);
+                    notifyBtn.innerHTML = '<i class="fas fa-check"></i>Inscription confirmée';
+                    notifyBtn.classList.remove('btn-gradient');
+                    notifyBtn.classList.add('btn-success');
+                } else {
+                    showNotification('error', data.message || data.error || 'Une erreur est survenue.', 5000);
+                    notifyBtn.disabled = false;
+                    notifyBtn.classList.remove('btn-disabled');
+                    notifyBtn.innerHTML = originalHTML;
+                }
+
+            } catch (err) {
+                console.error('Erreur réseau :', err);
+                showNotification('error', 'Impossible de contacter le serveur.', 5000);
+                notifyBtn.disabled = false;
+                notifyBtn.classList.remove('btn-disabled');
+                notifyBtn.innerHTML = originalHTML;
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>
