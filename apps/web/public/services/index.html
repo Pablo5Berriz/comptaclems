@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Services | ComptaClems | Comptabilité virtuelle</title>
+    <meta name="description" content="Services comptables détaillés pour particuliers, travailleurs autonomes et PME. Tarifs transparents selon votre profil fiscal." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets-css/main.css" />
+    <link rel="stylesheet" href="/assets-css/components.css" />
+    <link rel="stylesheet" href="/assets-css/services.css" />
+
+    <!-- Dark mode init -->
+    <script>
+      (function () {
+        try {
+          var key = 'cc_theme';
+          var saved = localStorage.getItem(key);
+          var mode = (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var shouldDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+          document.documentElement.classList.toggle('dark', shouldDark);
+          document.documentElement.setAttribute('data-theme', shouldDark ? 'dark' : 'light');
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <!-- Header global -->
+    <script src="/assets-js/global/header.js"></script>
+
+    <main>
+      <!-- Hero -->
+      <section class="services-hero">
+        <div class="hero-container">
+          <div class="hero-badge reveal">
+            <span class="hero-badge-dot"></span>
+            <span class="hero-badge-text">Services comptables</span>
+          </div>
+
+          <h1 class="hero-title reveal delay-100">
+            Des services conçus pour
+            <span>ta réalité fiscale</span>
+          </h1>
+
+          <p class="hero-sub reveal delay-200">
+            Chaque service est structuré, expliqué et accompagné.
+            Tu sais exactement ce qui est fait, pourquoi, combien ça coûte et comment.
+          </p>
+
+          <a id="btnAccessEspace" href="/auth/login.html" class="hero-cta reveal delay-300">
+            <i class="fas fa-user-circle"></i>
+            Accéder à mon espace
+          </a>
+        </div>
+      </section>
+
+      <!-- Service Particuliers -->
+      <section id="particuliers" class="services-section services-section--subtle">
+        <div class="section-container">
+          <div class="section-header reveal">
+            <span class="category-badge category-badge--blue">Particuliers</span>
+            <h2>Déclaration d'impôts pour <span>particuliers</span></h2>
+            <p>Que vous soyez célibataire, en couple, avec ou sans enfants, nous adaptons notre service à votre situation familiale.</p>
+          </div>
+
+          <div class="services-grid">
+            <div class="services-content reveal">
+              <p class="lead">Ce service s'adresse aux salariés, étudiants, familles et retraités. On prépare et transmet ta déclaration fédérale et provinciale en tenant compte de l'ensemble de ta situation.</p>
+
+              <ul class="services-list">
+                <li class="services-list-item"><i class="fas fa-check"></i> Analyse complète de tes revenus (T4, T5, Relevés, etc.)</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Optimisation des crédits (TPS, solidarité, etc.)</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Déductions maximales (frais médicaux, scolarité, etc.)</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Vérification de conformité fiscale</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Transmission sécurisée aux autorités</li>
+              </ul>
+
+              <p class="text-muted">Tu transmets tes documents en ligne. Tu suis l'avancement. Tu reçois ta confirmation et ton avis de cotisation.</p>
+            </div>
+
+            <div class="reveal delay-200">
+              <div class="pricing-card">
+                <h3 class="pricing-title blue">
+                  <i class="fas fa-tag"></i>
+                  Tarifs selon votre profil
+                </h3>
+
+                <div class="pricing-list">
+
+                  <div class="pricing-item blue">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-graduation-cap"></i> Étudiant(e)</h4>
+                      <span class="price">55$ – 75$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Profil simple : <span>55$</span><br />
+                      Avec crédit scolarité + feuillets multiples : <span>75$</span>
+                    </div>
+                  </div>
+
+                  <div class="pricing-item blue">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-user"></i> Déclaration individuelle</h4>
+                      <span class="price">75$ – 110$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Max 4 feuillets : <span>75$</span><br />
+                      Plus de 4 feuillets : <span>110$</span>
+                    </div>
+                  </div>
+
+                  <div class="pricing-item blue">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-user-clock"></i> Retraité(e)</h4>
+                      <span class="price">100$ – 145$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      RRQ/RPC + pension simple : <span>100$</span><br />
+                      FERR, REER converti, OAS + revenus multiples : <span>145$</span>
+                    </div>
+                  </div>
+
+                  <div class="pricing-item blue">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-user-shield"></i> Famille monoparentale</h4>
+                      <span class="price">100$ – 135$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Max 4 feuillets : <span>100$</span><br />
+                      Plus de 4 feuillets : <span>135$</span>
+                    </div>
+                  </div>
+
+                  <div class="pricing-item blue">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-user-friends"></i> Couple (sans enfants)</h4>
+                      <span class="price">130$ – 165$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      6 feuillets ou moins : <span>130$</span><br />
+                      Plus de 6 feuillets : <span>165$</span>
+                    </div>
+                  </div>
+
+                  <div class="pricing-item blue">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-users"></i> Couple avec enfants</h4>
+                      <span class="price">175$ – 215$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Deux conjoints + enfants à charge : <span>175$</span><br />
+                      Avec gains en capital ou revenus de placement : <span>215$</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <a href="/espace-client/declaration.html" class="service-action blue">
+                <i class="fas fa-file-invoice"></i>
+                Commencer ma déclaration
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Service Travailleurs autonomes -->
+      <section id="travailleurs-autonomes" class="services-section services-section--white">
+        <div class="section-container">
+          <div class="section-header reveal">
+            <span class="category-badge category-badge--green">Travailleurs autonomes</span>
+            <h2>Comptabilité pour <span class="green">travailleurs autonomes</span></h2>
+            <p>Des services adaptés à votre situation : travailleur autonome, salarié avec dépenses, ou petite entreprise.</p>
+          </div>
+
+          <div class="services-grid">
+            <div class="services-content reveal">
+              <p class="lead">Ce service est conçu pour structurer ton activité autonome. Revenus, dépenses, taxes et obligations sont organisés de façon claire et conforme.</p>
+
+              <ul class="services-list">
+                <li class="services-list-item"><i class="fas fa-check"></i> Analyse de ton modèle d'activité</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Classement des dépenses admissibles</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Calcul TPS et TVQ</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Déclaration autonome optimisée</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Suivi des revenus et dépenses</li>
+              </ul>
+
+              <p class="text-muted">Tu évites les erreurs. Tu comprends tes chiffres. Tu prends de meilleures décisions.</p>
+            </div>
+
+            <div class="reveal delay-200">
+              <div class="pricing-card">
+                <h3 class="pricing-title green">
+                  <i class="fas fa-tag"></i>
+                  Tarifs selon votre situation
+                </h3>
+
+                <div class="pricing-list">
+
+                  <div class="pricing-item green">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-user-tie"></i> Salarié(e) avec dépenses d'emploi</h4>
+                      <span class="price">À partir de 160$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Télétravail, véhicule, outils, formation. Formulaire T2200/TP-64.3 inclus.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item green">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-briefcase"></i> Travailleur(se) autonome — profil simple</h4>
+                      <span class="price">À partir de 200$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Activité unique, faible volume de transactions, non inscrit TPS/TVQ.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item green">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-exchange-alt"></i> Revenus mixtes (salarié + autonome)</h4>
+                      <span class="price">À partir de 250$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Combinaison de T4 et revenus d'activité autonome. Optimisation des deux sources.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item green">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-percent"></i> Autonome inscrit TPS/TVQ</h4>
+                      <span class="price">À partir de 250$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Déclaration autonome + production des déclarations de taxes TPS et TVQ (trimestriel ou annuel) incluses.
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <a href="/espace-client/autonome.html" class="service-action green">
+                <i class="fas fa-calculator"></i>
+                Évaluer mon service
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Service PME -->
+      <section id="pme"  class="services-section services-section--subtle">
+        <div class="section-container">
+          <div class="section-header reveal">
+            <span class="category-badge category-badge--violet">PME et Incorporations</span>
+            <h2>Comptabilité pour <span class="violet">PME et incorporations</span></h2>
+            <p>Un accompagnement sur mesure pour les entreprises en croissance, avec des services adaptés à votre réalité.</p>
+          </div>
+
+          <div class="services-grid">
+            <div class="services-content reveal">
+              <p class="lead">Ce service s'adresse aux entreprises en croissance. La comptabilité devient un outil de pilotage, pas une contrainte.</p>
+
+              <ul class="services-list">
+                <li class="services-list-item"><i class="fas fa-check"></i> Tenue de livres mensuelle ou trimestrielle</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> États financiers annuels</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Fiscalité corporative</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Déclarations de taxes (TPS/TVH/TVQ)</li>
+                <li class="services-list-item"><i class="fas fa-check"></i> Accompagnement stratégique et conseils</li>
+              </ul>
+
+              <p class="text-muted">Tu sais où tu vas. Tu respectes tes obligations. Tu anticipes.</p>
+            </div>
+
+            <div class="reveal delay-200">
+              <div class="pricing-card">
+                <h3 class="pricing-title violet">
+                  <i class="fas fa-chart-line"></i>
+                  Services & Tarifs PME
+                </h3>
+
+                <div class="pricing-list">
+
+                  <div class="pricing-item violet">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-book-open"></i> Tenue de livres mensuelle</h4>
+                      <span class="price">À partir de 150$/mois</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      0–100 transactions/mois : <span>150$</span><br />
+                      100–300 transactions/mois : <span>300$+</span>
+                    </div>
+                  </div>
+
+                  <div class="pricing-item violet">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-percent"></i> Déclarations TPS/TVH/TVQ</h4>
+                      <span class="price">75$ – 150$/période</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Production mensuelle ou trimestrielle. Inclus dans les forfaits tenue de livres.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item violet">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-file-alt"></i> États financiers annuels</h4>
+                      <span class="price">À partir de 500$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Bilan, état des résultats, flux de trésorerie. Avis au lecteur inclus. Tarif selon complexité.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item violet">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-building"></i> Déclaration corporative (T2 / CO-17)</h4>
+                      <span class="price">À partir de 650$</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Déclaration fédérale T2 et provinciale CO-17 pour sociétés incorporées. Tarif ajusté selon la taille de l'entreprise.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item violet">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-users-cog"></i> Gestion de la paie</h4>
+                      <span class="price">À partir de 60$/mois</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Calcul des salaires, retenues à la source, production des T4 et Relevé 1. Tarif par tranche d'employés.
+                    </div>
+                  </div>
+
+                  <div class="pricing-item violet">
+                    <div class="pricing-item-header">
+                      <h4><i class="fas fa-lightbulb"></i> Consultation & conseil fiscal</h4>
+                      <span class="price">120$/heure</span>
+                    </div>
+                    <div class="pricing-item-desc">
+                      Planification fiscale, optimisation de la rémunération dirigeant, structuration. Premier appel gratuit.
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="pricing-note">
+                  <i class="fas fa-phone-alt"></i>
+                  Forfaits personnalisés disponibles — contactez-nous pour un devis sans engagement
+                </div>
+              </div>
+
+              <a href="/espace-client/pme.html" class="service-action violet">
+                <i class="fas fa-building"></i>
+                Découvrir ce service
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section FAQ Tarifs -->
+      <section  class="services-section services-section--white">
+        <div class="faq-container">
+          <h2 class="faq-title reveal">Questions fréquentes sur les tarifs</h2>
+          <p class="faq-subtitle reveal delay-100">Tout est transparent, pas de surprise.</p>
+
+          <div class="faq-grid">
+            <div class="faq-item reveal">
+              <h3 class="faq-question">
+                <i class="fas fa-file blue"></i>
+                Qu'est-ce qu'un "feuillet" ?
+              </h3>
+              <p class="faq-answer">
+                Un feuillet est un document fiscal comme un T4 (emploi), T5 (intérêts), Relevé 31 (loyer), etc. Plus vous avez de feuillets, plus le traitement est complexe, ce qui explique la différence de tarif.
+              </p>
+            </div>
+
+            <div class="faq-item reveal delay-100">
+              <h3 class="faq-question">
+                <i class="fas fa-clock green"></i>
+                Pourquoi des tarifs "à partir de" pour les travailleurs autonomes ?
+              </h3>
+              <p class="faq-answer">
+                Le temps requis varie selon le nombre de transactions, la complexité des revenus et la tenue de livres. Nous vous confirmons le prix exact après analyse de votre dossier.
+              </p>
+            </div>
+
+            <div class="faq-item reveal delay-200">
+              <h3 class="faq-question">
+                <i class="fas fa-calculator violet"></i>
+                Comment obtenir un tarif précis pour mon entreprise ?
+              </h3>
+              <p class="faq-answer">
+                Contactez-nous via le formulaire de contact ou par téléphone. Nous planifierons un appel gratuit pour comprendre vos besoins et établir une soumission sur mesure.
+              </p>
+            </div>
+
+            <div class="faq-item reveal delay-300">
+              <h3 class="faq-question">
+                <i class="fas fa-home blue"></i>
+                J'ai des revenus de location. Est-ce inclus dans la déclaration standard ?
+              </h3>
+              <p class="faq-answer">
+                Non. Les revenus locatifs ajoutent de la complexité à votre dossier (formulaire T776, calcul des dépenses admissibles, dépréciation). Un supplément est appliqué à partir de 135$, selon le nombre de propriétés concernées.
+              </p>
+            </div>
+
+            <div class="faq-item reveal delay-100">
+              <h3 class="faq-question">
+                <i class="fas fa-percent green"></i>
+                À quel moment dois-je m'inscrire à la TPS/TVQ ?
+              </h3>
+              <p class="faq-answer">
+                L'inscription est obligatoire dès que vos revenus annuels d'activité autonome dépassent 30 000 $. En dessous de ce seuil, elle reste optionnelle mais peut être avantageuse selon votre situation. Nous vous conseillons sur la meilleure approche.
+              </p>
+            </div>
+
+            <div class="faq-item reveal delay-200">
+              <h3 class="faq-question">
+                <i class="fas fa-receipt blue"></i>
+                Puis-je déduire les frais comptables dans ma déclaration ?
+              </h3>
+              <p class="faq-answer">
+                Oui, pour les travailleurs autonomes et les entreprises, les honoraires comptables sont une dépense d'entreprise entièrement déductible. Pour les particuliers salariés, la déduction est généralement non admissible, sauf exceptions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <script src="/assets-js/global/footer.js"></script>
+
+    <!-- Scripts globaux -->
+    <script src="/assets-js/core/http.js" defer></script>
+    <script src="/assets-js/global/global.js" defer></script>
+    <script src="/assets-js/pages/services.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Partagez votre expérience avec ComptaClems — votre témoignage aide d'autres Québécois à choisir le bon comptable." />
+  <title>Partagez votre témoignage | ComptaClems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <script>(function(){var t=localStorage.getItem('cc_theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}})();</script>
+  <style>
+    :root {
+      --navy-900: #0a1628;
+      --navy-800: #0d1f3c;
+      --navy-700: #102449;
+      --navy-600: #153060;
+      --gold-400: #d4af37;
+      --gold-300: #e8c94a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f8f9fb;
+      min-height: 100vh;
+    }
+
+    /* ── Hero ── */
+    .submit-hero {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 60%, #1a3a6b 100%);
+      padding: 56px 24px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .submit-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212,175,55,0.15);
+      color: var(--gold-300);
+      border: 1px solid rgba(212,175,55,0.3);
+      padding: 6px 18px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .submit-hero__title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .submit-hero__title em {
+      font-style: italic;
+      color: var(--gold-300);
+    }
+    .submit-hero__desc {
+      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── Card wrapper ── */
+    .submit-wrapper {
+      max-width: 680px;
+      margin: -36px auto 60px;
+      padding: 0 20px;
+    }
+
+    .submit-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(10,22,40,0.12);
+      padding: 40px 44px;
+    }
+
+    @media (max-width: 600px) {
+      .submit-card { padding: 28px 20px; }
+    }
+
+    /* ── States ── */
+    .state { display: none; }
+    .state.active { display: block; }
+
+    /* ── Loading ── */
+    .loading-state {
+      text-align: center;
+      padding: 48px 0;
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid #e8eaf0;
+      border-top-color: var(--navy-700);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Form ── */
+    .form-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin: 28px 0 16px;
+    }
+    .form-section-title:first-child { margin-top: 0; }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .form-label .required { color: #ef4444; margin-left: 2px; }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 11px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.93rem;
+      color: #1f2937;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--navy-700);
+      box-shadow: 0 0 0 3px rgba(15,36,73,0.08);
+    }
+    .form-input.error, .form-textarea.error {
+      border-color: #ef4444;
+    }
+    .form-textarea { resize: vertical; min-height: 120px; }
+    .form-hint {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-top: 5px;
+    }
+    .field-error {
+      font-size: 0.78rem;
+      color: #ef4444;
+      margin-top: 5px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* ── Stars ── */
+    .stars-group { display: flex; gap: 6px; margin-bottom: 6px; }
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 2rem;
+      color: #d1d5db;
+      transition: color 0.15s, transform 0.1s;
+      line-height: 1;
+      padding: 2px;
+    }
+    .star-btn:hover,
+    .star-btn.active {
+      color: var(--gold-400);
+      transform: scale(1.12);
+    }
+    .star-btn.hovered { color: var(--gold-300); }
+    .stars-label {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    /* ── Char counter ── */
+    .char-counter {
+      font-size: 0.76rem;
+      color: #9ca3af;
+      text-align: right;
+      margin-top: 4px;
+    }
+    .char-counter.warn { color: #f59e0b; }
+    .char-counter.over { color: #ef4444; }
+
+    /* ── Submit btn ── */
+    .submit-btn {
+      width: 100%;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, var(--navy-800), var(--navy-600));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .submit-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* ── Success / Error / Already states ── */
+    .result-state {
+      text-align: center;
+      padding: 32px 0;
+    }
+    .result-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 1.8rem;
+    }
+    .result-icon.success { background: #d1fae5; color: #065f46; }
+    .result-icon.error   { background: #fee2e2; color: #991b1b; }
+    .result-icon.info    { background: #dbeafe; color: #1e40af; }
+
+    .result-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.7rem;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .result-desc {
+      color: #6b7280;
+      line-height: 1.65;
+      max-width: 440px;
+      margin: 0 auto 28px;
+    }
+    .result-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy-700);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .result-link:hover { text-decoration: underline; }
+
+    /* ── Invalid token ── */
+    .invalid-state {
+      text-align: center;
+      padding: 32px 0;
+    }
+
+    /* Dark mode */
+    [data-theme="dark"] .submit-card {
+      background: #1a2540;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    }
+    [data-theme="dark"] .form-label { color: #d1d5db; }
+    [data-theme="dark"] .form-input,
+    [data-theme="dark"] .form-textarea {
+      background: #0d1f3c;
+      border-color: #2d3f5e;
+      color: #e5e7eb;
+    }
+    [data-theme="dark"] .form-input:focus,
+    [data-theme="dark"] .form-textarea:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
+    }
+    [data-theme="dark"] .result-title { color: #f3f4f6; }
+    [data-theme="dark"] body { background: #0a1628; }
+  </style>
+</head>
+<body>
+
+  <script src="/assets-js/global/header.js"></script>
+
+  <section class="submit-hero">
+    <div class="submit-hero__badge">
+      <i class="fas fa-star" aria-hidden="true"></i>
+      Votre avis compte
+    </div>
+    <h1 class="submit-hero__title">
+      Partagez votre<br><em>expérience</em>
+    </h1>
+    <p class="submit-hero__desc">
+      Votre témoignage aide d'autres Québécois à trouver un comptable de confiance.
+      Merci de prendre quelques instants pour partager votre ressenti.
+    </p>
+  </section>
+
+  <div class="submit-wrapper">
+    <div class="submit-card">
+
+      <!-- État : chargement -->
+      <div id="stateLoading" class="state active loading-state">
+        <div class="spinner"></div>
+        <p style="color:#6b7280; font-size:0.9rem;">Vérification du lien…</p>
+      </div>
+
+      <!-- État : token invalide -->
+      <div id="stateInvalid" class="state invalid-state">
+        <div class="result-icon error">
+          <i class="fas fa-link-slash"></i>
+        </div>
+        <h2 class="result-title">Lien invalide</h2>
+        <p class="result-desc">Ce lien d'invitation est invalide ou a expiré. Si vous pensez que c'est une erreur, contactez-nous.</p>
+        <a href="/temoignages/" class="result-link">
+          <i class="fas fa-arrow-left"></i> Voir les témoignages
+        </a>
+      </div>
+
+      <!-- État : déjà soumis -->
+      <div id="stateAlready" class="state">
+        <div class="result-state">
+          <div class="result-icon info">
+            <i class="fas fa-check-double"></i>
+          </div>
+          <h2 class="result-title">Déjà soumis !</h2>
+          <p class="result-desc">Vous avez déjà partagé votre témoignage. Il est en cours de modération ou a déjà été publié. Merci de votre confiance&nbsp;!</p>
+          <a href="/temoignages/" class="result-link">
+            <i class="fas fa-arrow-left"></i> Voir les témoignages
+          </a>
+        </div>
+      </div>
+
+      <!-- État : formulaire -->
+      <div id="stateForm" class="state">
+        <form id="testimonialForm" novalidate>
+
+          <p class="form-section-title">À propos de vous</p>
+
+          <div class="form-group">
+            <label class="form-label" for="fieldName">
+              Votre prénom ou pseudo <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="fieldName"
+              class="form-input"
+              placeholder="ex. : Marie T."
+              maxlength="80"
+              autocomplete="off"
+            />
+            <p class="field-error" id="errName">Veuillez saisir votre nom.</p>
+          </div>
+
+          <p class="form-section-title">Votre évaluation</p>
+
+          <div class="form-group">
+            <label class="form-label">
+              Note globale <span class="required">*</span>
+            </label>
+            <div class="stars-group" id="starsContainer" role="group" aria-label="Note de 1 à 5 étoiles">
+              <button type="button" class="star-btn" data-val="1" aria-label="1 étoile">&#9733;</button>
+              <button type="button" class="star-btn" data-val="2" aria-label="2 étoiles">&#9733;</button>
+              <button type="button" class="star-btn" data-val="3" aria-label="3 étoiles">&#9733;</button>
+              <button type="button" class="star-btn" data-val="4" aria-label="4 étoiles">&#9733;</button>
+              <button type="button" class="star-btn" data-val="5" aria-label="5 étoiles">&#9733;</button>
+            </div>
+            <p class="stars-label" id="starsLabel">Cliquez pour noter</p>
+            <p class="field-error" id="errRating">Veuillez choisir une note.</p>
+          </div>
+
+          <p class="form-section-title">Votre témoignage</p>
+
+          <div class="form-group">
+            <label class="form-label" for="fieldQuote">
+              Résumé en une phrase <span style="color:#9ca3af; font-weight:400;">(optionnel)</span>
+            </label>
+            <input
+              type="text"
+              id="fieldQuote"
+              class="form-input"
+              placeholder="ex. : Service rapide, efficace et à l'écoute !"
+              maxlength="200"
+            />
+            <p class="form-hint">Sera affiché en mise en avant sur la page témoignages.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="fieldText">
+              Votre témoignage complet <span class="required">*</span>
+            </label>
+            <textarea
+              id="fieldText"
+              class="form-textarea"
+              placeholder="Décrivez votre expérience avec ComptaClems : rapidité, clarté des explications, qualité du suivi…"
+              maxlength="2000"
+              rows="6"
+            ></textarea>
+            <p class="char-counter" id="charCounter">0 / 2000</p>
+            <p class="field-error" id="errText">Veuillez rédiger votre témoignage (minimum 20 caractères).</p>
+          </div>
+
+          <!-- Alerte générale -->
+          <div id="formAlert" style="display:none; padding:12px 16px; border-radius:10px; font-size:0.88rem; margin-top:8px;"></div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <i class="fas fa-paper-plane"></i>
+            Envoyer mon témoignage
+          </button>
+
+          <p style="text-align:center; font-size:0.76rem; color:#9ca3af; margin-top:16px; line-height:1.5;">
+            Votre témoignage sera examiné avant publication. Aucun renseignement personnel ne sera affiché sans votre accord.
+          </p>
+        </form>
+      </div>
+
+      <!-- État : succès -->
+      <div id="stateSuccess" class="state">
+        <div class="result-state">
+          <div class="result-icon success">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h2 class="result-title">Merci beaucoup&nbsp;!</h2>
+          <p class="result-desc">
+            Votre témoignage a bien été reçu. Il sera examiné par notre équipe avant d'être publié sur la page témoignages.
+            Nous vous en sommes sincèrement reconnaissants.
+          </p>
+          <a href="/temoignages/" class="result-link">
+            <i class="fas fa-arrow-left"></i> Voir les témoignages
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/assets-js/global/footer.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // ── Utilitaires ──────────────────────────────────────────────────────────
+    function getToken() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('token') || '';
+    }
+
+    function showState(id) {
+      ['stateLoading', 'stateInvalid', 'stateAlready', 'stateForm', 'stateSuccess'].forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.classList.toggle('active', s === id);
+      });
+    }
+
+    function showAlert(msg, type = 'error') {
+      const el = document.getElementById('formAlert');
+      if (!el) return;
+      el.style.display = 'block';
+      el.style.background = type === 'error' ? '#fef2f2' : '#f0fdf4';
+      el.style.color = type === 'error' ? '#991b1b' : '#065f46';
+      el.style.border = `1px solid ${type === 'error' ? '#fecaca' : '#bbf7d0'}`;
+      el.textContent = msg;
+    }
+
+    function hideAlert() {
+      const el = document.getElementById('formAlert');
+      if (el) el.style.display = 'none';
+    }
+
+    function setLoading(on) {
+      const btn = document.getElementById('submitBtn');
+      if (!btn) return;
+      btn.disabled = on;
+      btn.innerHTML = on
+        ? '<i class="fas fa-spinner fa-spin"></i> Envoi en cours…'
+        : '<i class="fas fa-paper-plane"></i> Envoyer mon témoignage';
+    }
+
+    // ── Étoiles ──────────────────────────────────────────────────────────────
+    let selectedRating = 0;
+    const STAR_LABELS = ['', 'Mauvais', 'Passable', 'Bien', 'Très bien', 'Excellent !'];
+
+    function initStars() {
+      const container = document.getElementById('starsContainer');
+      if (!container) return;
+      const stars = container.querySelectorAll('.star-btn');
+      const label = document.getElementById('starsLabel');
+
+      stars.forEach(btn => {
+        const val = parseInt(btn.dataset.val, 10);
+
+        btn.addEventListener('mouseenter', () => {
+          stars.forEach(s => {
+            s.classList.toggle('hovered', parseInt(s.dataset.val, 10) <= val);
+            s.classList.remove('active');
+          });
+          if (label) label.textContent = STAR_LABELS[val] || '';
+        });
+
+        btn.addEventListener('mouseleave', () => {
+          stars.forEach(s => s.classList.remove('hovered'));
+          renderStars(stars, label);
+        });
+
+        btn.addEventListener('click', () => {
+          selectedRating = val;
+          renderStars(stars, label);
+          const errRating = document.getElementById('errRating');
+          if (errRating) errRating.classList.remove('visible');
+        });
+      });
+    }
+
+    function renderStars(stars, label) {
+      stars.forEach(s => {
+        const v = parseInt(s.dataset.val, 10);
+        s.classList.toggle('active', v <= selectedRating);
+        s.classList.remove('hovered');
+      });
+      if (label) {
+        label.textContent = selectedRating ? STAR_LABELS[selectedRating] : 'Cliquez pour noter';
+      }
+    }
+
+    // ── Compteur de caractères ────────────────────────────────────────────────
+    function initCharCounter() {
+      const textarea = document.getElementById('fieldText');
+      const counter = document.getElementById('charCounter');
+      if (!textarea || !counter) return;
+
+      textarea.addEventListener('input', () => {
+        const len = textarea.value.length;
+        const max = 2000;
+        counter.textContent = `${len} / ${max}`;
+        counter.className = 'char-counter' + (len > max * 0.9 ? (len >= max ? ' over' : ' warn') : '');
+      });
+    }
+
+    // ── Validation ────────────────────────────────────────────────────────────
+    function validateForm() {
+      let valid = true;
+
+      const name = document.getElementById('fieldName');
+      const errName = document.getElementById('errName');
+      if (!name.value.trim()) {
+        name.classList.add('error');
+        errName.classList.add('visible');
+        valid = false;
+      } else {
+        name.classList.remove('error');
+        errName.classList.remove('visible');
+      }
+
+      if (!selectedRating) {
+        document.getElementById('errRating').classList.add('visible');
+        valid = false;
+      } else {
+        document.getElementById('errRating').classList.remove('visible');
+      }
+
+      const text = document.getElementById('fieldText');
+      const errText = document.getElementById('errText');
+      if (text.value.trim().length < 20) {
+        text.classList.add('error');
+        errText.classList.add('visible');
+        valid = false;
+      } else {
+        text.classList.remove('error');
+        errText.classList.remove('visible');
+      }
+
+      return valid;
+    }
+
+    // ── Validation du token au chargement ────────────────────────────────────
+    async function validateToken(token) {
+      try {
+        const r = await fetch(`/api/public/testimonials/submit/${encodeURIComponent(token)}`);
+        const data = await r.json();
+
+        if (!r.ok || !data.success) {
+          showState('stateInvalid');
+          return;
+        }
+
+        if (data.already_submitted) {
+          showState('stateAlready');
+          return;
+        }
+
+        // Pré-remplir le nom si fourni
+        if (data.name) {
+          const nameField = document.getElementById('fieldName');
+          if (nameField) nameField.value = data.name;
+        }
+
+        showState('stateForm');
+      } catch (e) {
+        showState('stateInvalid');
+      }
+    }
+
+    // ── Soumission du formulaire ──────────────────────────────────────────────
+    async function handleSubmit(e) {
+      e.preventDefault();
+      hideAlert();
+
+      if (!validateForm()) return;
+
+      const token = getToken();
+      if (!token) {
+        showAlert('Token manquant. Veuillez utiliser le lien fourni dans votre courriel.');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const payload = {
+          display_name: document.getElementById('fieldName').value.trim(),
+          rating: selectedRating,
+          short_quote: document.getElementById('fieldQuote').value.trim() || null,
+          full_text: document.getElementById('fieldText').value.trim(),
+        };
+
+        const r = await fetch(`/api/public/testimonials/submit/${encodeURIComponent(token)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await r.json();
+
+        if (r.ok && data.success) {
+          showState('stateSuccess');
+        } else if (r.status === 409) {
+          showState('stateAlready');
+        } else {
+          showAlert(data.error || 'Une erreur est survenue. Veuillez réessayer.');
+          setLoading(false);
+        }
+      } catch (err) {
+        showAlert('Erreur réseau. Vérifiez votre connexion et réessayez.');
+        setLoading(false);
+      }
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      initStars();
+      initCharCounter();
+
+      const form = document.getElementById('testimonialForm');
+      if (form) form.addEventListener('submit', handleSubmit);
+
+      const token = getToken();
+      if (!token) {
+        showState('stateInvalid');
+        return;
+      }
+
+      validateToken(token);
+    });
+  })();
+  </script>
+
+</body>
+</html>

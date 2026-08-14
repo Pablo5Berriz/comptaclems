@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Suivez l'évolution de votre déclaration fiscale en temps réel — ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Suivi de déclaration | ComptaClems — Espace client</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/clients/suivi.css" />
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <div id="toastHost" aria-live="polite" aria-atomic="false"></div>
+  <div id="pageAlert" class="hidden" role="alert" aria-live="polite"></div>
+
+  <script src="/assets-js/global/header.js"></script>
+  <script src="/assets-js/auth/clientAuthGuard.js"></script>
+
+  <!-- ─── HERO ─── -->
+  <div class="hero-suivi" role="banner">
+    <div class="hero-inner">
+
+      <div class="hero-icon animate-float" aria-hidden="true">
+        <i class="fas fa-chart-line"></i>
+      </div>
+
+      <div class="hero-body">
+        <div class="hero-badge">
+          <span class="hero-badge-dot" aria-hidden="true">
+            <span class="hero-badge-dot-ping"></span>
+            <span class="hero-badge-dot-core"></span>
+          </span>
+          Espace client sécurisé
+        </div>
+
+        <h1 class="hero-title">Suivi de <em>déclaration</em></h1>
+
+        <p class="hero-desc">
+          Consultez l'état d'avancement de votre dossier fiscal et les actions à réaliser en temps réel.
+        </p>
+
+        <div class="hero-chips" aria-hidden="true">
+          <span class="hero-chip"><i class="fas fa-clock ic-blue"></i> Suivi en temps réel</span>
+          <span class="hero-chip"><i class="fas fa-bell ic-green"></i> Notifications instantanées</span>
+        </div>
+
+        <div class="hero-actions">
+          <a href="/espace-client/declaration.html" class="btn-primary">
+            <i class="fas fa-file-signature"></i>
+            Nouvelle déclaration
+          </a>
+          <a href="/contact/index.html#contact" class="btn-secondary">
+            <i class="fas fa-headset"></i>
+            Support
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-actions-desktop" aria-hidden="true">
+        <a href="/espace-client/declaration.html" class="btn-gold">
+          <i class="fas fa-file-signature"></i>
+          Nouvelle déclaration
+        </a>
+        <a href="/contact/index.html#contact" class="btn-secondary">
+          <i class="fas fa-headset"></i>
+          Support
+        </a>
+      </div>
+
+    </div><!-- /hero-inner -->
+
+    <!-- KPI band intégré dans le hero -->
+    <div class="hero-kpi-band">
+      <div class="hero-kpi-inner">
+
+        <div class="hero-kpi-item">
+          <div class="hero-kpi-icon navy" aria-hidden="true">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div>
+            <p class="hero-kpi-label">Déclarations</p>
+            <p class="hero-kpi-value" id="kpiTotal">—</p>
+          </div>
+        </div>
+
+        <div class="hero-kpi-sep" aria-hidden="true"></div>
+
+        <div class="hero-kpi-item">
+          <div class="hero-kpi-icon gold" aria-hidden="true">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div>
+            <p class="hero-kpi-label">En cours</p>
+            <p class="hero-kpi-value" id="kpiInProgress">—</p>
+          </div>
+        </div>
+
+        <div class="hero-kpi-sep" aria-hidden="true"></div>
+
+        <div class="hero-kpi-item">
+          <div class="hero-kpi-icon crimson" aria-hidden="true">
+            <i class="fas fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <p class="hero-kpi-label">Action requise</p>
+            <p class="hero-kpi-value" id="kpiAction">—</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /hero-suivi -->
+
+  <main class="page-section">
+
+    <div id="alert" class="hidden" role="status" aria-live="polite"></div>
+
+    <!-- Layout 3 colonnes :
+         [liste] [détail + action + notes + historique] [progression] -->
+    <div class="suivi-layout">
+
+      <!-- ─── Col 1 · Liste ─── -->
+      <div class="cc-card">
+        <div class="cc-card-accent"></div>
+        <div class="cc-card-inner">
+
+          <div class="list-header">
+            <div>
+              <h2>Vos déclarations</h2>
+              <p>Sélectionnez un dossier</p>
+            </div>
+            <button id="refreshBtn" class="btn-secondary" type="button" aria-label="Actualiser les données">
+              <i class="fas fa-rotate-right"></i>
+              <span>Actualiser</span>
+            </button>
+          </div>
+
+          <div class="list-filters">
+            <div class="filter-wrap">
+              <i class="fas fa-search filter-icon" aria-hidden="true"></i>
+              <input id="searchInput" type="text" class="filter-input"
+                placeholder="Rechercher (année, ID, statut…)"
+                aria-label="Rechercher une déclaration" />
+            </div>
+            <div class="filter-grid">
+              <div class="filter-wrap">
+                <i class="fas fa-calendar filter-icon" aria-hidden="true"></i>
+                <select id="yearFilter" class="filter-input" aria-label="Filtrer par année">
+                  <option value="">Toutes les années</option>
+                </select>
+              </div>
+              <div class="filter-wrap">
+                <i class="fas fa-tag filter-icon" aria-hidden="true"></i>
+                <select id="statusFilter" class="filter-input" aria-label="Filtrer par statut">
+                  <option value="">Tous les statuts</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="listContainer" aria-live="polite" aria-label="Liste des déclarations"></div>
+
+          <div id="emptyList" class="hidden">
+            <div class="empty-icon-wrap" aria-hidden="true"><i class="fas fa-folder-open"></i></div>
+            <p class="empty-title">Aucune déclaration trouvée</p>
+            <p class="empty-desc">Soumettez une déclaration pour activer le suivi.</p>
+            <a href="/espace-client/declaration.html" class="btn-primary" style="margin-top:1rem;display:inline-flex;">
+              <i class="fas fa-plus-circle"></i>
+              Nouvelle déclaration
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── Col 2 · Déclaration sélectionnée ─── -->
+      <div class="cc-card">
+        <div class="cc-card-accent"></div>
+        <div class="cc-card-inner">
+
+          <div class="detail-header">
+            <div class="detail-header-left">
+              <p class="label-sm">Déclaration sélectionnée</p>
+              <div id="detailTitle">—</div>
+              <div id="detailMeta">—</div>
+            </div>
+            <div class="detail-header-right">
+              <div id="detailBadge" class="cc-badge cc-badge-received">—</div>
+              <div id="detailUpdated">
+                <i class="fas fa-clock" aria-hidden="true"></i>
+                <span>—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-panels">
+
+            <div class="detail-panel action-panel">
+              <div class="panel-header">
+                <div class="panel-icon amber" aria-hidden="true"><i class="fas fa-bell"></i></div>
+                <p class="panel-title">Action requise</p>
+              </div>
+              <div id="detailAction">—</div>
+              <div class="panel-actions">
+                <a id="btnUpload" href="/espace-client/documents.html" class="btn-upload">
+                  <i class="fas fa-cloud-arrow-up"></i>
+                  Documents
+                </a>
+                <a id="btnSupport" href="/contact/index.html#contact" class="btn-secondary" style="padding:.5rem 1rem;font-size:.875rem;">
+                  <i class="fas fa-comment-dots"></i>
+                  Support
+                </a>
+              </div>
+            </div>
+
+            <div class="detail-panel notes-panel">
+              <div class="panel-header">
+                <div class="panel-icon navy" aria-hidden="true"><i class="fas fa-note-sticky"></i></div>
+                <p class="panel-title">Notes</p>
+              </div>
+              <div id="detailNotes">—</div>
+            </div>
+
+          </div>
+
+          <div class="section-header" style="margin-top:1.375rem;">
+            <div>
+              <p class="section-title">Historique</p>
+              <p class="section-subtitle">Dernières activités</p>
+            </div>
+          </div>
+
+          <div id="history" aria-live="polite" aria-label="Historique des activités"></div>
+
+        </div>
+      </div>
+
+      <!-- ─── Col 3 · Progression ─── -->
+      <div class="cc-card progression-card">
+        <div class="cc-card-accent cc-card-accent--sage"></div>
+        <div class="cc-card-inner">
+
+          <div class="progression-header">
+            <div class="progression-header-left">
+              <div class="progression-icon" aria-hidden="true">
+                <i class="fas fa-list-check"></i>
+              </div>
+              <div>
+                <p class="section-title">Progression</p>
+                <p class="section-subtitle">Étapes de traitement</p>
+              </div>
+            </div>
+            <div id="detailProgressText" aria-live="polite">—</div>
+          </div>
+
+          <div id="timeline" aria-live="polite" aria-label="Progression de la déclaration"></div>
+
+        </div>
+      </div>
+
+    </div><!-- /suivi-layout -->
+
+    <div class="page-tip" aria-hidden="true">
+      <i class="fas fa-lightbulb"></i>
+      Astuce : les données sont mises à jour en temps réel. Cliquez sur « Actualiser » pour forcer la mise à jour.
+    </div>
+
+  </main>
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/espace-client/suivi.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,927 @@
+
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ComptaClems | Cabinet comptable virtuel au Québec</title>
+    <meta
+      name="description"
+      content="ComptaClems, cabinet comptable virtuel spécialisé en fiscalité pour particuliers, travailleurs autonomes et PME au Québec et au Canada."
+    />
+
+    <!-- Fonts — DM Serif Display + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets-css/main.css" />
+    <link rel="stylesheet" href="/assets-css/components.css" />
+    <link rel="stylesheet" href="/assets-css/index.css" />
+    <link rel="stylesheet" href="/assets-css/design.css" />
+
+    <!-- Dark mode init — évite le flash blanc au chargement -->
+    <script>
+      (function () {
+        try {
+          var key = 'cc_theme';
+          var saved = localStorage.getItem(key);
+          var mode = (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var shouldDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+          document.documentElement.classList.toggle('dark', shouldDark);
+          document.documentElement.setAttribute('data-theme', shouldDark ? 'dark' : 'light');
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+
+    <!-- Header global (injecté via header.js) -->
+    <script src="/assets-js/global/header.js"></script>
+
+    <main>
+
+      <!-- ===================================================================
+           HERO
+      ==================================================================== -->
+      <section class="hero">
+        <div class="hero__container">
+          <div class="hero__content">
+
+            <!-- Badge statut -->
+            <div class="hero__badge reveal" style="display:inline-flex;">
+              <span class="hero__badge-dot"></span>
+              <span class="hero__badge-text">Cabinet comptable virtuel · Québec &amp; Canada</span>
+            </div>
+
+            <!-- Titre principal -->
+            <h1 class="hero__heading reveal delay-100">
+              Une comptabilité
+              <em>claire, humaine</em><br>
+              et structurée
+            </h1>
+
+            <!-- Sous-titre -->
+            <p class="hero__sub reveal delay-200">
+              Comptaclems accompagne particuliers, travailleurs autonomes et PME
+              avec une approche simple, transparente et entièrement en ligne.
+            </p>
+
+            <!-- CTA — btnStartDeclaration ciblé par header.js -->
+            <div class="hero__cta reveal delay-300">
+              <a
+                id="btnStartDeclaration"
+                href="/auth/login.html?redirect=%2Fespace-client%2Fdeclaration.html"
+                class="btn btn-primary btn-lg"
+              >
+                Démarrer mon dossier
+                <i class="fas fa-arrow-right btn-arrow" aria-hidden="true"></i>
+              </a>
+              <a href="/services/index.html" class="btn btn-outline btn-lg">
+                Voir les services
+              </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="hero__stats reveal delay-400">
+              <div class="hero__stat">
+                <div class="hero__stat-number">100<span style="color:var(--color-accent-gold)">+</span></div>
+                <div class="hero__stat-label">Clients satisfaits</div>
+              </div>
+              <div class="hero__stat-sep"></div>
+              <div class="hero__stat">
+                <div class="hero__stat-number">100<span style="color:var(--color-accent-gold)">%</span></div>
+                <div class="hero__stat-label">En ligne</div>
+              </div>
+              <div class="hero__stat-sep"></div>
+              <div class="hero__stat">
+                <div class="hero__stat-number">06<span style="color:var(--color-accent-gold)">+</span></div>
+                <div class="hero__stat-label">Années d'expérience</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           NOTRE APPROCHE
+      ==================================================================== -->
+      <section class="features section">
+        <div class="container">
+
+          <div class="section-header reveal">
+            <span class="eyebrow">Notre approche</span>
+            <h2>Une méthode en trois temps</h2>
+            <p>
+              Structurée pour éviter les erreurs, maximiser la clarté
+              et garantir votre conformité fiscale.
+            </p>
+          </div>
+
+          <div class="features-grid">
+
+            <div class="feature-card reveal">
+              <div class="feature-card__num">01</div>
+              <div class="feature-card__icon">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </div>
+              <h3 class="feature-card__title">Analyse</h3>
+              <p class="feature-card__text">
+                Compréhension complète de votre situation fiscale, de vos revenus
+                et de vos obligations avant toute action.
+              </p>
+            </div>
+
+            <div class="feature-card reveal delay-100">
+              <div class="feature-card__num">02</div>
+              <div class="feature-card__icon">
+                <i class="fas fa-layer-group" aria-hidden="true"></i>
+              </div>
+              <h3 class="feature-card__title">Structuration</h3>
+              <p class="feature-card__text">
+                Organisation méthodique de vos données, documents et obligations
+                dans un espace sécurisé et accessible.
+              </p>
+            </div>
+
+            <div class="feature-card reveal delay-200">
+              <div class="feature-card__num">03</div>
+              <div class="feature-card__icon">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+              </div>
+              <h3 class="feature-card__title">Conformité</h3>
+              <p class="feature-card__text">
+                Déclarations exactes, sécurisées et transmises dans les délais
+                impartis. Zéro mauvaise surprise.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           QUI SOMMES-NOUS
+      ==================================================================== -->
+      <section class="about section">
+        <div class="container">
+          <div class="about-layout">
+
+            <div class="about-content reveal">
+              <span class="eyebrow">Qui nous sommes</span>
+              <h2>
+                Un cabinet fondé sur<br>
+                <em style="font-family:var(--font-display); font-style:italic; color:var(--color-accent-gold);">la confiance</em>
+              </h2>
+              <p>
+                ComptaClems est un cabinet comptable virtuel fondé pour répondre à
+                une réalité simple : la fiscalité ne devrait jamais être floue,
+                stressante ou incompréhensible.
+              </p>
+              <p>
+                Nous combinons expertise comptable, outils numériques sécurisés et
+                accompagnement humain pour offrir une expérience fluide, claire
+                et adaptée à chaque situation.
+              </p>
+
+              <ul class="about-checks">
+                <li class="about-check">
+                  <span class="about-check__icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+                  Cabinet 100 % en ligne — accessible partout au Canada
+                </li>
+                <li class="about-check">
+                  <span class="about-check__icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+                  Expertise fiscale spécialisée Québec et Canada
+                </li>
+                <li class="about-check">
+                  <span class="about-check__icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+                  Processus documentés, clairs et reproductibles
+                </li>
+                <li class="about-check">
+                  <span class="about-check__icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+                  Communication transparente à chaque étape
+                </li>
+              </ul>
+            </div>
+
+            <div class="about-visual reveal delay-200">
+              <div class="about-visual-card about-visual-card--navy">
+                <div class="about-visual-card__label">Clients accompagnés</div>
+                <div class="about-visual-card__value">100+</div>
+                <p class="about-visual-card__sub" style="color:rgba(255,255,255,0.5) !important;">
+                  Particuliers, autonomes et PME
+                </p>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);">
+                <div class="about-visual-card">
+                  <div class="about-visual-card__label">Satisfaction</div>
+                  <div class="about-visual-card__value">98%</div>
+                  <p class="about-visual-card__sub">Basé sur nos avis clients</p>
+                </div>
+                <div class="about-visual-card">
+                  <div class="about-visual-card__label">Expérience</div>
+                  <div class="about-visual-card__value">06+</div>
+                  <p class="about-visual-card__sub">Années en fiscalité</p>
+                </div>
+              </div>
+              <div class="about-tags">
+                <span class="about-tag">Impôt personnel</span>
+                <span class="about-tag">Travailleur autonome</span>
+                <span class="about-tag">PME</span>
+                <span class="about-tag">TPS / TVQ</span>
+                <span class="about-tag">Planification fiscale</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           SERVICES
+      ==================================================================== -->
+      <section class="services section">
+        <div class="container">
+
+          <div class="section-header reveal">
+            <span class="eyebrow">Nos services</span>
+            <h2>L'accompagnement adapté<br>à votre réalité</h2>
+            <p>
+              Que vous soyez particulier, travailleur autonome ou PME,
+              nous avons une solution taillée pour vous.
+            </p>
+          </div>
+
+          <div class="services-grid">
+
+            <div class="service-card service-card--particuliers reveal">
+              <div class="service-card__header">
+                <div class="service-card__icon">
+                  <i class="fas fa-user" aria-hidden="true"></i>
+                </div>
+                <span class="badge badge--default">Populaire</span>
+              </div>
+              <h3 class="service-card__title">Particuliers</h3>
+              <p class="service-card__text">
+                Déclarations de revenus simples ou complexes, remboursements optimisés
+                et accompagnement personnalisé pour chaque situation de vie.
+              </p>
+              <ul class="service-card__list">
+                <li class="service-card__list-item">Déclaration fédérale et provinciale</li>
+                <li class="service-card__list-item">Optimisation des déductions</li>
+                <li class="service-card__list-item">Revenus de placement</li>
+                <li class="service-card__list-item">Première déclaration</li>
+              </ul>
+              <a href="/espace-client/declaration.html" class="service-card__cta requires-auth">
+                En savoir plus <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+
+            <div class="service-card service-card--autonomes reveal delay-100">
+              <div class="service-card__header">
+                <div class="service-card__icon">
+                  <i class="fas fa-briefcase" aria-hidden="true"></i>
+                </div>
+                <span class="badge badge--gold">Recommandé</span>
+              </div>
+              <h3 class="service-card__title">Travailleurs autonomes</h3>
+              <p class="service-card__text">
+                Gestion complète de votre fiscalité de travailleur indépendant :
+                dépenses d'affaires, TPS/TVQ, acomptes provisionnels.
+              </p>
+              <ul class="service-card__list">
+                <li class="service-card__list-item">Déclaration T1 / TP-1</li>
+                <li class="service-card__list-item">Inscription TPS / TVQ</li>
+                <li class="service-card__list-item">Dépenses d'affaires</li>
+                <li class="service-card__list-item">Acomptes provisionnels</li>
+              </ul>
+              <a href="/espace-client/autonome.html" class="service-card__cta requires-auth">
+                En savoir plus <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+
+            <div class="service-card service-card--pme reveal delay-200">
+              <div class="service-card__header">
+                <div class="service-card__icon">
+                  <i class="fas fa-building" aria-hidden="true"></i>
+                </div>
+                <span class="badge badge--success">Entreprise</span>
+              </div>
+              <h3 class="service-card__title">PME &amp; Sociétés</h3>
+              <p class="service-card__text">
+                Déclarations T2, tenue de livres, paie et conformité fiscale
+                pour les petites et moyennes entreprises incorporées.
+              </p>
+              <ul class="service-card__list">
+                <li class="service-card__list-item">Déclaration T2 corporative</li>
+                <li class="service-card__list-item">Tenue de livres mensuelle</li>
+                <li class="service-card__list-item">Remises TPS / TVQ</li>
+                <li class="service-card__list-item">Planification fiscale</li>
+              </ul>
+              <a href="/espace-client/pme.html" class="service-card__cta requires-auth">
+                En savoir plus <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           VALEURS
+      ==================================================================== -->
+      <section class="values section">
+        <div class="container">
+
+          <div class="section-header reveal">
+            <span class="eyebrow">Nos valeurs</span>
+            <h2>Ce qui nous distingue</h2>
+            <p>Des engagements concrets, pas des promesses creuses.</p>
+          </div>
+
+          <div class="values-grid">
+            <div class="value-card reveal">
+              <div class="value-card__num">01</div>
+              <div class="value-card__icon">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </div>
+              <h3 class="value-card__title">Clarté</h3>
+              <p class="value-card__text">
+                Vous comprenez exactement ce qui est fait, pourquoi et comment.
+                Aucun jargon inutile, aucune zone d'ombre.
+              </p>
+            </div>
+            <div class="value-card reveal delay-100">
+              <div class="value-card__num">02</div>
+              <div class="value-card__icon">
+                <i class="fas fa-drafting-compass" aria-hidden="true"></i>
+              </div>
+              <h3 class="value-card__title">Rigueur</h3>
+              <p class="value-card__text">
+                Chaque dossier est traité avec une précision méticuleuse.
+                Nous ne laissons rien au hasard.
+              </p>
+            </div>
+            <div class="value-card reveal delay-200">
+              <div class="value-card__num">03</div>
+              <div class="value-card__icon">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+              </div>
+              <h3 class="value-card__title">Confiance</h3>
+              <p class="value-card__text">
+                Vos données sont protégées, vos obligations respectées.
+                Vous êtes entre de bonnes mains.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TÉMOIGNAGES — Chargés dynamiquement depuis le backend
+      ==================================================================== -->
+      <section class="testimonials section" id="testimonials-section">
+        <div class="container">
+
+          <div class="section-header reveal">
+            <span class="eyebrow">Témoignages</span>
+            <h2>Ce que disent nos clients</h2>
+          </div>
+
+          <!-- Skeleton pendant le chargement -->
+          <div id="testimonials-loading" class="testimonials-grid" aria-busy="true" aria-label="Chargement des témoignages">
+            <div class="testimonial-card">
+              <div class="skeleton" style="height:13px; width:88px; margin-bottom:var(--space-5); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:100%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:88%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:72%; margin-bottom:var(--space-6); border-radius:4px;"></div>
+              <div style="display:flex; align-items:center; gap:var(--space-3); padding-top:var(--space-5); border-top:1px solid var(--color-border-subtle);">
+                <div class="skeleton" style="width:40px; height:40px; border-radius:50%; flex-shrink:0;"></div>
+                <div style="flex:1;">
+                  <div class="skeleton" style="height:11px; width:55%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+                  <div class="skeleton" style="height:10px; width:38%; border-radius:4px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-card">
+              <div class="skeleton" style="height:13px; width:88px; margin-bottom:var(--space-5); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:100%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:82%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:64%; margin-bottom:var(--space-6); border-radius:4px;"></div>
+              <div style="display:flex; align-items:center; gap:var(--space-3); padding-top:var(--space-5); border-top:1px solid var(--color-border-subtle);">
+                <div class="skeleton" style="width:40px; height:40px; border-radius:50%; flex-shrink:0;"></div>
+                <div style="flex:1;">
+                  <div class="skeleton" style="height:11px; width:48%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+                  <div class="skeleton" style="height:10px; width:42%; border-radius:4px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-card">
+              <div class="skeleton" style="height:13px; width:88px; margin-bottom:var(--space-5); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:100%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:76%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+              <div class="skeleton" style="height:11px; width:58%; margin-bottom:var(--space-6); border-radius:4px;"></div>
+              <div style="display:flex; align-items:center; gap:var(--space-3); padding-top:var(--space-5); border-top:1px solid var(--color-border-subtle);">
+                <div class="skeleton" style="width:40px; height:40px; border-radius:50%; flex-shrink:0;"></div>
+                <div style="flex:1;">
+                  <div class="skeleton" style="height:11px; width:52%; margin-bottom:var(--space-2); border-radius:4px;"></div>
+                  <div class="skeleton" style="height:10px; width:36%; border-radius:4px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grille des vrais témoignages (injectée par JS) -->
+          <div id="testimonials-grid" class="testimonials-grid" style="display:none;" aria-live="polite"></div>
+
+          <!-- État vide -->
+          <div id="testimonials-empty" style="display:none; text-align:center; padding:var(--space-10) 0;">
+            <p class="text-caption">Aucun témoignage disponible pour le moment.</p>
+          </div>
+
+          <!-- ─── CTA + Formulaire ─────────────────────────────────── -->
+          <div class="testimonials-form-zone">
+
+            <!-- Bouton d'ouverture -->
+            <div class="testimonials-form-cta">
+              <button id="openTestimonialForm" class="btn btn-gold" aria-expanded="false" aria-controls="testimonialFormContainer">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+                Laisser un témoignage
+              </button>
+              <a href="/temoignages/index.html" class="btn btn--ghost">
+                Voir tous les témoignages
+                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+
+            <!-- Formulaire (masqué par défaut) -->
+            <div id="testimonialFormContainer" class="testimonial-form-card hidden" role="region" aria-label="Formulaire de témoignage">
+              <div class="testimonial-form-accent" aria-hidden="true"></div>
+              <div class="testimonial-form-inner">
+
+                <!-- En-tête -->
+                <div class="testimonial-form-header">
+                  <p class="testimonial-form-title">
+                    <i class="fas fa-comment-medical" aria-hidden="true"></i>
+                    Partagez votre expérience
+                  </p>
+                  <button id="closeTestimonialForm" class="testimonial-form-close" aria-label="Fermer le formulaire">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <form id="testimonialForm" novalidate>
+
+                  <!-- Nom + Courriel -->
+                  <div class="testimonial-form-row">
+                    <div class="testimonial-field">
+                      <label class="testimonial-label" for="client_name">
+                        Votre nom <span class="required" aria-hidden="true">*</span>
+                      </label>
+                      <input
+                        type="text" id="client_name" name="client_name"
+                        class="testimonial-input"
+                        placeholder="Ex : Marie Dupont"
+                        required autocomplete="name"
+                      />
+                    </div>
+                    <div class="testimonial-field">
+                      <label class="testimonial-label" for="email">
+                        Courriel <span class="optional">(facultatif)</span>
+                      </label>
+                      <input
+                        type="email" id="email" name="email"
+                        class="testimonial-input"
+                        placeholder="votre@courriel.com"
+                        autocomplete="email"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Note -->
+                  <div class="testimonial-field">
+                    <span class="testimonial-label">
+                      Votre note <span class="required" aria-hidden="true">*</span>
+                    </span>
+                    <div class="testimonial-rating">
+                      <div class="testimonial-stars-row">
+                        <div id="ratingStars" role="group" aria-label="Note sur 5 étoiles"></div>
+                        <span id="ratingValue" aria-live="polite">0 / 5</span>
+                      </div>
+                      <input
+                        type="range" id="rating" name="rating"
+                        min="1" max="5" value="5"
+                        aria-label="Note de 1 à 5"
+                      />
+                      <div class="testimonial-rating-labels" aria-hidden="true">
+                        <span>1 étoile</span><span>2</span><span>3</span><span>4</span><span>5 étoiles</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Texte -->
+                  <div class="testimonial-field">
+                    <label class="testimonial-label" for="content">
+                      Votre témoignage <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <textarea
+                      id="content" name="content"
+                      class="testimonial-textarea"
+                      rows="5"
+                      placeholder="Partagez votre expérience avec ComptaClems… (minimum 50 caractères)"
+                      required
+                    ></textarea>
+                    <p class="testimonial-field-note">
+                      <i class="fas fa-info-circle" aria-hidden="true"></i>
+                      Votre témoignage sera publié après modération.
+                    </p>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="testimonial-form-footer">
+                    <button type="button" id="cancelTestimonialForm" class="btn btn--ghost">
+                      Annuler
+                    </button>
+                    <button type="submit" id="submitTestimonialButton" class="btn btn-navy">
+                      <span id="submitText">Envoyer mon témoignage</span>
+                      <span id="submitSpinner" class="hidden" aria-hidden="true">
+                        <i class="fas fa-spinner fa-spin"></i>
+                      </span>
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div><!-- /testimonialFormContainer -->
+
+          </div><!-- /testimonials-form-zone -->
+
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           CTA FINAL
+      ==================================================================== -->
+      <section class="cta-section section">
+        <div class="container">
+          <div class="cta-inner reveal">
+
+            <div class="cta-inner__content">
+              <div class="cta-eyebrow">
+                <i class="fas fa-bolt" aria-hidden="true"></i>
+                Prêt à commencer ?
+              </div>
+              <h2>
+                Simplifiez votre comptabilité
+                <em>dès aujourd'hui</em>
+              </h2>
+              <p>
+                Démarrez votre dossier en quelques minutes. Aucun rendez-vous requis,
+                tout se fait en ligne.
+              </p>
+            </div>
+
+            <div class="cta-inner__actions">
+              <a href="/auth/register.html" class="btn btn-gold btn-xl">
+                Ouvrir mon compte
+                <i class="fas fa-arrow-right btn-arrow" aria-hidden="true"></i>
+              </a>
+              <a href="/services/index.html" class="btn btn-light btn-sm">
+                Voir tous les services
+              </a>
+              <div class="cta-trust">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+                Sécurisé · Confidentiel · Sans engagement
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer global (injecté via footer.js) -->
+    <script src="/assets-js/global/footer.js"></script>
+
+    <!-- Scripts core -->
+    <script src="/assets-js/core/http.js" defer></script>
+    <script src="/assets-js/global/global.js" defer></script>
+
+    <script>
+    /* ================================================================
+       Reveal animations — Intersection Observer
+    ================================================================ */
+    (function () {
+      if (!window.IntersectionObserver) {
+        document.querySelectorAll('.reveal').forEach(function (el) {
+          el.classList.add('is-visible');
+        });
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal').forEach(function (el) {
+        observer.observe(el);
+      });
+    })();
+
+    /* ================================================================
+       Témoignages — chargement dynamique depuis le backend
+       NB : l'affichage est géré ici ; le formulaire est géré dans
+            le script suivant (indépendant de temoignages.js)
+    ================================================================ */
+    (function () {
+      var API_URL  = '/api/public/testimonials';
+      var loading  = document.getElementById('testimonials-loading');
+      var grid     = document.getElementById('testimonials-grid');
+      var empty    = document.getElementById('testimonials-empty');
+
+      function initials(name) {
+        if (!name) return '?';
+        var parts = String(name).trim().split(/\s+/);
+        return parts.length === 1
+          ? parts[0].charAt(0).toUpperCase()
+          : (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+      }
+
+      function stars(note) {
+        var n = Math.min(5, Math.max(0, Math.round(Number(note) || 5)));
+        var h = '<div class="testimonial-stars" aria-label="' + n + ' étoiles sur 5">';
+        for (var i = 0; i < 5; i++) {
+          h += '<i class="' + (i < n ? 'fas' : 'far') + ' fa-star testimonial-star" aria-hidden="true"></i>';
+        }
+        return h + '</div>';
+      }
+
+      function esc(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function card(t) {
+        var name = t.client_name || t.display_name || t.nom || t.name || '';
+        var meta = t.type || t.profession || t.ville || '';
+        var msg  = t.content || t.message || t.commentaire || t.texte || '';
+        var note = t.rating || t.note || t.etoiles || 5;
+
+        return '<div class="testimonial-card">'
+          + stars(note)
+          + '<p class="testimonial-quote">' + esc(msg) + '</p>'
+          + '<div class="testimonial-footer">'
+            + '<div class="testimonial-avatar" aria-hidden="true">' + esc(initials(name)) + '</div>'
+            + '<div>'
+              + '<div class="testimonial-name">' + esc(name) + '</div>'
+              + (meta ? '<div class="testimonial-meta">' + esc(meta) + '</div>' : '')
+            + '</div>'
+          + '</div>'
+          + '</div>';
+      }
+
+      function animateCards() {
+        if (!window.IntersectionObserver) return;
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+          });
+        }, { threshold: 0.1 });
+        grid.querySelectorAll('.testimonial-card').forEach(function (c) {
+          c.classList.add('reveal'); obs.observe(c);
+        });
+      }
+
+      async function load() {
+        try {
+          var res   = await fetch(API_URL + '?limit=3', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          var json  = await res.json();
+          var items = Array.isArray(json) ? json
+            : (json.testimonials || json.data || json.temoignages || json.items || []);
+
+          loading.style.display = 'none';
+          if (!items.length) { empty.style.display = 'block'; return; }
+
+          grid.innerHTML     = items.slice(0, 3).map(card).join('');
+          grid.style.display = 'grid';
+          animateCards();
+        } catch (_) {
+          loading.style.display = 'none';
+          empty.style.display   = 'block';
+        }
+      }
+
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load);
+      else load();
+    })();
+
+    /* ================================================================
+       Formulaire témoignage (page d'accueil)
+       Gère : ouverture/fermeture, étoiles, soumission API
+       Indépendant de temoignages.js pour éviter le blocage compact
+    ================================================================ */
+    (function () {
+      var API_BASE = '/api/public/testimonials';
+
+      var openBtn    = document.getElementById('openTestimonialForm');
+      var container  = document.getElementById('testimonialFormContainer');
+      var closeBtn   = document.getElementById('closeTestimonialForm');
+      var cancelBtn  = document.getElementById('cancelTestimonialForm');
+      var form       = document.getElementById('testimonialForm');
+      var ratingIn   = document.getElementById('rating');
+      var ratingVal  = document.getElementById('ratingValue');
+      var ratingStrs = document.getElementById('ratingStars');
+      var submitBtn  = document.getElementById('submitTestimonialButton');
+      var submitTxt  = document.getElementById('submitText');
+      var submitSpin = document.getElementById('submitSpinner');
+      var nameIn     = document.getElementById('client_name');
+      var emailIn    = document.getElementById('email');
+      var contentTA  = document.getElementById('content');
+
+      if (!form || !container) return;
+
+      /* ── Étoiles interactives ── */
+      function buildStars() {
+        if (!ratingStrs || !ratingIn) return;
+        var val = parseInt(ratingIn.value, 10) || 5;
+        ratingStrs.innerHTML = '';
+        for (var i = 1; i <= 5; i++) {
+          (function (idx) {
+            var s = document.createElement('button');
+            s.type = 'button';
+            s.className = 'testimonial-star-btn' + (idx <= val ? ' active' : '');
+            s.innerHTML = '<i class="fas fa-star"></i>';
+            s.setAttribute('aria-label', idx + ' étoile' + (idx > 1 ? 's' : ''));
+            s.addEventListener('click', function () {
+              ratingIn.value = String(idx);
+              updateStars();
+            });
+            ratingStrs.appendChild(s);
+          })(i);
+        }
+        if (ratingVal) ratingVal.textContent = val + ' / 5';
+      }
+
+      function updateStars() {
+        var val = parseInt(ratingIn.value, 10) || 5;
+        if (ratingVal) ratingVal.textContent = val + ' / 5';
+        if (!ratingStrs) return;
+        var btns = ratingStrs.querySelectorAll('.testimonial-star-btn');
+        btns.forEach(function (b, i) {
+          b.classList.toggle('active', i < val);
+        });
+      }
+
+      if (ratingIn) ratingIn.addEventListener('input', updateStars);
+      buildStars();
+
+      /* ── Pré-remplir depuis /me ── */
+      async function fetchMe() {
+        try {
+          var res = await fetch('/api/client/espace-client/me', {
+            method: 'GET', credentials: 'include', cache: 'no-store',
+            headers: { Accept: 'application/json' }
+          });
+          if (!res.ok) return null;
+          var json = await res.json().catch(function () { return null; });
+          if (!json || !json.success) return null;
+          return json.data || null;
+        } catch (_) { return null; }
+      }
+
+      function showForm() {
+        container.classList.remove('hidden');
+        openBtn && openBtn.setAttribute('aria-expanded', 'true');
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        nameIn && nameIn.focus();
+      }
+
+      function hideForm() {
+        container.classList.add('hidden');
+        openBtn && openBtn.setAttribute('aria-expanded', 'false');
+        form.reset();
+        if (ratingIn) ratingIn.value = '5';
+        buildStars();
+      }
+
+      /* ── Clic bouton ouvrir ── */
+      openBtn && openBtn.addEventListener('click', async function () {
+        var me = await fetchMe();
+        if (!me) {
+          localStorage.setItem('cc_post_login_redirect', JSON.stringify({
+            url: window.location.pathname + window.location.hash,
+            openTestimonialForm: true
+          }));
+          window.location.href = '/auth/login.html';
+          return;
+        }
+        if (nameIn && !nameIn.value.trim()) {
+          nameIn.value = ((me.firstName || '') + ' ' + (me.lastName || '')).trim();
+        }
+        if (emailIn && !emailIn.value.trim() && me.email) emailIn.value = me.email;
+        showForm();
+      });
+
+      closeBtn  && closeBtn.addEventListener('click', hideForm);
+      cancelBtn && cancelBtn.addEventListener('click', hideForm);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !container.classList.contains('hidden')) hideForm();
+      });
+
+      /* ── Redirect post-login ── */
+      var raw = localStorage.getItem('cc_post_login_redirect');
+      if (raw) {
+        try {
+          var info = JSON.parse(raw);
+          if (info && info.openTestimonialForm) {
+            fetchMe().then(function (me) { if (me) showForm(); });
+          }
+        } catch (_) {}
+        localStorage.removeItem('cc_post_login_redirect');
+      }
+
+      /* ── Soumission ── */
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        var me = await fetchMe();
+        if (!me) { openBtn && openBtn.click(); return; }
+
+        var fd = new FormData(form);
+        var payload = {
+          client_name: String(fd.get('client_name') || '').trim(),
+          email:       String(fd.get('email')        || '').trim() || null,
+          rating:      parseInt(String(fd.get('rating') || '5'), 10) || 5,
+          content:     String(fd.get('content') || '').trim()
+        };
+
+        if (!payload.client_name || !payload.content) {
+          alert('Veuillez remplir tous les champs obligatoires.'); return;
+        }
+        if (payload.content.length < 50) {
+          alert('Votre témoignage doit contenir au moins 50 caractères.');
+          contentTA && contentTA.focus(); return;
+        }
+
+        if (submitTxt) submitTxt.textContent = 'Envoi en cours…';
+        submitSpin && submitSpin.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+          var res  = await fetch(API_BASE, {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          var json = await res.json().catch(function () { return {}; });
+
+          if (res.ok && json && json.success) {
+            hideForm();
+            /* Message de confirmation discret sous le formulaire */
+            var msg = document.createElement('p');
+            msg.className = 'testimonials-form-confirm';
+            msg.innerHTML = '<i class="fas fa-check-circle"></i> Merci ! Votre témoignage sera publié après modération.';
+            var zone = document.querySelector('.testimonials-form-zone');
+            if (zone) zone.appendChild(msg);
+            setTimeout(function () { msg && msg.remove(); }, 6000);
+          } else {
+            alert((json && json.error) || 'Une erreur est survenue. Réessaie.');
+          }
+        } catch (_) {
+          alert('Erreur réseau. Vérifiez votre connexion.');
+        } finally {
+          if (submitTxt) submitTxt.textContent = 'Envoyer mon témoignage';
+          submitSpin && submitSpin.classList.add('hidden');
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      });
+    })();
+    </script>
+
+  </body>
+</html>

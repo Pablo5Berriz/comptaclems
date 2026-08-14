@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <meta name="description" content="Configuration générale, maintenance, sécurité et SEO - Interface d'administration ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Paramètres | Administration ComptaClems</title>
+  
+  <!-- Polices & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="/assets-css/tw.min.css" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon/favicon.ico">
+
+  <!-- Styles personnalisés -->
+  <link rel="stylesheet" href="/assets-css/admin/settings.css" />
+
+  <!-- Dark mode init -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+  
+  <!-- Scripts -->
+  <script src="/assets-js/admin/adminGuard.js" defer></script>
+  <script src="/assets-js/admin/adminSettings.js" defer></script>
+</head>
+
+<body class="min-h-screen flex antialiased">
+  
+  <!-- Toast Container - Notifications globales -->
+  <div id="toastHost" class="fixed top-6 right-6 z-50 space-y-3 w-80"></div>
+  
+  <!-- Modal de confirmation pour les actions critiques -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="confirmBackdrop"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fadeIn">
+      <div class="flex items-center gap-4 text-amber-600 mb-4">
+        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+          <i class="fas fa-exclamation-triangle text-2xl"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-900" id="confirmTitle">Confirmer l'action</h3>
+          <p class="text-sm text-slate-500" id="confirmSubtitle">Cette action est irréversible</p>
+        </div>
+      </div>
+      <p class="text-slate-600 mb-6" id="confirmMessage">Voulez-vous continuer ?</p>
+      <div class="flex justify-end gap-3">
+        <button id="confirmCancel" class="px-5 py-2.5 border-2 border-slate-300 rounded-xl hover:bg-slate-50 font-medium transition">
+          Annuler
+        </button>
+        <button id="confirmAction" class="px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl hover:from-red-700 hover:to-red-600 font-medium transition shadow-lg shadow-red-500/30">
+          <i class="fas fa-check mr-2" id="confirmIcon"></i>
+          <span id="confirmButtonText">Confirmer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar - Version Premium -->
+  <aside class="w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white flex flex-col shadow-2xl">
+    <!-- Logo et branding -->
+    <div class="px-6 py-6 border-b border-slate-700/50">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+          <i class="fas fa-calculator text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-black tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            ComptaClems
+          </h1>
+          <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+            <i class="fas fa-shield-alt text-xs"></i>
+            Espace administrateur
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="flex-1 px-4 py-6 space-y-1.5 text-sm overflow-y-auto" id="adminSidebarNav">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mb-2">
+        Tableau de bord
+      </div>
+      
+      <a href="/admin/adminDashboard.html" data-nav="dashboard.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-chart-pie text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mt-4 mb-2">
+        Gestion
+      </div>
+
+      <a href="/admin/adminAdministrateurs.html" data-nav="administrateurs.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-user-shield text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Administrateurs</span>
+      </a>
+
+      <a href="/admin/adminClients.html" data-nav="clients.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-users text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Clients</span>
+      </a>
+
+      <a href="/admin/adminDocuments.html" data-nav="documents.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-comments text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Documents</span>
+      </a>
+
+      <a href="/admin/adminServices.html" data-nav="services.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-cogs text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Services</span>
+      </a>
+
+      <a href="/admin/adminDeclarations.html" data-nav="declarations.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-file-alt text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Déclarations</span>
+      </a>
+
+      <a href="/admin/adminTemoignages.html" data-nav="temoignages.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-comments text-slate-400 group-hover:text-white transition"></i>
+        </div>
+        <span>Témoignages</span>
+      </a>
+
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mt-4 mb-2">
+        Configuration
+      </div>
+
+      <a href="/admin/adminSettings.html" data-nav="settings.html" class="flex items-center px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-700/30 group">
+        <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center mr-3">
+          <i class="fas fa-folder-open text-white"></i>
+        </div>
+        <span class="font-semibold">Paramètres</span>
+      </a>
+    </nav>
+
+    <!-- Profil et déconnexion -->
+    <div class="px-4 py-6 border-t border-slate-700/50 mt-auto">
+      <div class="flex items-center gap-3 mb-4 px-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+          <span class="text-white font-bold text-lg" id="adminInitials">AD</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium truncate" id="adminName">Administrateur</p>
+          <p class="text-xs text-slate-400 truncate flex items-center gap-1">
+            <i class="fas fa-shield-alt text-xs"></i>
+            <span id="adminRole">Super Admin</span>
+          </p>
+        </div>
+      </div>
+      
+      <button id="adminLogoutBtn" class="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-red-600/90 text-slate-300 hover:text-white transition-all group">
+        <i class="fas fa-sign-out-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100">
+    
+    <!-- ====================================
+         HEADER - EN-TÊTE DE PAGE
+    ==================================== -->
+    <header class="flex items-center justify-between mb-10">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center shadow-xl">
+            <i class="fas fa-sliders-h text-white text-xl"></i>
+          </div>
+          <div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Paramètres</h2>
+            <p class="text-slate-500 mt-1 flex items-center gap-2">
+              <i class="fas fa-cog text-xs"></i>
+              Configuration générale et maintenance de la plateforme
+            </p>
+          </div>
+        </div>
+        
+        <!-- Fil d'Ariane -->
+        <div class="flex items-center gap-2 text-sm text-slate-500 ml-2">
+          <i class="fas fa-home text-xs"></i>
+          <span>Accueil</span>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span>Administration</span>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span class="text-slate-800 font-medium">Paramètres</span>
+        </div>
+      </div>
+
+      <!-- Badge dernière mise à jour + Profil -->
+      <div class="flex items-center gap-4">
+        <div class="bg-white/80 backdrop-blur-sm px-5 py-3 rounded-2xl shadow-lg border border-white/50">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+              <i class="fas fa-clock text-blue-600 text-sm"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase tracking-wider">Dernière mise à jour</p>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-sm font-semibold text-slate-900" id="lastUpdate">—</span>
+                <span class="text-xs text-slate-400">par</span>
+                <span class="text-sm font-medium text-slate-900" id="lastUpdateBy">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avatar admin -->
+        <div class="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-5 py-2.5 rounded-2xl shadow-lg border border-white/50">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+            <span class="text-white font-bold text-sm" id="headerAdminInitials">AD</span>
+          </div>
+          <div class="text-sm">
+            <p class="font-semibold text-slate-900" id="headerAdminName">Admin</p>
+            <p class="text-xs text-slate-500" id="headerAdminRole">Super Admin</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================
+         ALERTES ET NOTIFICATIONS
+    ==================================== -->
+    <div id="pageAlert" class="hidden mb-8 rounded-2xl border px-5 py-4 text-sm items-start gap-3 animate-slideIn" role="alert"></div>
+
+    <!-- ====================================
+         READ-ONLY WARNING (si pas superadmin)
+    ==================================== -->
+    <div id="readOnlyBox" class="hidden mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900 items-start gap-3">
+      <i class="fas fa-shield-alt text-amber-600 mt-0.5"></i>
+      <div>
+        <span class="font-semibold">Accès en lecture seule</span>
+        <p class="text-xs mt-0.5">Le rôle Super Administrateur est requis pour modifier les paramètres.</p>
+      </div>
+    </div>
+
+    <!-- ====================================
+         TABS PREMIUM
+    ==================================== -->
+    <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden border border-slate-200/80">
+      <div class="tab-container px-4 py-3" role="tablist" aria-label="Paramètres">
+        <div class="flex flex-wrap gap-2">
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-maint" role="tab" aria-selected="false">
+            <i class="fas fa-wrench text-slate-500"></i>
+            Maintenance & Bannière
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-security" role="tab" aria-selected="false">
+            <i class="fas fa-shield text-slate-500"></i>
+            Sécurité
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-uploads" role="tab" aria-selected="false">
+            <i class="fas fa-upload text-slate-500"></i>
+            Uploads
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-decls" role="tab" aria-selected="false">
+            <i class="fas fa-file-invoice text-slate-500"></i>
+            Déclarations
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-brand" role="tab" aria-selected="false">
+            <i class="fas fa-building text-slate-500"></i>
+            Contact & SEO
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-advanced" role="tab" aria-selected="false">
+            <i class="fas fa-code-branch text-slate-500"></i>
+            Avancé
+          </button>
+          <button class="tab-btn px-5 py-3 rounded-xl flex items-center gap-2 text-sm font-medium" data-tab="tab-account" role="tab" aria-selected="false">
+            <i class="fas fa-user-circle text-slate-500"></i>
+            Mon compte
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================
+           PANELS DES PARAMÈTRES
+      ==================================== -->
+      <div class="p-8 space-y-8">
+
+        <!-- === MAINTENANCE & BANNIÈRE === -->
+        <section id="tab-maint" class="tabPanel" role="tabpanel">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Maintenance Card -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                  <i class="fas fa-tools text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Maintenance du site</h3>
+                  <p class="text-xs text-slate-500">Bloque l'accès public au site</p>
+                </div>
+              </div>
+              
+              <div class="p-6 space-y-5">
+                <!-- Toggle -->
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-slate-700">Activer la maintenance</p>
+                    <p class="text-xs text-slate-500 mt-0.5">L'administration reste accessible</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input id="m_enabled" type="checkbox" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <!-- Message -->
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-comment"></i>
+                    Message de maintenance
+                  </label>
+                  <textarea 
+                    id="m_message" 
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    rows="4"
+                    placeholder="Le site est actuellement en maintenance. Merci de votre compréhension."
+                  ></textarea>
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i>
+                    Message court, visible par tous les visiteurs
+                  </p>
+                </div>
+
+                <!-- Preview -->
+                <div class="mt-4 pt-4 border-t border-slate-200">
+                  <p class="text-xs font-medium text-slate-600 mb-3 flex items-center gap-1.5">
+                    <i class="fas fa-eye"></i>
+                    Prévisualisation
+                  </p>
+                  <div id="maintenancePreview" class="hidden rounded-xl border-2 border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900 items-start gap-3">
+                    <i class="fas fa-tools mt-0.5"></i>
+                    <span class="flex-1"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bannière Card -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <i class="fas fa-flag text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Bannière globale</h3>
+                  <p class="text-xs text-slate-500">Affichée en haut du site</p>
+                </div>
+              </div>
+              
+              <div class="p-6 space-y-5">
+                <!-- Toggle -->
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-slate-700">Afficher la bannière</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Message d'information global</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input id="b_enabled" type="checkbox" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <!-- Niveau -->
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-tag"></i>
+                    Niveau d'alerte
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                    <select 
+                      id="b_level" 
+                      class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base appearance-none"
+                    >
+                      <option value="info">🔵 Info - Information générale</option>
+                      <option value="warning">🟡 Alerte - Attention requise</option>
+                      <option value="danger">🔴 Urgent - Action immédiate</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Message -->
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-comment"></i>
+                    Texte de la bannière
+                  </label>
+                  <textarea 
+                    id="b_message" 
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    rows="4"
+                    placeholder="Ex: Nos délais de traitement sont actuellement allongés."
+                  ></textarea>
+                </div>
+
+                <!-- Preview -->
+                <div class="mt-4 pt-4 border-t border-slate-200">
+                  <p class="text-xs font-medium text-slate-600 mb-3 flex items-center gap-1.5">
+                    <i class="fas fa-eye"></i>
+                    Prévisualisation
+                  </p>
+                  <div id="bannerPreview" class="hidden rounded-xl px-5 py-4 text-sm items-start gap-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === SÉCURITÉ === -->
+        <section id="tab-security" class="tabPanel hidden" role="tabpanel">
+          <div class="settings-card">
+            <div class="settings-card-header flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                <i class="fas fa-shield text-white text-sm"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">Sécurité & Sessions</h3>
+                <p class="text-xs text-slate-500">Contrôle des accès administrateurs</p>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Durée session -->
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-hourglass-half"></i>
+                    Durée de session (minutes)
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-clock absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input 
+                      id="s_ttl" 
+                      type="number" 
+                      min="15" 
+                      max="10080" 
+                      step="15"
+                      placeholder="480"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                  <div class="flex items-center justify-between mt-2">
+                    <p class="text-xs text-slate-500">Min: 15min • Max: 10080min (7 jours)</p>
+                    <span class="text-xs font-medium text-slate-700" id="sessionPreview">8 heures</span>
+                  </div>
+                </div>
+
+                <!-- Forcer déconnexion -->
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-power-off"></i>
+                    Forcer déconnexion à
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-calendar absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input 
+                      id="s_force" 
+                      type="datetime-local" 
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i>
+                    Laissez vide pour désactiver
+                  </p>
+                </div>
+              </div>
+
+              <!-- Preview -->
+              <div class="mt-8 pt-6 border-t border-slate-200">
+                <p class="text-xs font-medium text-slate-600 mb-3 flex items-center gap-1.5">
+                  <i class="fas fa-eye"></i>
+                  Configuration actuelle
+                </p>
+                <div id="securityPreview" class="rounded-xl bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 p-5 text-sm">
+                  <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                      <i class="fas fa-hourglass-half text-slate-400"></i>
+                      <span class="text-slate-600">Session expire après:</span>
+                      <span class="font-semibold text-slate-900">8h</span>
+                    </div>
+                    <span class="text-slate-300">|</span>
+                    <div class="flex items-center gap-2">
+                      <i class="fas fa-calendar-xmark text-slate-400"></i>
+                      <span class="text-slate-600">Déconnexion forcée:</span>
+                      <span class="font-semibold text-slate-900">Aucune</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === UPLOADS === -->
+        <section id="tab-uploads" class="tabPanel hidden" role="tabpanel">
+          <div class="settings-card">
+            <div class="settings-card-header flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                <i class="fas fa-upload text-white text-sm"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">Uploads & Fichiers</h3>
+                <p class="text-xs text-slate-500">Limites globales pour les documents</p>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Taille max -->
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-weight-hanging"></i>
+                    Taille maximale par fichier
+                  </label>
+                  <div class="flex items-center gap-3">
+                    <div class="relative flex-1">
+                      <input 
+                        id="u_max" 
+                        type="number" 
+                        min="1" 
+                        max="100" 
+                        value="10"
+                        class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                      />
+                    </div>
+                    <span class="text-sm font-medium text-slate-700 px-3">MB</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i>
+                    De 1 à 100 Mo. Actuellement: <span id="uploadMaxPreview">10 MB</span>
+                  </p>
+                </div>
+
+                <!-- Types autorisés -->
+                <div class="lg:col-span-2">
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-file-alt"></i>
+                    Types MIME autorisés (un par ligne)
+                  </label>
+                  <textarea 
+                    id="u_types" 
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base font-mono"
+                    rows="6"
+                    placeholder="application/pdf&#10;image/jpeg&#10;image/png&#10;application/msword&#10;application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  ></textarea>
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-shield-alt"></i>
+                    Pour la sécurité, limitez aux types nécessaires
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === DÉCLARATIONS === -->
+        <section id="tab-decls" class="tabPanel hidden" role="tabpanel">
+          <div class="settings-card">
+            <div class="settings-card-header flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                <i class="fas fa-file-invoice text-white text-sm"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">Déclarations fiscales</h3>
+                <p class="text-xs text-slate-500">Configuration par défaut</p>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="max-w-md">
+                <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                  <i class="fas fa-calendar"></i>
+                  Année fiscale par défaut
+                </label>
+                <div class="relative">
+                  <i class="fas fa-calendar-alt absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                  <input 
+                    id="d_year" 
+                    type="number" 
+                    min="2000" 
+                    max="2100" 
+                    placeholder="2025"
+                    class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  />
+                </div>
+                <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                  <i class="fas fa-info-circle"></i>
+                  Année de déclaration suggérée pour les nouveaux clients
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === CONTACT & SEO === -->
+        <section id="tab-brand" class="tabPanel hidden" role="tabpanel">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Contact Card -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                  <i class="fas fa-address-card text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Coordonnées</h3>
+                  <p class="text-xs text-slate-500">Informations de contact</p>
+                </div>
+              </div>
+              
+              <div class="p-6 space-y-5">
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-phone"></i>
+                    Téléphone
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-phone-alt absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input 
+                      id="c_phone" 
+                      type="tel" 
+                      placeholder="+33 1 23 45 67 89"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input 
+                      id="c_email" 
+                      type="email" 
+                      placeholder="contact@comptaclems.fr"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-map-pin"></i>
+                    Adresse
+                  </label>
+                  <textarea 
+                    id="c_address" 
+                    rows="3"
+                    placeholder="Adresse postale de l'entreprise"
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEO Card -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                  <i class="fas fa-chart-line text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">SEO</h3>
+                  <p class="text-xs text-slate-500">Référencement naturel</p>
+                </div>
+              </div>
+              
+              <div class="p-6 space-y-5">
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-heading"></i>
+                    Suffixe de titre
+                  </label>
+                  <div class="relative">
+                    <input 
+                      id="seo_suffix" 
+                      type="text" 
+                      placeholder=" | ComptaClems"
+                      class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i>
+                    Exemple: "Accueil | ComptaClems"
+                  </p>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-paragraph"></i>
+                    Meta-description par défaut
+                  </label>
+                  <textarea 
+                    id="seo_description" 
+                    rows="4"
+                    placeholder="Description globale du site pour les moteurs de recherche"
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  ></textarea>
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-font"></i>
+                    150-160 caractères recommandés
+                  </p>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-tags"></i>
+                    Mots-clés
+                  </label>
+                  <input 
+                    id="seo_keywords" 
+                    type="text" 
+                    placeholder="comptabilité, fiscalité, entreprise, PME"
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  />
+                  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <i class="fas fa-hashtag"></i>
+                    Séparés par des virgules
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === AVANCÉ === -->
+        <section id="tab-advanced" class="tabPanel hidden" role="tabpanel">
+          <div class="grid grid-cols-1 gap-8">
+
+            <!-- Cache & Performances -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                  <i class="fas fa-rocket text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Cache & Performances</h3>
+                  <p class="text-xs text-slate-500">Optimisation de la plateforme</p>
+                </div>
+              </div>
+              <div class="p-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-slate-700">Vider le cache</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Supprime tous les caches de l'application</p>
+                  </div>
+                  <button id="clearCacheBtn" class="px-5 py-3 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700">
+                    <i class="fas fa-broom"></i>
+                    Nettoyer
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Maintenance DB -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-700 to-emerald-800 flex items-center justify-center">
+                  <i class="fas fa-database text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Base de données</h3>
+                  <p class="text-xs text-slate-500">Optimisation et maintenance</p>
+                </div>
+              </div>
+              <div class="p-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-slate-700">Optimiser les tables</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Réorganise les tables pour de meilleures performances (ANALYZE)</p>
+                  </div>
+                  <button id="optimizeDbBtn" class="px-5 py-3 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700">
+                    <i class="fas fa-database"></i>
+                    Optimiser
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test SMTP -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+                  <i class="fas fa-envelope-open-text text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Test SMTP</h3>
+                  <p class="text-xs text-slate-500">Vérifier la configuration d'envoi des e-mails</p>
+                </div>
+              </div>
+              <div class="p-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4">
+                  <div class="flex-1">
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                      <i class="fas fa-at"></i>
+                      Adresse de réception du test
+                    </label>
+                    <div class="relative">
+                      <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                      <input
+                        id="smtpTestEmail"
+                        type="email"
+                        placeholder="test@exemple.com"
+                        class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                      />
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                      <i class="fas fa-info-circle"></i>
+                      Un e-mail de test sera envoyé à cette adresse via la config SMTP du serveur
+                    </p>
+                  </div>
+                  <button id="btnTestSmtp" class="px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition flex items-center gap-2 font-medium shadow-lg shadow-blue-500/30 shrink-0">
+                    <i class="fas fa-paper-plane mr-2"></i>Envoyer test
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Informations système -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center">
+                  <i class="fas fa-server text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Informations système</h3>
+                  <p class="text-xs text-slate-500">État du serveur et de la base de données</p>
+                </div>
+              </div>
+              <div class="p-6">
+                <div id="systemInfoContainer" class="text-sm text-slate-500 italic">
+                  Cliquez sur l'onglet Avancé pour charger les informations système.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === MON COMPTE === -->
+        <section id="tab-account" class="tabPanel hidden" role="tabpanel">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Profil -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+                  <i class="fas fa-id-card text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Mon profil</h3>
+                  <p class="text-xs text-slate-500">Modifier vos informations personnelles</p>
+                </div>
+              </div>
+              <div class="p-6 space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                      <i class="fas fa-user"></i>
+                      Prénom
+                    </label>
+                    <input
+                      id="p_firstname"
+                      type="text"
+                      placeholder="Prénom"
+                      class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                      <i class="fas fa-user"></i>
+                      Nom
+                    </label>
+                    <input
+                      id="p_lastname"
+                      type="text"
+                      placeholder="Nom de famille"
+                      class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-envelope"></i>
+                    Adresse e-mail
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input
+                      id="p_email"
+                      type="email"
+                      placeholder="votre@email.com"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                </div>
+
+                <!-- Authentification 2FA -->
+                <div class="pt-4 border-t border-slate-100">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-slate-700">Authentification à 2 facteurs</p>
+                      <p class="text-xs text-slate-500 mt-0.5">TOTP (Google Authenticator, Authy…)</p>
+                    </div>
+                    <div id="twoFaStatus">
+                      <span class="inline-flex items-center gap-1.5 text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full text-xs font-semibold">
+                        <i class="fas fa-spinner fa-spin"></i> Chargement...
+                      </span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-3 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i>
+                    Pour activer/désactiver la 2FA, rendez-vous dans la page
+                    <a href="/admin/adminAdministrateurs.html" class="text-blue-600 hover:underline ml-1">Administrateurs</a>.
+                  </p>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                  <button id="btnSaveProfile" class="btn-primary px-6 py-3 rounded-xl shadow-lg flex items-center gap-2">
+                    <i class="fas fa-save mr-2"></i>Enregistrer le profil
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="settings-card">
+              <div class="settings-card-header flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                  <i class="fas fa-lock text-white text-sm"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900">Changer le mot de passe</h3>
+                  <p class="text-xs text-slate-500">Sécurité de votre compte administrateur</p>
+                </div>
+              </div>
+              <div class="p-6 space-y-5">
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-key"></i>
+                    Mot de passe actuel
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input
+                      id="p_old_pwd"
+                      type="password"
+                      placeholder="••••••••••"
+                      autocomplete="current-password"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-key"></i>
+                    Nouveau mot de passe
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input
+                      id="p_new_pwd"
+                      type="password"
+                      placeholder="Minimum 10 caractères"
+                      autocomplete="new-password"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                  <!-- Barre de force -->
+                  <div class="mt-2">
+                    <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                      <div id="pwdStrengthBar" class="h-full rounded-full transition-all duration-300 bg-slate-200" style="width:0%"></div>
+                    </div>
+                    <p class="text-xs mt-1 text-slate-500">
+                      Force : <span id="pwdStrengthText" class="font-medium"></span>
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <i class="fas fa-check-double"></i>
+                    Confirmer le nouveau mot de passe
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input
+                      id="p_confirm_pwd"
+                      type="password"
+                      placeholder="Répétez le nouveau mot de passe"
+                      autocomplete="new-password"
+                      class="form-input w-full pl-12 pr-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                    />
+                  </div>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 flex items-start gap-2">
+                  <i class="fas fa-shield-alt mt-0.5 shrink-0"></i>
+                  <span>Utilisez au moins 10 caractères avec des majuscules, chiffres et caractères spéciaux pour un mot de passe robuste.</span>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                  <button id="btnChangePwd" class="px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl font-medium transition shadow-lg shadow-red-500/30 flex items-center gap-2">
+                    <i class="fas fa-key mr-2"></i>Changer le mot de passe
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ====================================
+         BARRE D'ACTIONS GLOBALES
+    ==================================== -->
+    <div class="mt-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200/80 p-5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        
+        <!-- Dirty state indicator -->
+        <div class="flex items-center gap-3">
+          <span id="dirtyState" class="inline-flex items-center gap-3 text-sm">
+            <span class="dirty-dot w-3 h-3 rounded-full bg-slate-300"></span>
+            <span class="text-slate-600 font-medium">Aucune modification</span>
+          </span>
+          
+          <span class="text-slate-300 hidden md:inline">|</span>
+          
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <i class="fas fa-shield-alt"></i>
+            <span>Superadmin requis</span>
+          </div>
+        </div>
+
+        <!-- Actions group -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="relative">
+            <input id="importFile" type="file" accept="application/json" class="hidden" />
+            <button id="btnImport" class="px-5 py-3 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 shadow-sm">
+              <i class="fas fa-file-import"></i>
+              <span class="hidden sm:inline">Importer</span>
+            </button>
+          </div>
+          
+          <button id="btnExport" class="px-5 py-3 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 shadow-sm">
+            <i class="fas fa-file-export"></i>
+            <span class="hidden sm:inline">Exporter</span>
+          </button>
+          
+          <button id="btnReload" class="px-5 py-3 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 shadow-sm">
+            <i class="fas fa-sync-alt"></i>
+            <span class="hidden sm:inline">Recharger</span>
+          </button>
+          
+          <button id="btnDefaults" class="px-5 py-3 bg-amber-50 border-2 border-amber-200 rounded-xl hover:bg-amber-100 transition flex items-center gap-2 text-amber-700 shadow-sm">
+            <i class="fas fa-undo-alt"></i>
+            <span class="hidden sm:inline">Défauts</span>
+          </button>
+          
+          <button id="btnSave" class="btn-primary px-6 py-3 rounded-xl shadow-lg flex items-center gap-2">
+            <i class="fas fa-save"></i>
+            <span class="font-semibold">Enregistrer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================
+         FOOTER INFORMATIONS
+    ==================================== -->
+    <div class="mt-6 text-xs text-slate-400 text-right">
+      <p>Version 2.0.0 • Configuration système • Dernière sauvegarde: <span id="lastBackup">—</span></p>
+    </div>
+  </main>
+
+  <!-- Script de déconnexion amélioré -->
+  <script>
+    (function() {
+      'use strict';
+      
+      // Déconnexion sécurisée
+      const logoutBtn = document.getElementById('adminLogoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Déconnexion...';
+          this.disabled = true;
+          
+          setTimeout(() => {
+            localStorage.removeItem('cc_admin_auth');
+            localStorage.removeItem('cc_admin_user');
+            sessionStorage.clear();
+            window.location.href = '/admin/adminLogin.html?logout=success';
+          }, 300);
+        });
+      }
+
+      // Initials de l'admin
+      try {
+        const auth = JSON.parse(localStorage.getItem('cc_admin_auth') || '{}');
+        if (auth.admin?.first_name && auth.admin?.last_name) {
+          const fullName = `${auth.admin.first_name} ${auth.admin.last_name}`;
+          const firstName = auth.admin.first_name;
+          const initials = (auth.admin.first_name[0] + (auth.admin.last_name[0] || '')).toUpperCase();
+          
+          const adminInitials = document.getElementById('adminInitials');
+          const headerAdminInitials = document.getElementById('headerAdminInitials');
+          const adminName = document.getElementById('adminName');
+          const headerAdminName = document.getElementById('headerAdminName');
+          const adminRole = document.getElementById('adminRole');
+          const headerAdminRole = document.getElementById('headerAdminRole');
+          
+          if (adminInitials) adminInitials.textContent = initials;
+          if (headerAdminInitials) headerAdminInitials.textContent = initials;
+          if (adminName) adminName.textContent = fullName;
+          if (headerAdminName) headerAdminName.textContent = firstName;
+          
+          const roleText = auth.admin.role === 'superadmin' ? 'Super Admin' : 
+                          auth.admin.role === 'admin' ? 'Admin' : 'Support';
+          if (adminRole) adminRole.textContent = roleText;
+          if (headerAdminRole) headerAdminRole.textContent = auth.admin.role === 'superadmin' ? 'Super Administrateur' : 'Administrateur';
+        }
+      } catch (e) {
+        console.error('Erreur chargement profil:', e);
+      }
+    })();
+  </script>
+  <script src="/assets-js/admin/adminSidebarPatch.js" defer></script>
+</body>
+</html>

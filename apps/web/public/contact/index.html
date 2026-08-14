@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth" data-theme="light">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | ComptaClems - Cabinet comptable virtuel</title>
+    <meta name="description" content="Contactez ComptaClems pour vos déclarations d'impôts et services comptables. Réponses rapides et accompagnement personnalisé au Québec et Canada.">
+
+    <!-- Fonts — DM Serif Display + DM Sans (charte graphique ComptaClems) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"DM Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
+              serif: ['"DM Serif Display"', 'Georgia', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets-css/main.css" />
+    <link rel="stylesheet" href="/assets-css/components.css" />
+    <link rel="stylesheet" href="/assets-css/contact.css" />
+
+    <!-- Dark mode init — évite le flash au chargement -->
+    <script>
+      (function () {
+        try {
+          var key = 'cc_theme';
+          var saved = localStorage.getItem(key);
+          var mode = (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var shouldDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+          document.documentElement.classList.toggle('dark', shouldDark);
+          document.documentElement.setAttribute('data-theme', shouldDark ? 'dark' : 'light');
+        } catch (_) {}
+      })();
+    </script>
+
+    <style>
+      /* Palette navy/or — remplace les dégradés bleu/cyan Tailwind */
+      .from-blue-400 { --tw-gradient-from: var(--gold-400) !important; }
+      .to-cyan-400   { --tw-gradient-to:   var(--gold-300) !important; }
+      .from-indigo-600 { --tw-gradient-from: var(--navy-700) !important; }
+      .to-emerald-600  { --tw-gradient-to:   var(--navy-600) !important; }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 text-slate-900">
+    <!-- Bouton retour en haut -->
+    <button
+      id="scrollTop"
+      class="hidden fixed bottom-8 right-8 z-50 text-white p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl" style="background: var(--navy-800);"
+      aria-label="Retour en haut"
+    >
+      <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+
+    <!-- Header global -->
+    <script src="/assets-js/global/header.js"></script>
+
+    <!-- Contenu principal -->
+    <main>
+      <!-- Hero Contact -->
+      <section class="contact-hero section-spacing">
+        <!-- Background décor -->
+        <div class="hero-decor pointer-events-none absolute inset-0">
+          <div
+            class="absolute -top-20 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-indigo-600/20 blur-3xl"
+          ></div>
+          <div
+            class="absolute -bottom-24 right-[-100px] h-[480px] w-[480px] rounded-full bg-emerald-500/20 blur-3xl"
+          ></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-slate-950/0 via-slate-950/10 to-slate-950/40"
+          ></div>
+          <div
+            class="absolute inset-0 opacity-[0.08] [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:20px_20px]"
+          ></div>
+        </div>
+
+        <div
+          class="relative z-10 max-w-5xl mx-auto px-6 lg:px-8 pt-12 pb-12 lg:pt-16 lg:pb-16"
+        >
+          <!-- Contenu centré -->
+          <div class="flex flex-col items-center text-center text-slate-900">
+            <!-- Badge -->
+            <div
+              class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-4 py-2 mb-5"
+            >
+              <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-sm font-semibold text-slate-900">
+                Contact & Support
+            </span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              Nous sommes là pour
+              <span style="color: var(--gold-400);">
+                vous accompagner
+              </span>
+            </h1>
+
+            <p class="text-xl mb-10 max-w-2xl mx-auto leading-relaxed hero-lead">
+              Une question sur vos déclarations ? Besoin d'un conseil fiscal personnalisé ? Notre équipe vous répond sous 24h.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <div class="text-center p-6 rounded-2xl contact-hero-card">
+                <div class="w-14 h-14 rounded-full contact-hero-icon mx-auto mb-4">
+                  <i class="fas fa-phone-alt text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Par téléphone</h3>
+                <p class="mb-3 hero-muted">Service rapide et direct</p>
+                <a href="tel:5062521410" class="text-white text-2xl font-bold hero-link">
+                  506-252-1410
+                </a>
+              </div>
+
+              <div class="text-center p-6 rounded-2xl contact-hero-card">
+                <div class="w-14 h-14 rounded-full contact-hero-icon mx-auto mb-4">
+                  <i class="fas fa-envelope text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Par email</h3>
+                <p class="mb-3 hero-muted">Réponse sous 24h</p>
+                <a href="mailto:comptaclems@gmail.com" class="text-white text-lg font-bold hero-link">
+                  comptaclems@gmail.com
+                </a>
+              </div>
+
+              <div class="text-center p-6 rounded-2xl contact-hero-card">
+                <div class="w-14 h-14 rounded-full contact-hero-icon mx-auto mb-4">
+                  <i class="fas fa-comments text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Support client</h3>
+                <p class="mb-3 hero-muted">Accompagnement 7j/7</p>
+                <p class="text-white text-lg font-bold">Via votre espace client</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="bg-gradient-to-b from-slate-50 to-white py-20" id="faq">
+        <div class="max-w-5xl mx-auto px-6">
+          <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+              Questions
+              <span class="text-primary">fréquentes</span>
+            </h2>
+            <p class="text-lg text-slate-600">
+              Réponses claires sur nos services et votre accompagnement.
+            </p>
+          </div>
+
+          <div class="faq-list">
+            <!-- FAQ 1 -->
+            <div class="faq-item">
+              <button type="button" class="faq-question" aria-expanded="true" aria-controls="faq-1" id="faq-btn-1">
+                <span class="text-lg font-semibold text-slate-900">
+                  Comment se déroule une déclaration d'impôts avec ComptaClems ?
+                </span>
+                <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+              </button>
+              <div class="faq-answer">
+                <div class="space-y-3">
+                  <p>Processus 100% en ligne :</p>
+                  <ul class="space-y-2 pl-5">
+                    <li class="flex items-start"><i class="fas fa-check-circle text-emerald-500 mt-1 mr-2"></i><span>Création de compte et connexion</span></li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-emerald-500 mt-1 mr-2"></i><span>Remplissage du formulaire d'informations</span></li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-emerald-500 mt-1 mr-2"></i><span>Téléversement sécurisé des documents</span></li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-emerald-500 mt-1 mr-2"></i><span>Validation et envoi</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+              <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-2" id="faq-btn-2">
+                <span class="text-lg font-semibold text-slate-900">
+                  Quels documents dois-je préparer avant de commencer ?
+                </span>
+                <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+              </button>
+              <div class="faq-answer">
+                <div class="space-y-3">
+                  <p class="mb-3">Selon votre profil :</p>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl" style="background: var(--navy-50, #f0f4ff);">
+                      <h4 class="font-bold mb-2" style="color: var(--navy-800);">Particuliers</h4>
+                      <ul class="space-y-1 text-sm">
+                        <li class="flex items-center"><i class="fas fa-file-invoice mr-2" style="color: var(--navy-600);"></i><span>T4</span></li>
+                        <li class="flex items-center"><i class="fas fa-file-invoice mr-2" style="color: var(--navy-600);"></i><span>Relevé 1</span></li>
+                        <li class="flex items-center"><i class="fas fa-file-invoice mr-2" style="color: var(--navy-600);"></i><span>T5</span></li>
+                      </ul>
+                    </div>
+                    <div class="p-4 rounded-xl" style="background: var(--gold-50, #fdf8e8);">
+                      <h4 class="font-bold mb-2" style="color: var(--navy-800);">Travailleurs autonomes</h4>
+                      <ul class="space-y-1 text-sm">
+                        <li class="flex items-center"><i class="fas fa-receipt mr-2" style="color: var(--gold-600, #b8860b);"></i><span>Registre des revenus</span></li>
+                        <li class="flex items-center"><i class="fas fa-receipt mr-2" style="color: var(--gold-600, #b8860b);"></i><span>Dépenses</span></li>
+                        <li class="flex items-center"><i class="fas fa-receipt mr-2" style="color: var(--gold-600, #b8860b);"></i><span>TPS/TVQ</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+              <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-3" id="faq-btn-3">
+                <span class="text-lg font-semibold text-slate-900">
+                  Combien de temps prend le traitement d'une déclaration ?
+                </span>
+                <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+              </button>
+              <div class="faq-answer">
+                <div class="space-y-3">
+                  <p>Le délai dépend de la complexité de votre situation :</p>
+                  <ul class="space-y-2">
+                    <li class="flex items-center">
+                      <span class="w-24 font-medium text-primary">Situation simple :</span>
+                      <span>1 à 2 jours ouvrables</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-24 font-medium text-primary">Travailleur autonome :</span>
+                      <span>2 à 3 jours ouvrables</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-24 font-medium text-primary">PME :</span>
+                      <span>10 à 15 jours ouvrables</span>
+                    </li>
+                  </ul>
+                  <p class="text-sm text-slate-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Les délais commencent à courir une fois tous vos documents reçus.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+              <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-4" id="faq-btn-4">
+                <span class="text-lg font-semibold text-slate-900">
+                  Est-ce que le service est adapté si je suis nouveau au Québec ?
+                </span>
+                <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+              </button>
+              <div class="faq-answer">
+                <p>Absolument ! Nous accompagnons spécifiquement les nouveaux résidents avec :</p>
+                <ul class="space-y-2 mt-3">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-emerald-500 mt-1 mr-2"></i>
+                    <span>Explications des particularités fiscales québécoises et canadiennes</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-emerald-500 mt-1 mr-2"></i>
+                    <span>Aide pour les formulaires spécifiques aux nouveaux résidents</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-emerald-500 mt-1 mr-2"></i>
+                    <span>Gestion des déclarations pour les étudiants internationaux</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-emerald-500 mt-1 mr-2"></i>
+                    <span>Support multilingue disponible</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="faq-item">
+              <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-5" id="faq-btn-5">
+                <span class="text-lg font-semibold text-slate-900">
+                  5. Quels sont vos tarifs et modes de paiement ?
+                </span>
+                <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+              </button>
+              <div class="faq-answer">
+                <div class="space-y-4">
+                  <div class="grid md:grid-cols-3 gap-4">
+                    <div class="text-center p-4 bg-slate-50 rounded-xl">
+                      <h4 class="font-bold text-slate-900">Particuliers</h4>
+                      <p class="text-2xl font-bold text-primary mt-2">À partir de 75$</p>
+                      <p class="text-sm text-slate-500 mt-1">Déclaration complète</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 rounded-xl">
+                      <h4 class="font-bold text-slate-900">Travailleurs autonomes</h4>
+                      <p class="text-2xl font-bold text-primary mt-2">À partir de 150$</p>
+                      <p class="text-sm text-slate-500 mt-1">Déclaration + TPS/TVQ</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 rounded-xl">
+                      <h4 class="font-bold text-slate-900">PME</h4>
+                      <p class="text-2xl font-bold text-primary mt-2">Sur devis</p>
+                      <p class="text-sm text-slate-500 mt-1">Service personnalisé</p>
+                    </div>
+                  </div>
+                  <div class="p-4 rounded-xl" style="background: var(--navy-50, #f0f4ff);">
+                    <h4 class="font-bold mb-2" style="color: var(--navy-800);">Modes de paiement acceptés :</h4>
+                    <div class="flex flex-wrap gap-3">
+                      <span class="px-3 py-1 bg-white rounded-lg text-sm border">Visa/Mastercard</span>
+                      <span class="px-3 py-1 bg-white rounded-lg text-sm border">Interac</span>
+                      <span class="px-3 py-1 bg-white rounded-lg text-sm border">Virement bancaire</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="faq-item">
+              <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-6" id="faq-btn-6">
+                <span class="text-lg font-semibold text-slate-900">
+                  6. Comment puis-je suivre l'avancement de mon dossier ?
+                </span>
+                <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+              </button>
+              <div class="faq-answer">
+                <div class="space-y-4">
+                  <p>Plusieurs moyens pour rester informé :</p>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex items-start">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3" style="background: var(--navy-100, #dce6f7); color: var(--navy-700);">
+                        <i class="fas fa-desktop"></i>
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-slate-900">Espace client</h4>
+                        <p class="text-sm text-slate-600">Tableau de bord avec statut en temps réel</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3" style="background: var(--gold-100, #fdefc3); color: var(--gold-700, #a07800);">
+                        <i class="fas fa-bell"></i>
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-slate-900">Notifications</h4>
+                        <p class="text-sm text-slate-600">Alertes email à chaque étape clé</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-slate-50 p-4 rounded-xl">
+                    <p class="text-sm text-slate-600">
+                      <i class="fas fa-info-circle mr-1 text-primary"></i>
+                      Vous recevez également un rapport détaillé une fois votre déclaration transmise aux autorités fiscales.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-12">
+            <p class="text-slate-600 mb-4">Vous ne trouvez pas la réponse à votre question ?</p>
+            <a href="#contact" class="btn-primary px-8 py-3 rounded-xl inline-flex items-center">
+              <i class="fas fa-comment-dots mr-2"></i>
+              Posez votre question directement
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formulaire de Contact -->
+      <section class="bg-gradient-to-b from-white to-slate-50 section-spacing" id="contact"> 
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="grid lg:grid-cols-2 gap-12 items-start">
+            <!-- Informations -->
+            <div>
+              <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                Écrivez-nous
+                <span class="text-primary">directement</span>
+              </h2>
+              <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                Que tu sois particulier, travailleur autonome ou dirigeant de PME, on répond à tes questions fiscales et comptables.
+              </p>
+              <div class="space-y-6">
+                <div class="flex items-start">
+                  <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mr-4 shadow-sm">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-900 mb-1">Horaires de contact</h3>
+                    <p class="text-slate-600">Lundi au vendredi : 9h - 17h</p>
+                    <p class="text-sm text-slate-500">Support en ligne disponible 7 jours sur 7</p>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mr-4 shadow-sm">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-900 mb-1">Bureau principal</h3>
+                    <p class="text-slate-600">164 Rue Principale</p>
+                    <p class="text-slate-600">Saint-Louis de Gonzague, QC J0S 1T0</p>
+                    <p class="text-sm text-slate-500">Cabinet comptable virtuel - Service partout au Québec et Canada</p>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <div class="w-12 h-12 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center mr-4 shadow-sm">
+                    <i class="fas fa-bolt"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-900 mb-1">Temps de réponse</h3>
+                    <p class="text-slate-600">Email : Moins de 24 heures</p>
+                    <p class="text-slate-600">Support client : Moins de 2 heures</p>
+                    <p class="text-sm text-slate-500">Urgences fiscales : Réponse immédiate par téléphone</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulaire -->
+            <div class="bg-slate-50 rounded-2xl shadow-xl p-8 border border-slate-200">
+              <div class="text-center mb-8">
+                <h3 class="text-3xl font-bold text-slate-900 mb-2">Formulaire de contact</h3>
+                <p class="text-slate-600">
+                  Remplis ce formulaire et on te répond rapidement
+                </p>
+              </div>
+
+              <div
+                id="contactAlert"
+                class="hidden mb-6 p-4 rounded-xl text-sm border"
+                role="status"
+                aria-live="polite"
+              ></div>
+
+              <form id="contactForm" class="space-y-6" novalidate>
+                <!-- Honeypot anti-spam -->
+                <div class="hidden">
+                  <label for="website">Website</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    tabindex="-1"
+                    autocomplete="off"
+                  />
+                </div>
+
+                <!-- Source page -->
+                <input type="hidden" name="source_page" value="contact" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="first_name" class="block text-sm font-medium text-slate-700 mb-2">
+                      Prénom *
+                    </label>
+                    <input
+                      type="text"
+                      id="first_name"
+                      name="first_name"
+                      required
+                      placeholder="Ton prénom"
+                      class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="last_name" class="block text-sm font-medium text-slate-700 mb-2">
+                      Nom *
+                    </label>
+                    <input
+                      type="text"
+                      id="last_name"
+                      name="last_name"
+                      required
+                      placeholder="Ton nom"
+                      class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+                    Adresse courriel *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="exemple@email.com"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label for="phone" class="block text-sm font-medium text-slate-700 mb-2">
+                    Téléphone (optionnel)
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="514-000-0000"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label for="subject" class="block text-sm font-medium text-slate-700 mb-2">
+                    Sujet *
+                  </label>
+                  <select
+                    id="subject"
+                    name="subject"
+                    required
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+                  >
+                    <option value="">Sélectionne un sujet</option>
+                    <option value="declaration">Déclaration d’impôts</option>
+                    <option value="travailleur_autonome">Travailleur autonome</option>
+                    <option value="pme">Comptabilité PME</option>
+                    <option value="devis">Demande de devis</option>
+                    <option value="support">Support technique</option>
+                    <option value="autre">Autre question</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="message" class="block text-sm font-medium text-slate-700 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    required
+                    placeholder="Décris ta demande..."
+                    class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none resize-y"
+                  ></textarea>
+                </div>
+
+                <div class="flex items-start">
+                  <input
+                    type="checkbox"
+                    id="privacy"
+                    name="privacy"
+                    required
+                    class="w-4 h-4 mt-1 text-primary border-slate-300 rounded focus:ring-primary/20"
+                  />
+                  <label for="privacy" class="ml-2 text-sm text-slate-600">
+                    J’accepte la
+                    <a
+                      href="/legal/politique-confidentialite.html"
+                      class="text-primary font-medium hover:underline"
+                    >
+                      politique de confidentialité
+                    </a>
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  id="contactSubmit"
+                  class="w-full btn-primary py-4 rounded-xl font-semibold text-lg"
+                >
+                  <i class="fas fa-paper-plane mr-2"></i>
+                  Envoyer mon message
+                </button>
+
+                <p class="text-center text-sm text-slate-500 pt-4 border-t border-slate-200">
+                  <i class="fas fa-shield-alt mr-1 text-emerald-500"></i>
+                  Tes informations ne seront jamais partagées
+                </p>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer global -->
+    <script src="/assets-js/global/footer.js"></script>
+
+    <!-- Script global -->
+    <script src="/assets-js/core/http.js" defer></script>
+    <script src="/assets-js/global/global.js" defer></script>
+    <script src="/assets-js/pages/contact.js" defer></script>
+  </body>
+</html>

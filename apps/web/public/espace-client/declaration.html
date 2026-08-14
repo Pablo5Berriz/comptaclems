@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <title>Déclaration d'impôts – Particuliers | ComptaClems</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/clients/declaration.css" />
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <!-- Guard d'authentification — redirige vers login si session absente -->
+  <script src="/assets-js/auth/clientAuthGuard.js"></script>
+</head>
+
+<body>
+
+  <!-- Scroll to top -->
+  <button id="scrollTop" aria-label="Retour en haut">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <script src="/assets-js/global/header.js"></script>
+
+  <main>
+
+    <!-- En-tête de page -->
+    <div class="page-header">
+      <h1>Déclaration d'impôts — Particuliers</h1>
+      <p>Remplissez les étapes ci-dessous pour soumettre votre déclaration</p>
+    </div>
+
+    <!-- Barre de progression -->
+    <div class="progress-wrapper">
+      <div class="progress-meta">
+        <span class="progress-meta-step">Étape <span id="current-step-display">1</span> sur 8</span>
+        <span class="progress-meta-name" id="step-name">Informations personnelles</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" style="width: 12.5%;"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         FORMULAIRE
+    ═════════════════════════════════════════════════════ -->
+    <form id="tax-declaration-form" novalidate>
+
+      <!-- ══ STEP 1 — Informations personnelles ══ -->
+      <section class="form-step active" id="step-1" data-step-name="Informations personnelles">
+        <fieldset>
+          <legend>Étape 1 – Informations personnelles</legend>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>Prénom *</label>
+              <input class="form-input" name="firstName" required placeholder="Votre prénom">
+            </div>
+            <div class="field">
+              <label>Nom *</label>
+              <input class="form-input" name="lastName" required placeholder="Votre nom">
+            </div>
+            <div class="field">
+              <label>Date de naissance *</label>
+              <input class="form-input" type="date" name="date_of_birth" required>
+            </div>
+            <div class="field">
+              <label>NAS *</label>
+              <input class="form-input" type="password" name="nas" required placeholder="123 456 789">
+            </div>
+            <div class="field">
+              <label>Téléphone *</label>
+              <input class="form-input" name="phone" required placeholder="(514) 555-1234">
+            </div>
+            <div class="field">
+              <label>Courriel *</label>
+              <input class="form-input" type="email" name="email" required placeholder="vous@exemple.com">
+            </div>
+            <div class="field col-span-2">
+              <label>Situation matrimoniale *</label>
+              <select name="maritalStatus" id="marital_status" class="form-select" required>
+                <option value="">Sélectionnez votre situation</option>
+                <option value="single">Célibataire</option>
+                <option value="married">Marié(e)</option>
+                <option value="common_law">Conjoint(e) de fait</option>
+                <option value="separated">Séparé(e)</option>
+                <option value="divorced">Divorcé(e)</option>
+                <option value="widowed">Veuf / Veuve</option>
+              </select>
+            </div>
+          </div>
+
+          <h3 class="form-group-title">Adresse</h3>
+
+          <div class="grid-2">
+            <div class="field col-span-2">
+              <label>Adresse *</label>
+              <input class="form-input" name="address_line1" required placeholder="Numéro et rue">
+            </div>
+            <div class="field">
+              <label>Ville *</label>
+              <input class="form-input" name="city" required placeholder="Ville">
+            </div>
+            <div class="field">
+              <label>Province *</label>
+              <select name="province" class="form-select" required>
+                <option value="">Sélectionnez</option>
+                <option value="QC">Québec</option>
+                <option value="ON">Ontario</option>
+                <option value="BC">Colombie-Britannique</option>
+                <option value="AB">Alberta</option>
+                <option value="MB">Manitoba</option>
+                <option value="SK">Saskatchewan</option>
+                <option value="NS">Nouvelle-Écosse</option>
+                <option value="NB">Nouveau-Brunswick</option>
+                <option value="NL">Terre-Neuve-et-Labrador</option>
+                <option value="PE">Île-du-Prince-Édouard</option>
+                <option value="NT">Territoires du Nord-Ouest</option>
+                <option value="YT">Yukon</option>
+                <option value="NU">Nunavut</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Code postal *</label>
+              <input class="form-input" name="postal_code" required placeholder="A1A 1A1">
+            </div>
+          </div>
+
+          <div id="joint-question" class="info-block hidden">
+            <label>
+              <input type="checkbox" name="joint_declaration" id="joint_declaration_checkbox">
+              Cocher pour faire une déclaration conjointe avec votre conjoint(e)
+            </label>
+            <p>Des informations sur votre conjoint vous seront demandées à l'étape 3</p>
+          </div>
+
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 2 — Statut fiscal ══ -->
+      <section class="form-step" id="step-2" data-step-name="Statut fiscal">
+        <fieldset>
+          <legend>Étape 2 – Statut fiscal</legend>
+
+          <div class="field" style="margin-bottom:1.375rem;">
+            <label>Statut au Canada *</label>
+            <select name="canada_status" class="form-select" style="max-width:440px;" required>
+              <option value="">Sélectionnez votre statut</option>
+              <option value="citizen">Citoyen canadien</option>
+              <option value="permanent_resident">Résident permanent</option>
+              <option value="temporary_resident">Résident temporaire</option>
+              <option value="non_resident">Non-résident</option>
+              <option value="protected_person">Personne protégée</option>
+            </select>
+          </div>
+
+          <div class="field" style="margin-bottom:1.375rem;">
+            <label>Est-ce votre première déclaration d'impôts au Canada ? *</label>
+            <select name="first_declaration" id="first_declaration_select" class="form-select" style="max-width:440px;" required>
+              <option value="">Choisir</option>
+              <option value="yes">Oui</option>
+              <option value="no">Non</option>
+            </select>
+          </div>
+
+          <div class="field" style="margin-bottom:1.375rem;">
+            <label>Quel profil vous correspond le mieux ? *</label>
+            <select name="fiscal_profile" class="form-select" style="max-width:440px;" required>
+              <option value="">Sélectionnez votre profil</option>
+              <option value="simple">Particulier simple</option>
+              <option value="student">Étudiant(e)</option>
+              <option value="retired">Retraité(e)</option>
+            </select>
+            <span style="display:block;margin-top:.375rem;font-size:.8125rem;color:var(--text-tertiary,#6b7280);">
+              Ce choix aide à déterminer le tarif applicable à votre situation.
+            </span>
+          </div>
+
+          <div class="field">
+            <label>Avez-vous des enfants à charge ? *</label>
+            <select name="has_children" id="has_children" class="form-select" style="max-width:440px;" required>
+              <option value="">Choisir</option>
+              <option value="yes">Oui</option>
+              <option value="no">Non</option>
+            </select>
+          </div>
+
+          <div id="children-count-wrapper" class="conditional-block hidden" style="margin-top:1.125rem; max-width:440px;">
+            <label class="field-label">Combien d'enfants à charge avez-vous ?</label>
+            <select name="children_count" id="children_count" class="form-select">
+              <option value="1">1 enfant</option>
+              <option value="2">2 enfants</option>
+              <option value="3">3 enfants</option>
+              <option value="4">4 enfants ou plus</option>
+            </select>
+          </div>
+
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 3 — Informations conjoint ══ -->
+      <section class="form-step" id="step-3" data-step-name="Informations conjoint">
+        <fieldset>
+          <legend>Étape 3 – Informations sur le/la conjoint(e)</legend>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>Prénom du conjoint</label>
+              <input class="form-input" name="spouseFirstName" placeholder="Prénom">
+            </div>
+            <div class="field">
+              <label>Nom du conjoint</label>
+              <input class="form-input" name="spouseLastName" placeholder="Nom">
+            </div>
+            <div class="field">
+              <label>Date de naissance</label>
+              <input class="form-input" type="date" name="spouseDob">
+            </div>
+            <div class="field">
+              <label>NAS</label>
+              <input class="form-input" type="password" name="spouseNas" placeholder="123 456 789">
+            </div>
+            <div class="field">
+              <label>Téléphone</label>
+              <input class="form-input" name="spousePhone" placeholder="(514) 555-1234">
+            </div>
+            <div class="field">
+              <label>Courriel</label>
+              <input class="form-input" type="email" name="spouseEmail" placeholder="conjoint@exemple.com">
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:1.375rem;">
+            <label>Résidez-vous à la même adresse que votre conjoint(e) ?</label>
+            <select name="spouse_same_address" id="spouse_same_address_select" class="form-select" style="max-width:440px;">
+              <option value="">Choisir</option>
+              <option value="yes">Oui, même adresse</option>
+              <option value="no">Non, adresse différente</option>
+            </select>
+          </div>
+
+          <div id="spouse-address" class="conditional-block hidden" style="margin-top:1.125rem;">
+            <h4>Adresse du conjoint</h4>
+            <div class="grid-2">
+              <div class="field col-span-2">
+                <label>Adresse</label>
+                <input class="form-input" name="spouse_address" placeholder="Numéro et rue">
+              </div>
+              <div class="field">
+                <label>Ville</label>
+                <input class="form-input" name="spouse_city" placeholder="Ville">
+              </div>
+              <div class="field">
+                <label>Province</label>
+                <select name="spouse_province" class="form-select">
+                  <option value="">Sélectionnez</option>
+                  <option value="QC">Québec</option>
+                  <option value="ON">Ontario</option>
+                  <option value="BC">Colombie-Britannique</option>
+                  <option value="AB">Alberta</option>
+                  <option value="MB">Manitoba</option>
+                  <option value="SK">Saskatchewan</option>
+                  <option value="NS">Nouvelle-Écosse</option>
+                  <option value="NB">Nouveau-Brunswick</option>
+                  <option value="NL">Terre-Neuve-et-Labrador</option>
+                  <option value="PE">Île-du-Prince-Édouard</option>
+                  <option value="NT">Territoires du Nord-Ouest</option>
+                  <option value="YT">Yukon</option>
+                  <option value="NU">Nunavut</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Code postal</label>
+                <input class="form-input" name="spouse_postal_code" placeholder="A1A 1A1">
+              </div>
+            </div>
+          </div>
+
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 4 — Enfants à charge ══ -->
+      <section class="form-step" id="step-4" data-step-name="Enfants à charge">
+        <fieldset>
+          <legend>Étape 4 – Enfants à charge</legend>
+
+          <div id="children-list" style="display:flex; flex-direction:column; gap:.75rem;">
+            <p style="color:var(--text-tertiary); font-size:.9375rem;">Aucun enfant à charge</p>
+          </div>
+
+          <div id="child-navigation">
+            <button type="button" id="prev-child-btn" class="btn-secondary">
+              <i class="fas fa-arrow-left"></i> Enfant précédent
+            </button>
+            <button type="button" id="next-child-btn" class="btn-secondary">
+              Enfant suivant <i class="fas fa-arrow-right"></i>
+            </button>
+            <button type="button" id="finish-children-btn" class="btn-primary">
+              <i class="fas fa-check"></i> Terminer les enfants
+            </button>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 5 — Revenus client ══ -->
+      <section class="form-step" id="step-5" data-step-name="Revenus - Client">
+        <fieldset>
+          <legend>Étape 5 – Vos revenus et déductions</legend>
+
+          <p class="section-subtitle">Quels types de revenus et déductions vous concernent cette année ? Cochez toutes les cases qui s'appliquent.</p>
+
+          <div class="step-section">
+            <div class="section-cat navy">
+              <i class="fas fa-briefcase"></i> Revenus d'emploi
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="client_t4" name="client_docs[]" value="t4"><label for="client_t4">T4 – Revenus d'emploi (fédéral)</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_releve1" name="client_docs[]" value="releve1"><label for="client_releve1">Relevé 1 – Revenus d'emploi (Québec)</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4a" name="client_docs[]" value="t4a"><label for="client_t4a">T4A – Pensions, rentes, bourses d'études</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4e" name="client_docs[]" value="t4e"><label for="client_t4e">T4E – Prestations d'assurance-emploi</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4ps" name="client_docs[]" value="t4ps"><label for="client_t4ps">T4PS – Régime de participation des employés</label></div>
+            </div>
+          </div>
+
+          <div class="step-section">
+            <div class="section-cat green">
+              <i class="fas fa-chart-line"></i> Revenus de placements et retraite
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="client_t5" name="client_docs[]" value="t5"><label for="client_t5">T5 / Relevé 3 – Intérêts et dividendes</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t3" name="client_docs[]" value="t3"><label for="client_t3">T3 / Relevé 16 – Revenus de fiducies et FNB</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4rsp" name="client_docs[]" value="t4rsp"><label for="client_t4rsp">T4RSP / Relevé 2 – Retraits REER</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4rif" name="client_docs[]" value="t4rif"><label for="client_t4rif">T4RIF / Relevé 2 – Retraits FERR</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4ap" name="client_docs[]" value="t4ap"><label for="client_t4ap">T4A(P) – Prestations du RRQ / RPC</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t4aoas" name="client_docs[]" value="t4aoas"><label for="client_t4aoas">T4A(OAS) – Pension de la Sécurité de la vieillesse</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_t5007" name="client_docs[]" value="t5007"><label for="client_t5007">T5007 / Relevé 5 – Aide sociale, CSST, IVAC</label></div>
+            </div>
+          </div>
+
+          <div class="step-section">
+            <div class="section-cat violet">
+              <i class="fas fa-home"></i> Épargne, logement et propriété
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="client_reer" name="client_docs[]" value="reer"><label for="client_reer">REER – Cotisations de l'année</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_celiapp" name="client_docs[]" value="celiapp"><label for="client_celiapp">CELIAPP – Compte épargne première propriété</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_r31" name="client_docs[]" value="r31"><label for="client_r31">Relevé 31 – Frais de logement</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_interet_hypo" name="client_docs[]" value="interet_hypothecaire"><label for="client_interet_hypo">Relevé intérêts hypothécaires (propriétaires)</label></div>
+            </div>
+          </div>
+
+          <div class="step-section">
+            <div class="section-cat amber">
+              <i class="fas fa-receipt"></i> Crédits d'impôt et déductions
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="client_t2202" name="client_docs[]" value="t2202"><label for="client_t2202">T2202 / Relevé 8 – Frais de scolarité</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_medical" name="client_docs[]" value="medical"><label for="client_medical">Frais médicaux (reçus, prescriptions)</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_dons" name="client_docs[]" value="dons"><label for="client_dons">Reçus de dons de bienfaisance</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_syndicat" name="client_docs[]" value="syndicat"><label for="client_syndicat">Cotisations syndicales / professionnelles</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="client_teletravail" name="client_docs[]" value="teletravail"><label for="client_teletravail">Dépenses de télétravail (T2200)</label></div>
+            </div>
+          </div>
+
+          <div class="info-block" style="margin-top:.75rem;">
+            <label style="pointer-events:none; cursor:default;">
+              <i class="fas fa-info-circle" style="color:var(--navy-500); margin-top:1px;"></i>
+              Vous devrez téléverser les documents correspondants à l'étape 8.
+            </label>
+          </div>
+
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 6 — Revenus conjoint ══ -->
+      <section class="form-step" id="step-6" data-step-name="Revenus - Conjoint">
+        <fieldset>
+          <legend>Étape 6 – Revenus et déductions du conjoint</legend>
+
+          <p class="section-subtitle">Quels types de revenus et déductions concernent votre conjoint(e) cette année ?</p>
+
+          <div class="step-section">
+            <div class="section-cat navy">
+              <i class="fas fa-briefcase"></i> Revenus d'emploi
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4" name="spouse_docs[]" value="t4"><label for="spouse_t4">T4 – Revenus d'emploi (fédéral)</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_releve1" name="spouse_docs[]" value="releve1"><label for="spouse_releve1">Relevé 1 – Revenus d'emploi (Québec)</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4a" name="spouse_docs[]" value="t4a"><label for="spouse_t4a">T4A – Pensions, rentes, bourses d'études</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4e" name="spouse_docs[]" value="t4e"><label for="spouse_t4e">T4E – Prestations d'assurance-emploi</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4ps" name="spouse_docs[]" value="t4ps"><label for="spouse_t4ps">T4PS – Régime de participation des employés</label></div>
+            </div>
+          </div>
+
+          <div class="step-section">
+            <div class="section-cat green">
+              <i class="fas fa-chart-line"></i> Revenus de placements et retraite
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t5" name="spouse_docs[]" value="t5"><label for="spouse_t5">T5 / Relevé 3 – Intérêts et dividendes</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t3" name="spouse_docs[]" value="t3"><label for="spouse_t3">T3 / Relevé 16 – Revenus de fiducies et FNB</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4rsp" name="spouse_docs[]" value="t4rsp"><label for="spouse_t4rsp">T4RSP / Relevé 2 – Retraits REER</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4rif" name="spouse_docs[]" value="t4rif"><label for="spouse_t4rif">T4RIF / Relevé 2 – Retraits FERR</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4ap" name="spouse_docs[]" value="t4ap"><label for="spouse_t4ap">T4A(P) – Prestations du RRQ / RPC</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t4aoas" name="spouse_docs[]" value="t4aoas"><label for="spouse_t4aoas">T4A(OAS) – Pension de la Sécurité de la vieillesse</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t5007" name="spouse_docs[]" value="t5007"><label for="spouse_t5007">T5007 / Relevé 5 – Aide sociale, CSST, IVAC</label></div>
+            </div>
+          </div>
+
+          <div class="step-section">
+            <div class="section-cat violet">
+              <i class="fas fa-home"></i> Épargne, logement et propriété
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="spouse_reer" name="spouse_docs[]" value="reer"><label for="spouse_reer">REER – Cotisations de l'année</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_celiapp" name="spouse_docs[]" value="celiapp"><label for="spouse_celiapp">CELIAPP – Compte épargne première propriété</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_r31" name="spouse_docs[]" value="r31"><label for="spouse_r31">Relevé 31 – Frais de logement</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_interet_hypo" name="spouse_docs[]" value="interet_hypothecaire"><label for="spouse_interet_hypo">Relevé intérêts hypothécaires</label></div>
+            </div>
+          </div>
+
+          <div class="step-section">
+            <div class="section-cat amber">
+              <i class="fas fa-receipt"></i> Crédits d'impôt et déductions
+            </div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item"><input type="checkbox" id="spouse_t2202" name="spouse_docs[]" value="t2202"><label for="spouse_t2202">T2202 / Relevé 8 – Frais de scolarité</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_medical" name="spouse_docs[]" value="medical"><label for="spouse_medical">Frais médicaux (reçus, prescriptions)</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_dons" name="spouse_docs[]" value="dons"><label for="spouse_dons">Reçus de dons de bienfaisance</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_syndicat" name="spouse_docs[]" value="syndicat"><label for="spouse_syndicat">Cotisations syndicales / professionnelles</label></div>
+              <div class="checkbox-item"><input type="checkbox" id="spouse_teletravail" name="spouse_docs[]" value="teletravail"><label for="spouse_teletravail">Dépenses de télétravail (T2200)</label></div>
+            </div>
+          </div>
+
+          <div class="info-block" style="margin-top:.75rem;">
+            <label style="pointer-events:none; cursor:default;">
+              <i class="fas fa-info-circle" style="color:var(--navy-500); margin-top:1px;"></i>
+              Les documents correspondants seront à téléverser à l'étape 8.
+            </label>
+          </div>
+
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 7 — Dépenses enfants ══ -->
+      <section class="form-step" id="step-7" data-step-name="Dépenses enfants">
+        <fieldset>
+          <legend>Étape 7 – Dépenses liées aux enfants</legend>
+
+          <p class="section-subtitle">Quelles dépenses avez-vous engagées pour vos enfants cette année ? Cochez celles qui s'appliquent.</p>
+
+          <div style="margin-bottom:1.125rem;">
+            <div class="checkbox-item" id="no-expense-wrapper" style="border-style:dashed; max-width:480px;">
+              <input type="checkbox" id="expense_aucune" name="children_expenses[]" value="aucune">
+              <label for="expense_aucune"><i class="fas fa-times-circle" style="margin-right:.375rem; color:var(--text-disabled);"></i>Aucune dépense à déclarer pour les enfants</label>
+            </div>
+          </div>
+
+          <div id="children-expenses-list">
+
+            <div class="step-section">
+              <div class="section-cat navy">
+                <i class="fas fa-child"></i> Garde et éducation
+              </div>
+              <div class="checkbox-grid">
+                <div class="checkbox-item"><input type="checkbox" id="expense_garderie" name="children_expenses[]" value="garderie"><label for="expense_garderie">Frais de garde (garderie, CPE, gardienne)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_scolaire" name="children_expenses[]" value="scolaire"><label for="expense_scolaire">Frais scolaires (fournitures, sorties)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_camp" name="children_expenses[]" value="camp"><label for="expense_camp">Camps de jour / camps de vacances</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_tuteur" name="children_expenses[]" value="tuteur"><label for="expense_tuteur">Cours privés / tutorat</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_transport" name="children_expenses[]" value="transport"><label for="expense_transport">Transport scolaire</label></div>
+              </div>
+            </div>
+
+            <div class="step-section">
+              <div class="section-cat green">
+                <i class="fas fa-running"></i> Activités parascolaires
+              </div>
+              <div class="checkbox-grid">
+                <div class="checkbox-item"><input type="checkbox" id="expense_sport" name="children_expenses[]" value="sport"><label for="expense_sport">Activités sportives</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_art" name="children_expenses[]" value="art"><label for="expense_art">Activités artistiques / culturelles </label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_loisirs" name="children_expenses[]" value="loisirs"><label for="expense_loisirs">Autres loisirs organisés</label></div>
+              </div>
+            </div>
+
+            <div class="step-section">
+              <div class="section-cat rose">
+                <i class="fas fa-heartbeat"></i> Santé et thérapies
+              </div>
+              <div class="checkbox-grid">
+                <div class="checkbox-item"><input type="checkbox" id="expense_medical_enfant" name="children_expenses[]" value="medical"><label for="expense_medical_enfant">Frais médicaux pour enfants</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_therapie" name="children_expenses[]" value="therapie"><label for="expense_therapie">Thérapies (orthophonie, psychologie, ergothérapie)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_dentaire" name="children_expenses[]" value="dentaire"><label for="expense_dentaire">Soins dentaires / orthodontie</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="expense_vision" name="children_expenses[]" value="vision"><label for="expense_vision">Soins de la vue (lunettes, verres de contact)</label></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="info-block" style="margin-top:.75rem;">
+            <label style="pointer-events:none; cursor:default;">
+              <i class="fas fa-info-circle" style="color:var(--navy-500); margin-top:1px;"></i>
+              Conservez vos reçus originaux — ils pourraient être requis en cas de vérification.
+            </label>
+          </div>
+
+        </fieldset>
+      </section>
+
+      <!-- ══ STEP 8 — Résumé et documents ══ -->
+      <section class="form-step" id="step-8" data-step-name="Résumé et documents">
+        <fieldset>
+          <legend>Étape 8 – Résumé et téléversement</legend>
+
+          <!-- Résumé -->
+          <div style="margin-bottom:1.75rem;">
+            <h3 class="form-group-title" style="margin-top:0; margin-bottom:.875rem;">Récapitulatif de votre déclaration</h3>
+            <div id="summary-container">
+              <p style="padding:1rem; color:var(--text-tertiary); font-size:.875rem;">Votre résumé apparaîtra ici une fois les étapes complétées.</p>
+            </div>
+          </div>
+
+          <!-- Téléversement -->
+          <div style="margin-bottom:1.75rem;">
+            <h3 class="form-group-title" style="margin-top:0; margin-bottom:.375rem;">Téléversement des documents</h3>
+            <p style="font-size:.875rem; color:var(--text-secondary); margin-bottom:1rem;">Veuillez téléverser tous les documents correspondant aux revenus et dépenses que vous avez déclarés.</p>
+
+            <div id="drop-zone">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <div class="upload-text">
+                <label class="upload-link">
+                  <span>Choisir des fichiers</span>
+                  <input id="file-upload" type="file" style="display:none;" multiple
+                    accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx,application/pdf,image/jpeg,image/png,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </label>
+                <span>ou glisser-déposer</span>
+              </div>
+              <p class="upload-hint">PDF, JPG, PNG, DOCX, XLSX — max. 10 MB par fichier</p>
+            </div>
+
+            <div id="file-list"></div>
+          </div>
+
+          <!-- Consentement -->
+          <div class="consent-block">
+            <label>
+              <input type="checkbox" id="consent" name="consent" required>
+              <span>
+                <strong>Je certifie</strong> que toutes les informations fournies sont exactes et complètes.
+                Je comprends que des pénalités peuvent s'appliquer en cas de fausse déclaration.
+              </span>
+            </label>
+          </div>
+
+          <!-- Bouton soumettre -->
+          <button type="submit" id="submit-btn">
+            <span id="submit-text">Soumettre ma déclaration</span>
+            <span id="submit-loading">
+              <span class="loading-spinner"></span> Traitement en cours…
+            </span>
+          </button>
+
+        </fieldset>
+      </section>
+
+      <!-- Navigation -->
+      <div class="form-nav">
+        <button type="button" id="prev-btn" class="btn-secondary">
+          <i class="fas fa-arrow-left"></i> Précédent
+        </button>
+        <button type="button" id="next-btn" class="btn-primary">
+          Suivant <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </form>
+  </main>
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/espace-client/declaration-particuliers.js" defer></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var steps              = document.querySelectorAll('.form-step');
+      var currentStepDisplay = document.getElementById('current-step-display');
+      var stepNameDisplay    = document.getElementById('step-name');
+      var progressBar        = document.getElementById('progress-bar');
+      var progressMeta       = document.querySelector('.progress-meta-step');
+
+      function updateStepDisplay() {
+        var activeIndex   = -1;
+        var activeName    = '';
+
+        steps.forEach(function (step, index) {
+          if (step.classList.contains('active')) {
+            activeIndex = index;
+            activeName  = step.dataset.stepName || ('Étape ' + (index + 1));
+          }
+        });
+
+        if (activeIndex === -1) return;
+
+        // Compter uniquement les étapes visibles (non sautées par declarationForm)
+        var visibleSteps = 0;
+        var currentVisible = 0;
+        steps.forEach(function (step, index) {
+          // Une étape est "applicable" si elle est active ou a déjà été active
+          // On utilise les données de declarationForm si disponibles
+          var skip = false;
+          if (window.declarationForm) {
+            var df = window.declarationForm;
+            if (index === 2 && df.shouldSkipStep3 && df.shouldSkipStep3()) skip = true;
+            if (index === 3 && df.shouldSkipStep4 && df.shouldSkipStep4()) skip = true;
+            if (index === 5 && df.shouldSkipStep6 && df.shouldSkipStep6()) skip = true;
+            if (index === 6 && df.shouldSkipStep7 && df.shouldSkipStep7()) skip = true;
+          }
+          if (!skip) {
+            visibleSteps++;
+            if (index <= activeIndex) currentVisible++;
+          }
+        });
+
+        if (currentStepDisplay) currentStepDisplay.textContent = currentVisible;
+        if (progressMeta)       progressMeta.lastChild.textContent = ' sur ' + visibleSteps;
+        if (stepNameDisplay)    stepNameDisplay.textContent = activeName;
+        if (progressBar)        progressBar.style.width = ((currentVisible / visibleSteps) * 100) + '%';
+      }
+
+      var observer = new MutationObserver(updateStepDisplay);
+      steps.forEach(function (step) {
+        observer.observe(step, { attributes: true, attributeFilter: ['class'] });
+      });
+      updateStepDisplay();
+    });
+  </script>
+
+</body>
+</html>

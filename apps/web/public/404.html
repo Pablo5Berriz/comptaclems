@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page introuvable — ComptaClems</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets-css/404.css" />
+</head>
+
+<body>
+
+  <div class="error-card" role="main">
+
+    <!-- Logo -->
+    <img src="/assets/logo/Comptaclems.png" alt="ComptaClems" class="error-logo" />
+
+    <!-- Grand 404 -->
+    <p class="error-code" aria-hidden="true">404</p>
+
+    <!-- Eyebrow -->
+    <p class="error-eyebrow">Page introuvable</p>
+
+    <!-- Titre -->
+    <h1 class="error-title">Oups, cette page n'existe pas</h1>
+
+    <!-- Description -->
+    <p class="error-description">
+      La page que vous recherchez a peut-être été déplacée, supprimée
+      ou l'URL a été mal saisie. Revenez à l'accueil ou explorez les liens ci-dessous.
+    </p>
+
+    <!-- Actions -->
+    <div class="error-actions">
+      <a href="/index.html" class="btn btn--primary">
+        <i class="fas fa-house" aria-hidden="true"></i>
+        Retour à l'accueil
+      </a>
+      <a href="/contact/index.html" class="btn btn--ghost">
+        <i class="fas fa-envelope" aria-hidden="true"></i>
+        Nous contacter
+      </a>
+    </div>
+
+    <!-- Séparateur -->
+    <div class="error-divider"></div>
+
+    <!-- Liens utiles -->
+    <p class="error-links-label">Liens utiles</p>
+    <nav class="error-links" aria-label="Liens utiles">
+      <a href="/services/index.html" class="error-link">
+        <i class="fas fa-briefcase" aria-hidden="true"></i> Services
+      </a>
+      <a href="/espace-client/declaration.html" class="error-link">
+        <i class="fas fa-file-alt" aria-hidden="true"></i> Ma déclaration
+      </a>
+      <a href="/auth/login.html" class="error-link">
+        <i class="fas fa-right-to-bracket" aria-hidden="true"></i> Connexion
+      </a>
+      <a href="/temoignages/index.html" class="error-link">
+        <i class="fas fa-star" aria-hidden="true"></i> Témoignages
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- Copyright -->
+  <p class="error-footer">
+    &copy; <span id="cc-year"></span> ComptaClems. Tous droits réservés.
+  </p>
+
+  <script>
+    document.getElementById('cc-year').textContent = new Date().getFullYear();
+
+    /* Log 404 côté serveur */
+    if (window.location.hostname !== 'localhost') {
+      fetch('/api/public/log-404', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: window.location.pathname }),
+      }).catch(() => {});
+    }
+  </script>
+
+</body>
+</html>

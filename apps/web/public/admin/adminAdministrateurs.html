@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+    
+    <title>Administrateurs | Administration ComptaClems</title>
+    <meta name="description" content="Gestion des administrateurs et des rôles - Interface d'administration ComptaClems" />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <!-- Polices & Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/assets-css/tw.min.css" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="/assets-css/main.css" />
+    <link rel="stylesheet" href="/assets-css/components.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/favicon/favicon.ico">
+
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="/assets-css/admin/administrateurs.css" />
+
+    <!-- Dark mode init -->
+    <script>
+      (function(){
+        var t = localStorage.getItem('cc_theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    
+    <!-- Scripts -->
+    <script src="/assets-js/admin/adminGuard.js" defer></script>
+    <script src="/assets-js/admin/adminAdministrateurs.js" defer></script>
+  </head>
+
+  <body class="min-h-screen flex antialiased">
+    
+    <!-- Toast Container - Notifications globales -->
+    <div id="toastHost" class="fixed top-6 right-6 z-50 space-y-3 w-80"></div>
+    
+    <!-- Modal de confirmation (suppression / reset) -->
+    <div id="confirmModal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50 modal-backdrop" id="confirmBackdrop"></div>
+      <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fadeIn">
+        <div class="flex items-center gap-4 text-amber-600 mb-4">
+          <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900" id="confirmTitle">Confirmer l'action</h3>
+            <p class="text-sm text-slate-500" id="confirmSubtitle">Cette action est irréversible</p>
+          </div>
+        </div>
+        <p class="text-slate-600 mb-6" id="confirmMessage">Voulez-vous continuer ?</p>
+        <div class="flex justify-end gap-3">
+          <button id="confirmCancel" class="px-5 py-2.5 border-2 border-slate-300 rounded-xl hover:bg-slate-50 font-medium transition">
+            Annuler
+          </button>
+          <button id="confirmAction" class="px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl hover:from-red-700 hover:to-red-600 font-medium transition shadow-lg shadow-red-500/30">
+            <i class="fas fa-trash mr-2" id="confirmIcon"></i>
+            <span id="confirmButtonText">Confirmer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de modification / détails admin -->
+    <div id="editAdminModal" class="hidden fixed inset-0 z-[70] items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 modal-backdrop" id="editModalBackdrop"></div>
+      
+      <div class="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fadeIn">
+        <!-- En-tête avec gradient -->
+        <div class="bg-gradient-to-r from-slate-900 to-slate-800 px-6 py-5 rounded-t-3xl sticky top-0 z-10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur">
+                <i class="fas fa-user-shield text-white text-lg"></i>
+              </div>
+              <div>
+                <h3 id="editModalTitle" class="text-xl font-bold text-white">Modifier l'administrateur</h3>
+                <p class="text-xs text-slate-300 mt-0.5 flex items-center gap-2">
+                  <span id="editAdminId">#ID</span>
+                  <span class="w-1 h-1 rounded-full bg-slate-400"></span>
+                  <span id="editAdminEmail">email@exemple.com</span>
+                </p>
+              </div>
+            </div>
+            <button id="closeEditModal" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition backdrop-blur">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Corps du formulaire -->
+        <div class="p-8">
+          <form id="editAdminForm" class="space-y-6">
+            <!-- ID caché -->
+            <input type="hidden" id="edit_admin_id" />
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Prénom -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                  <i class="fas fa-user"></i>
+                  Prénom
+                </label>
+                <input 
+                  id="edit_first_name" 
+                  type="text" 
+                  required
+                  class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  placeholder="Jean"
+                />
+              </div>
+              
+              <!-- Nom -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                  <i class="fas fa-user"></i>
+                  Nom
+                </label>
+                <input 
+                  id="edit_last_name" 
+                  type="text" 
+                  required
+                  class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  placeholder="Dupont"
+                />
+              </div>
+              
+              <!-- Email -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </label>
+                <input 
+                  id="edit_email" 
+                  type="email" 
+                  required
+                  class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  placeholder="jean.dupont@exemple.com"
+                />
+              </div>
+              
+              <!-- Téléphone -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                  <i class="fas fa-phone"></i>
+                  Téléphone
+                </label>
+                <input 
+                  id="edit_phone" 
+                  type="tel" 
+                  class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                  placeholder="+33 6 12 34 56 78"
+                />
+              </div>
+              
+              <!-- Rôle -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                  <i class="fas fa-shield"></i>
+                  Rôle
+                </label>
+                <div class="relative">
+                  <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                  <select 
+                    id="edit_role" 
+                    required
+                    class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base appearance-none"
+                  >
+                    <option value="admin">Administrateur</option>
+                    <option value="support">Support</option>
+                    <option value="superadmin">Super Administrateur</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Statut actif/inactif -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                  <i class="fas fa-toggle-on"></i>
+                  Statut
+                </label>
+                <div class="flex items-center h-full pt-2">
+                  <div class="flex items-center gap-3">
+                    <button 
+                      type="button"
+                      id="toggleAdminStatus"
+                      class="relative w-14 h-8 rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-slate-900/10"
+                    >
+                      <span id="statusToggleBg" class="block w-14 h-8 rounded-full bg-slate-300"></span>
+                      <span id="statusToggleDot" class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-300 ease-in-out shadow-md"></span>
+                    </button>
+                    <span id="statusLabel" class="text-sm font-medium text-slate-700">Actif</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Section mot de passe (optionnel) -->
+            <div class="mt-6 pt-6 border-t border-slate-200">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                    <i class="fas fa-key text-amber-600 text-sm"></i>
+                  </div>
+                  <h4 class="font-semibold text-slate-900">Changer le mot de passe</h4>
+                </div>
+                <button 
+                  type="button"
+                  id="showPasswordFields"
+                  class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                >
+                  <i class="fas fa-plus-circle"></i>
+                  Ajouter un nouveau mot de passe
+                </button>
+              </div>
+              
+              <div id="passwordFields" class="hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
+                      Nouveau mot de passe
+                    </label>
+                    <div class="relative">
+                      <input 
+                        id="edit_password" 
+                        type="password" 
+                        minlength="10"
+                        class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                        placeholder="••••••••••"
+                      />
+                      <button 
+                        type="button"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                        onclick="togglePasswordVisibility('edit_password', this)"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+                      <i class="fas fa-info-circle"></i>
+                      Minimum 10 caractères
+                    </p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
+                      Confirmer le mot de passe
+                    </label>
+                    <div class="relative">
+                      <input 
+                        id="edit_password_confirm" 
+                        type="password" 
+                        class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base"
+                        placeholder="••••••••••"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p id="passwordError" class="text-xs text-red-600 hidden">Les mots de passe ne correspondent pas</p>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex justify-end gap-4 pt-6 border-t border-slate-200 mt-6">
+              <button 
+                type="button" 
+                id="cancelEditModal"
+                class="btn-secondary px-6 py-3.5 rounded-xl font-medium text-base flex items-center gap-2"
+              >
+                <i class="fas fa-times"></i>
+                Annuler
+              </button>
+              <button 
+                type="submit" 
+                class="btn-primary px-8 py-3.5 rounded-xl font-semibold text-base flex items-center gap-3 shadow-xl"
+              >
+                <i class="fas fa-save"></i>
+                Enregistrer les modifications
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar - Version Premium -->
+    <aside class="w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white flex flex-col shadow-2xl">
+      <!-- Logo et branding -->
+      <div class="px-6 py-6 border-b border-slate-700/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <i class="fas fa-calculator text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-black tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              ComptaClems
+            </h1>
+            <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+              <i class="fas fa-shield-alt text-xs"></i>
+              Espace administrateur
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation principale -->
+      <nav class="flex-1 px-4 py-6 space-y-1.5 text-sm overflow-y-auto" id="adminSidebarNav">
+        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mb-2">
+          Tableau de bord
+        </div>
+        
+        <a href="/admin/adminDashboard.html" data-nav="dashboard.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+            <i class="fas fa-chart-pie text-slate-400 group-hover:text-white transition"></i>
+          </div>
+          <span>Dashboard</span>
+        </a>
+
+        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mt-4 mb-2">
+          Gestion
+        </div>
+
+        <a href="/admin/adminAdministrateurs.html" data-nav="administrateurs.html" class="flex items-center px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-700/30 group">
+        <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center mr-3">
+          <i class="fas fa-folder-open text-white"></i>
+        </div>
+        <span class="font-semibold">Administrateurs</span>
+        </a>
+
+        <a href="/admin/adminClients.html" data-nav="clients.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+            <i class="fas fa-users text-slate-400 group-hover:text-white transition"></i>
+          </div>
+          <span>Clients</span>
+        </a>
+
+        <a href="/admin/adminDocuments.html" data-nav="documents.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+          <i class="fas fa-comments text-slate-400 group-hover:text-white transition"></i>
+        </div>
+          <span>Documents</span>
+        </a>
+
+        <a href="/admin/adminServices.html" data-nav="services.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+            <i class="fas fa-cogs text-slate-400 group-hover:text-white transition"></i>
+          </div>
+          <span>Services</span>
+        </a>
+
+        <a href="/admin/adminDeclarations.html" data-nav="declarations.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+            <i class="fas fa-file-alt text-slate-400 group-hover:text-white transition"></i>
+          </div>
+          <span>Déclarations</span>
+        </a>
+
+        <a href="/admin/adminTemoignages.html" data-nav="temoignages.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+            <i class="fas fa-comments text-slate-400 group-hover:text-white transition"></i>
+          </div>
+          <span>Témoignages</span>
+        </a>
+
+        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider px-4 mt-4 mb-2">
+          Configuration
+        </div>
+
+        <a href="/admin/adminSettings.html" data-nav="settings.html" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800/80 transition-all group">
+          <div class="w-8 h-8 rounded-lg bg-slate-800/50 group-hover:bg-slate-700 flex items-center justify-center mr-3">
+            <i class="fas fa-sliders-h text-slate-400 group-hover:text-white transition"></i>
+          </div>
+          <span>Paramètres</span>
+        </a>
+      </nav>
+
+      <!-- Profil et déconnexion -->
+      <div class="px-4 py-6 border-t border-slate-700/50 mt-auto">
+        <div class="flex items-center gap-3 mb-4 px-2">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <span class="text-white font-bold text-lg" id="adminInitials">AD</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-medium truncate" id="adminName">Administrateur</p>
+            <p class="text-xs text-slate-400 truncate flex items-center gap-1">
+              <i class="fas fa-shield-alt text-xs"></i>
+              <span id="adminRole">Super Admin</span>
+            </p>
+          </div>
+        </div>
+        
+        <button id="adminLogoutBtn" class="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-red-600/90 text-slate-300 hover:text-white transition-all group">
+          <i class="fas fa-sign-out-alt mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+          <span>Déconnexion</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100">
+      
+      <!-- ====================================
+          HEADER - EN-TÊTE DE PAGE
+      ==================================== -->
+      <header class="flex items-center justify-between mb-10">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center shadow-xl">
+              <i class="fas fa-user-shield text-white text-xl"></i>
+            </div>
+            <div>
+              <h2 class="text-4xl font-black text-slate-900 tracking-tight">Administrateurs</h2>
+              <p class="text-slate-500 mt-1 flex items-center gap-2">
+                <i class="fas fa-shield-halved text-xs"></i>
+                Gestion des accès, rôles et permissions
+              </p>
+            </div>
+          </div>
+          
+          <!-- Fil d'Ariane -->
+          <div class="flex items-center gap-2 text-sm text-slate-500 ml-2">
+            <i class="fas fa-home text-xs"></i>
+            <span>Accueil</span>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span>Administration</span>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-slate-800 font-medium">Administrateurs</span>
+          </div>
+        </div>
+
+        <!-- Stats rapides + Profil -->
+        <div class="flex items-center gap-4">
+          <!-- Stats cards compactes -->
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-5 py-3 rounded-2xl shadow-lg border border-white/50">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                <i class="fas fa-user-shield text-indigo-600 text-sm"></i>
+              </div>
+              <div class="text-right">
+                <p class="text-xs text-slate-500">Total admins</p>
+                <p class="text-xl font-bold text-slate-900" id="totalAdmins">0</p>
+              </div>
+            </div>
+            <div class="w-px h-8 bg-slate-200"></div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                <i class="fas fa-check-circle text-emerald-600 text-sm"></i>
+              </div>
+              <div class="text-right">
+                <p class="text-xs text-slate-500">Actifs</p>
+                <p class="text-xl font-bold text-emerald-600" id="activeAdmins">0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Avatar admin -->
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-5 py-2 rounded-2xl shadow-lg border border-white/50">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+              <span class="text-white font-bold text-sm" id="headerAdminInitials">AD</span>
+            </div>
+            <div class="text-sm">
+              <p class="font-semibold text-slate-900" id="headerAdminName">Admin</p>
+              <p class="text-xs text-slate-500" id="headerAdminRole">Super Admin</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ====================================
+          ALERTES ET NOTIFICATIONS
+      ==================================== -->
+      <div id="pageAlert" class="hidden mb-8 rounded-2xl border px-5 py-4 text-sm items-start gap-3 animate-slideIn" role="alert"></div>
+
+      <!-- ====================================
+          SECTION CRÉATION ADMIN
+      ==================================== -->
+      <section class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 mb-8 border border-slate-200/80">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+              <i class="fas fa-user-plus text-white text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">Créer un administrateur</h3>
+              <p class="text-sm text-slate-500 flex items-center gap-1.5 mt-0.5">
+                <i class="fas fa-shield-alt text-xs"></i>
+                Disponible uniquement pour les Super Administrateurs
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button id="openCreateAdmin" type="button" class="btn-primary px-6 py-3.5 rounded-xl shadow-lg flex items-center gap-2 text-base">
+              <i class="fas fa-plus-circle"></i>
+              <span class="font-semibold">Nouvel administrateur</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulaire de création (caché par défaut) -->
+        <div id="createAdminWrap" class="hidden mt-6 pt-6 border-t border-slate-200 animate-fadeIn">
+          <div class="flex items-center gap-2 mb-6">
+            <div class="w-1 h-6 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
+            <h4 class="font-semibold text-slate-900">Informations du nouvel administrateur</h4>
+            <span class="text-xs bg-slate-100 px-2 py-1 rounded-full text-slate-600">Tous les champs sont obligatoires</span>
+          </div>
+
+          <form id="createAdminForm" class="grid grid-cols-1 md:grid-cols-2 gap-6" novalidate>
+            <!-- Prénom -->
+            <div>
+              <label for="ca_first_name" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                <i class="fas fa-user"></i>
+                Prénom
+                <span class="text-red-500">*</span>
+              </label>
+              <input 
+                id="ca_first_name" 
+                type="text" 
+                required
+                placeholder="Jean"
+                class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base placeholder:text-slate-400"
+              />
+            </div>
+
+            <!-- Nom -->
+            <div>
+              <label for="ca_last_name" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                <i class="fas fa-user"></i>
+                Nom
+                <span class="text-red-500">*</span>
+              </label>
+              <input 
+                id="ca_last_name" 
+                type="text" 
+                required
+                placeholder="Dupont"
+                class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base placeholder:text-slate-400"
+              />
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="ca_email" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                <i class="fas fa-envelope"></i>
+                Email
+                <span class="text-red-500">*</span>
+              </label>
+              <input 
+                id="ca_email" 
+                type="email" 
+                required
+                placeholder="jean.dupont@exemple.com"
+                class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base placeholder:text-slate-400"
+              />
+            </div>
+
+            <!-- Téléphone -->
+            <div>
+              <label for="ca_phone" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                <i class="fas fa-phone"></i>
+                Téléphone
+              </label>
+              <input 
+                id="ca_phone" 
+                type="tel" 
+                placeholder="+33 6 12 34 56 78"
+                class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base placeholder:text-slate-400"
+              />
+              <p class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+                <i class="fas fa-info-circle"></i>
+                Optionnel
+              </p>
+            </div>
+
+            <!-- Rôle -->
+            <div>
+              <label for="ca_role" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                <i class="fas fa-shield"></i>
+                Rôle
+                <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                <select 
+                  id="ca_role" 
+                  required
+                  class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base appearance-none"
+                >
+                  <option value="admin">Administrateur</option>
+                  <option value="support">Support</option>
+                  <option value="superadmin">Super Administrateur</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Mot de passe -->
+            <div>
+              <label for="ca_password" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 items-center gap-1.5">
+                <i class="fas fa-key"></i>
+                Mot de passe
+                <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <input 
+                  id="ca_password" 
+                  type="password" 
+                  minlength="10"
+                  required
+                  placeholder="••••••••••"
+                  class="form-input w-full px-5 py-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 transition text-base placeholder:text-slate-400"
+                />
+                <button 
+                  type="button"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  onclick="togglePasswordVisibility('ca_password', this)"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <p class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+                <i class="fas fa-info-circle"></i>
+                Minimum 10 caractères
+              </p>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="md:col-span-2 flex items-center justify-end gap-4 pt-4 border-t border-slate-200 mt-2">
+              <button type="button" id="cancelCreateAdmin" class="btn-secondary px-6 py-3.5 rounded-xl font-medium text-base flex items-center gap-2">
+                <i class="fas fa-times"></i>
+                Annuler
+              </button>
+              <button type="submit" id="submitCreateAdmin" class="btn-primary px-8 py-3.5 rounded-xl font-semibold text-base flex items-center gap-3 shadow-lg">
+                <i class="fas fa-user-plus"></i>
+                Créer l'administrateur
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ====================================
+          TABLEAU DES ADMINISTRATEURS
+      ==================================== -->
+      <section class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200/80">
+        <!-- En-tête du tableau -->
+        <div class="bg-gradient-to-r from-slate-50 to-white px-6 py-5 border-b border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+                <i class="fas fa-list-ul text-white text-sm"></i>
+              </div>
+              <span class="text-sm font-bold text-slate-900">Liste des administrateurs</span>
+            </div>
+            <span class="text-xs bg-slate-200 px-3 py-1.5 rounded-full text-slate-700 font-semibold" id="adminCount">0</span>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <!-- Filtre rapide -->
+            <div class="relative">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+              <input 
+                type="text" 
+                id="searchAdmin" 
+                placeholder="Rechercher un admin..."
+                class="pl-10 pr-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10 transition text-sm w-64"
+              />
+            </div>
+            
+            <button id="refreshAdmins" type="button" class="px-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 shadow-sm">
+              <i class="fas fa-sync-alt"></i>
+              <span class="hidden sm:inline">Actualiser</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tableau responsive -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                  <div class="flex items-center gap-1">
+                    <i class="fas fa-user-shield"></i>
+                    Administrateur
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                  <div class="flex items-center gap-1">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                  <div class="flex items-center gap-1">
+                    <i class="fas fa-shield"></i>
+                    Rôle
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                  <div class="flex items-center gap-1">
+                    <i class="fas fa-circle"></i>
+                    Statut
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                  <div class="flex items-center justify-end gap-1">
+                    <i class="fas fa-cog"></i>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="adminsTbody" class="bg-white divide-y divide-slate-200">
+              <!-- Injecté dynamiquement -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pied du tableau -->
+        <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs text-slate-600">
+            <i class="fas fa-shield-alt"></i>
+            Espace sécurisé - Gestion des accès
+          </div>
+          <p class="text-xs text-slate-500">
+            <i class="fas fa-clock mr-1"></i>
+            Dernière mise à jour: <span id="lastUpdate">à l'instant</span>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Script de déconnexion amélioré -->
+    <script>
+      // Fonction pour afficher/masquer le mot de passe
+      window.togglePasswordVisibility = function(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector('i');
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      };
+
+      // Déconnexion améliorée
+      document.getElementById('adminLogoutBtn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Déconnexion...';
+        this.disabled = true;
+        
+        setTimeout(() => {
+          localStorage.removeItem('cc_admin_auth');
+          localStorage.removeItem('cc_admin_user');
+          sessionStorage.clear();
+          window.location.href = '/admin/adminLogin.html?logout=success';
+        }, 300);
+      });
+
+      // Initials de l'admin dans le header
+      try {
+        const auth = JSON.parse(localStorage.getItem('cc_admin_auth') || '{}');
+        if (auth.admin?.first_name && auth.admin?.last_name) {
+          const fullName = `${auth.admin.first_name} ${auth.admin.last_name}`;
+          const initials = (auth.admin.first_name[0] + (auth.admin.last_name[0] || '')).toUpperCase();
+          
+          document.getElementById('adminInitials').textContent = initials;
+          document.getElementById('headerAdminInitials').textContent = initials;
+          document.getElementById('adminName').textContent = fullName;
+          document.getElementById('headerAdminName').textContent = auth.admin.first_name;
+          
+          const roleEl = document.getElementById('adminRole');
+          const headerRoleEl = document.getElementById('headerAdminRole');
+          const roleText = auth.admin.role === 'superadmin' ? 'Super Admin' : 
+                          auth.admin.role === 'admin' ? 'Admin' : 'Support';
+          
+          if (roleEl) roleEl.textContent = roleText;
+          if (headerRoleEl) headerRoleEl.textContent = auth.admin.role === 'superadmin' ? 'Super Administrateur' : 
+                                                      auth.admin.role === 'admin' ? 'Administrateur' : 'Support';
+        }
+      } catch (e) {}
+    </script>
+    <script src="/assets-js/admin/adminSidebarPatch.js" defer></script>
+</body>
+</html>

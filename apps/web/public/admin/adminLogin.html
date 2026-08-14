@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Page de connexion administrateur - Plateforme ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Connexion admin | ComptaClems</title>
+  
+  <!-- Polices & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="/assets-css/tw.min.css" />
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon/favicon.ico">
+
+  <!-- Styles personnalisÃ©s -->
+  <link rel="stylesheet" href="/assets-css/admin/login.css" />
+</head>
+
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-grid auth-grid-reverse">
+
+        <!-- FORM -->
+        <div class="auth-form">
+          <div class="auth-form-inner auth-form-scroll">
+            <h2 class="auth-form-title">Connexion administrateur</h2>
+
+            <div id="adminLoginAlert"
+                 class="hidden auth-alert"
+                 role="alert"
+                 aria-live="polite"></div>
+
+            <form id="adminLoginForm"
+                  class="mt-8 space-y-4"
+                  novalidate>
+
+              <!-- EMAIL -->
+              <div class="auth-field">
+                <div class="auth-input-wrap">
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    placeholder="E-mail"
+                    class="auth-input"
+                    autocomplete="username"
+                    autofocus
+                  />
+                  <i class="fa-regular fa-envelope auth-input-icon"></i>
+                </div>
+              </div>
+
+              <!-- PASSWORD -->
+              <div class="auth-field">
+                <div class="auth-input-wrap relative">
+                  <input
+                    type="password"
+                    id="password"
+                    required
+                    placeholder="Mot de passe"
+                    class="auth-input pr-10"
+                    autocomplete="current-password"
+                  />
+
+                  <button
+                    type="button"
+                    id="togglePassword"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition z-10"
+                    aria-label="Afficher ou masquer le mot de passe"
+                  >
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+
+                  <i class="fa-solid fa-lock auth-input-icon"></i>
+                </div>
+              </div>
+
+              <!-- SUBMIT -->
+              <button type="submit"
+                      id="adminLoginSubmit"
+                      class="auth-submit">
+                <span class="flex items-center justify-center">
+                  <i class="fas fa-right-to-bracket mr-3 text-lg"></i>
+                  Connexion
+                </span>
+              </button>
+
+              <p class="auth-footer-note">
+                <i class="fas fa-shield-alt"></i>
+                Accès réservé au personnel autorisé.
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <!-- PANEL -->
+        <aside class="auth-panel">
+          <div class="auth-panel-inner">
+
+            <a href="/index.html" class="inline-flex items-center gap-3">
+              <img
+                src="/assets/logo/Comptaclems.png"
+                alt="ComptaClems"
+                class="h-14 w-auto rounded-lg shadow-sm"
+                loading="lazy"
+              />
+            </a>
+
+            <div class="mt-12">
+              <h1 class="auth-panel-title">Admin</h1>
+              <p class="auth-panel-subtitle">
+                Connexion sécurisée à l’espace administrateur.
+              </p>
+
+              <div class="mt-6 inline-flex items-center gap-2 text-xs text-white/80">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Session protégée</span>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- TOGGLE PASSWORD SCRIPT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+
+      if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Vérifie le type actuel du champ
+          const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
+          
+          // Change l'icône
+          const icon = this.querySelector('i');
+          if (icon) {
+            if (type === 'text') {
+              icon.classList.remove('fa-eye');
+              icon.classList.add('fa-eye-slash');
+            } else {
+              icon.classList.remove('fa-eye-slash');
+              icon.classList.add('fa-eye');
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+  <script src="/assets-js/admin/adminLogin.js" defer></script>
+
+</body>
+</html>

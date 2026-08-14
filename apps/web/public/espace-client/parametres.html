@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paramètres et préférences de votre espace client ComptaClems" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Paramètres | ComptaClems — Espace client</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets-css/main.css" />
+  <link rel="stylesheet" href="/assets-css/components.css" />
+  <link rel="stylesheet" href="/assets-css/clients/parametres.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    (function(){
+      var t = localStorage.getItem('cc_theme');
+      if(t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme:dark)').matches)){
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- Retour en haut -->
+  <button id="scrollTop" class="hidden" aria-label="Retour en haut">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Header global -->
+  <script src="/assets-js/global/header.js"></script>
+
+  <main class="page-main">
+
+    <!-- ─── En-tête de page ─── -->
+    <div class="page-header">
+      <div class="page-header-icon" aria-hidden="true">
+        <i class="fas fa-sliders-h"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Paramètres</h1>
+        <p class="page-subtitle">Personnalisez votre expérience et sécurisez votre compte.</p>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane">
+          <a href="/espace-client/profil.html"><i class="fas fa-home"></i></a>
+          <i class="fas fa-chevron-right"></i>
+          <span aria-current="page">Paramètres</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ─── Layout 2 colonnes ─── -->
+    <div class="settings-layout">
+
+      <!-- ═══ COLONNE PRINCIPALE ═══ -->
+      <div class="settings-col-main">
+
+        <!-- ── Apparence ── -->
+        <section class="settings-card" aria-labelledby="apparence-title">
+          <div class="settings-card-header">
+            <div class="settings-card-header-icon icon-bg-purple" aria-hidden="true">
+              <i class="fas fa-palette"></i>
+            </div>
+            <div class="settings-card-header-text">
+              <h2 id="apparence-title">Apparence</h2>
+              <p><i class="fas fa-eye-dropper"></i> Personnalisez l'affichage</p>
+            </div>
+          </div>
+
+          <div class="settings-card-body">
+
+            <!-- Thème -->
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-blue"><i class="fas fa-sun"></i></div>
+                <div>
+                  <div class="settings-item-title">Thème d'interface</div>
+                  <div class="settings-item-desc">Auto, clair ou sombre</div>
+                </div>
+              </div>
+              <div class="theme-buttons" role="radiogroup" aria-label="Sélection du thème">
+                <button id="themeAuto" class="theme-btn active" role="radio" aria-checked="true">
+                  <i class="fas fa-circle-half-stroke"></i> Auto
+                </button>
+                <button id="themeLight" class="theme-btn" role="radio" aria-checked="false">
+                  <i class="fas fa-sun"></i> Clair
+                </button>
+                <button id="themeDark" class="theme-btn" role="radio" aria-checked="false">
+                  <i class="fas fa-moon"></i> Sombre
+                </button>
+              </div>
+            </div>
+
+            <!-- Réduire animations -->
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-sage"><i class="fas fa-film"></i></div>
+                <div>
+                  <div class="settings-item-title">Réduire les animations</div>
+                  <div class="settings-item-desc">Interface plus stable, meilleure accessibilité</div>
+                </div>
+              </div>
+              <div class="toggle-container">
+                <span id="motionLabel" class="toggle-label" aria-live="polite">Désactivé</span>
+                <label class="toggle-switch" aria-label="Réduire les animations">
+                  <input id="reduceMotion" type="checkbox" aria-describedby="motionLabel" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ── Sécurité ── -->
+        <section class="settings-card" aria-labelledby="securite-title">
+          <div class="settings-card-header">
+            <div class="settings-card-header-icon icon-bg-sage" aria-hidden="true">
+              <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="settings-card-header-text">
+              <h2 id="securite-title">Sécurité</h2>
+              <p><i class="fas fa-lock"></i> Protégez votre compte</p>
+            </div>
+          </div>
+
+          <div class="settings-card-body">
+
+            <!-- Mot de passe -->
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-blue"><i class="fas fa-key"></i></div>
+                <div>
+                  <div class="settings-item-title">Mot de passe</div>
+                  <div class="settings-item-desc">Modifiez votre mot de passe</div>
+                </div>
+              </div>
+              <button id="openPwdBox" class="btn btn-secondary">
+                <i class="fas fa-pen-to-square"></i>
+                Modifier
+              </button>
+            </div>
+
+            <!-- 2FA (bientôt) -->
+            <div class="settings-item dimmed">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-violet"><i class="fas fa-mobile-screen"></i></div>
+                <div>
+                  <div class="settings-item-title">Double authentification</div>
+                  <div class="settings-item-desc">Renforcez la sécurité avec 2FA</div>
+                </div>
+              </div>
+              <span class="badge-soon"><i class="fas fa-clock"></i> Bientôt</span>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ── Notifications ── -->
+        <section class="settings-card" aria-labelledby="notifications-title">
+          <div class="settings-card-header">
+            <div class="settings-card-header-icon icon-bg-amber" aria-hidden="true">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="settings-card-header-text">
+              <h2 id="notifications-title">Notifications</h2>
+              <p><i class="fas fa-envelope"></i> Gérez vos alertes</p>
+            </div>
+          </div>
+
+          <div class="settings-card-body">
+
+            <!-- Email (activé, désactivé) -->
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-blue"><i class="fas fa-envelope"></i></div>
+                <div>
+                  <div class="settings-item-title">Notifications par email</div>
+                  <div class="settings-item-desc">Recevez les mises à jour importantes</div>
+                </div>
+              </div>
+              <label class="toggle-switch" aria-label="Activer les notifications email">
+                <input id="emailNotifications" type="checkbox" checked disabled />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <!-- SMS (bientôt) -->
+            <div class="settings-item dimmed">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-sage"><i class="fas fa-message"></i></div>
+                <div>
+                  <div class="settings-item-title">Notifications par SMS</div>
+                  <div class="settings-item-desc">Alertes en temps réel</div>
+                </div>
+              </div>
+              <span class="badge-soon"><i class="fas fa-clock"></i> Bientôt</span>
+            </div>
+
+            <!-- Rappels -->
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-ico ico-amber"><i class="fas fa-calendar-check"></i></div>
+                <div>
+                  <div class="settings-item-title">Rappels de déclarations</div>
+                  <div class="settings-item-desc">Soyez informé des échéances</div>
+                </div>
+              </div>
+              <label class="toggle-switch" aria-label="Activer les rappels">
+                <input id="reminderNotifications" type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+          </div>
+        </section>
+
+      </div><!-- /col-main -->
+
+      <!-- ═══ COLONNE LATÉRALE ═══ -->
+      <div class="settings-col-side">
+
+        <!-- ── Profil résumé ── -->
+        <section class="settings-card" aria-labelledby="profil-title" style="position:sticky;top:6rem;">
+          <div class="settings-card-header">
+            <div class="settings-card-header-icon icon-bg-navy" aria-hidden="true">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="settings-card-header-text">
+              <h2 id="profil-title">Profil</h2>
+              <p>Vos informations personnelles</p>
+            </div>
+          </div>
+
+          <div class="settings-card-body">
+
+            <!-- Avatar + infos -->
+            <div class="user-card">
+              <div class="user-avatar-wrap">
+                <div class="user-avatar" id="userInitials">?</div>
+                <div class="user-avatar-dot"></div>
+              </div>
+              <div class="user-name" id="fullName">—</div>
+              <div class="user-email" id="email">—</div>
+              <div class="user-meta">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="clientSince">—</span>
+              </div>
+            </div>
+
+            <!-- Barre sécurité -->
+            <div class="security-bar-wrap">
+              <div class="security-bar-header">
+                <span>Niveau de sécurité</span>
+                <span class="level">Élevé</span>
+              </div>
+              <div class="security-bar">
+                <div class="security-bar-fill"></div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="side-actions">
+              <a href="/espace-client/documents.html" class="btn btn-secondary btn-block">
+                <i class="fas fa-folder-open"></i>
+                Mes documents
+              </a>
+              <button id="logoutBtn" class="btn btn-secondary btn-block btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                Déconnexion
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ── Support ── -->
+        <div class="support-card" aria-labelledby="support-title">
+          <div class="support-card-inner">
+            <div class="support-icon" aria-hidden="true">
+              <i class="fas fa-headset"></i>
+            </div>
+            <p class="support-title" id="support-title">Support 24/7</p>
+            <p class="support-desc">Notre équipe est disponible pour vous aider à tout moment.</p>
+            <a href="/contact" class="btn btn-gold btn-block">
+              <i class="fas fa-headset"></i>
+              Contacter le support
+            </a>
+          </div>
+        </div>
+
+        <!-- ── FAQ rapide ── -->
+        <div class="settings-card">
+          <div class="settings-card-body">
+            <p class="faq-title"><i class="fas fa-circle-question"></i> Questions fréquentes</p>
+            <nav class="faq-list">
+              <a href="#" class="faq-link">
+                <i class="fas fa-chevron-right"></i>
+                Comment changer mon mot de passe ?
+              </a>
+              <a href="#" class="faq-link">
+                <i class="fas fa-chevron-right"></i>
+                Conseils de sécurité compte
+              </a>
+              <a href="#" class="faq-link">
+                <i class="fas fa-chevron-right"></i>
+                Gérer mes notifications
+              </a>
+            </nav>
+          </div>
+        </div>
+
+      </div><!-- /col-side -->
+
+    </div><!-- /settings-layout -->
+
+    <!-- ─── Zone dangereuse ─── -->
+    <section class="danger-zone" aria-labelledby="danger-title">
+
+      <div class="danger-header">
+        <div class="danger-icon" aria-hidden="true">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
+        <h2 id="danger-title">Zone dangereuse</h2>
+        <span class="danger-badge">Action irréversible</span>
+      </div>
+
+      <div class="danger-grid">
+
+        <div>
+          <p class="danger-desc">
+            La suppression de votre compte est irréversible. Toutes vos données personnelles, déclarations et documents seront effacés définitivement.
+          </p>
+          <ul class="danger-list">
+            <li><i class="fas fa-times-circle"></i> Déclarations fiscales</li>
+            <li><i class="fas fa-times-circle"></i> Documents téléversés</li>
+            <li><i class="fas fa-times-circle"></i> Informations personnelles</li>
+            <li><i class="fas fa-times-circle"></i> Historique des activités</li>
+          </ul>
+        </div>
+
+        <div class="danger-action-panel">
+          <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+          <p>Cette action ne peut pas être annulée</p>
+          <button id="deleteAccountBtn" class="btn btn-danger btn-block">
+            <i class="fas fa-trash-alt"></i>
+            Supprimer mon compte
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Box confirmation -->
+      <div id="deleteBox" class="hidden">
+        <div class="delete-confirm-header">
+          <i class="fas fa-shield-halved"></i>
+          Confirmation de sécurité requise
+        </div>
+        <p class="delete-confirm-text">
+          Tapez <span class="delete-keyword">SUPPRIMER</span> pour confirmer la suppression définitive de votre compte.
+        </p>
+        <div class="input-wrap" style="margin-bottom:.75rem;">
+          <input
+            id="deleteConfirmInput"
+            type="text"
+            class="input-field"
+            placeholder="SUPPRIMER"
+            style="padding-left:.875rem;"
+            autocomplete="off"
+          />
+        </div>
+        <div class="delete-actions">
+          <button id="deleteConfirmBtn" class="btn btn-danger" disabled>
+            <i class="fas fa-check-circle"></i>
+            Confirmer
+          </button>
+          <button id="deleteCancelBtn" class="btn btn-secondary">
+            Annuler
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main><!-- /page-main -->
+
+  <!-- Modal mot de passe -->
+  <div id="passwordBox" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pwdModalTitle">
+    <div class="modal-inner">
+
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-header-icon" aria-hidden="true">
+            <i class="fas fa-key"></i>
+          </div>
+          <div>
+            <p class="modal-title" id="pwdModalTitle">Changer le mot de passe</p>
+            <p class="modal-subtitle">Utilisez un mot de passe fort</p>
+          </div>
+        </div>
+        <button id="closePwdBox" class="modal-close" aria-label="Fermer">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="input-group">
+          <label class="input-label" for="currentPassword">
+            <i class="fas fa-lock" style="color:var(--navy-400);"></i>
+            Mot de passe actuel
+          </label>
+          <div class="input-wrap">
+            <input id="currentPassword" type="password" class="input-field" placeholder="••••••••" autocomplete="current-password" />
+            <i class="fas fa-key input-icon"></i>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="newPassword">
+            <i class="fas fa-shield" style="color:var(--sage-500);"></i>
+            Nouveau mot de passe
+          </label>
+          <div class="input-wrap">
+            <input id="newPassword" type="password" class="input-field" placeholder="Minimum 8 caractères" autocomplete="new-password" />
+            <i class="fas fa-lock-open input-icon"></i>
+          </div>
+          <div class="pwd-strength-bar">
+            <span class="strength-bar flex-1 h-full bg-slate-200 rounded-l"></span>
+            <span class="strength-bar flex-1 h-full bg-slate-200"></span>
+            <span class="strength-bar flex-1 h-full bg-slate-200"></span>
+            <span class="strength-bar flex-1 h-full bg-slate-200 rounded-r"></span>
+          </div>
+          <p class="pwd-strength-label">Force : <span id="passwordStrength">—</span></p>
+        </div>
+
+        <div class="modal-actions">
+          <button id="savePassword" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Enregistrer
+          </button>
+          <button id="cancelPwdBox" class="btn btn-secondary">
+            Annuler
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets-js/global/footer.js"></script>
+  <script src="/assets-js/core/http.js" defer></script>
+  <script src="/assets-js/global/global.js" defer></script>
+  <script src="/assets-js/espace-client/parametres.js" defer></script>
+
+</body>
+</html>

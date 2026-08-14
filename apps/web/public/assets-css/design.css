@@ -1,0 +1,827 @@
+/* ==========================================================================
+   COMPTACLEMS — DESIGN SYSTEM REFINEMENT v1.3
+   ========================================================================== */
+
+/* ==========================================================================
+   1. TYPOGRAPHIE 
+   ========================================================================== */
+
+/* Affinement des titres — jeu sur les graisses et interlignes */
+h1, h2, h3 {
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga" on, "kern" on;
+}
+
+h1 {
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+h2 {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  position: relative;
+  display: inline-block;
+}
+
+/* Accent doré plus subtil et élégant */
+.section-header h2 em,
+.hero__heading em,
+.cta-inner__content h2 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-400) 0%, var(--gold-300) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  position: relative;
+}
+
+/* Paragraphes avec meilleure lisibilité */
+p {
+  line-height: 1.7;
+  max-width: 65ch;
+}
+
+.section-header p {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: var(--color-text-tertiary);
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   2. ESPACEMENTS 
+   ========================================================================== */
+
+.section {
+  padding-block: clamp(5rem, 10vw, 8rem);
+  position: relative;
+}
+
+.section:first-of-type {
+  padding-top: clamp(2rem, 5vw, 4rem);
+}
+
+.section-header {
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.section-header .eyebrow {
+  margin-bottom: 1.5rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.15em;
+}
+
+.section-header h2 {
+  margin-bottom: 1.25rem;
+}
+
+/* Espacement entre les éléments */
+.stack > * + * {
+  margin-top: 1.5rem;
+}
+
+/* ==========================================================================
+   3. CARTES STANDARDS
+   ========================================================================== */
+
+/* Style de carte unifié pour les cartes standards */
+.feature-card,
+.service-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1.5rem;
+  padding: 2rem 1.75rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card__icon,
+.service-card__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--color-bg-subtle) 0%, var(--color-bg-muted) 100%);
+  border: 1px solid var(--color-border-subtle);
+  font-size: 1.5rem;
+  margin-bottom: 1.75rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.feature-card:hover .feature-card__icon,
+.service-card:hover .service-card__icon {
+  transform: scale(1.1) rotate(5deg);
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 10px 20px -8px rgba(10, 37, 64, 0.4);
+}
+
+.feature-card__num {
+  font-size: 4rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-border-default);
+  margin-bottom: 1rem;
+  opacity: 0.3;
+  transition: all 0.4s ease;
+}
+
+.feature-card:hover .feature-card__num {
+  opacity: 0.6;
+  transform: translateX(5px);
+  color: var(--gold-400);
+}
+
+/* ==========================================================================
+   4. SECTION QUI SOMMES-NOUS (CORRIGÉ)
+   ========================================================================== */
+
+.about-visual-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Carte spéciale fond bleu foncé - texte blanc explicite */
+.about-visual-card--navy {
+  background: var(--navy-800);
+  border-color: transparent;
+}
+
+.about-visual-card--navy .about-visual-card__label {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.about-visual-card--navy .about-visual-card__value {
+  color: white !important;
+  font-size: 2.5rem;
+}
+
+.about-visual-card--navy .about-visual-card__sub {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Cartes blanches standard - texte foncé */
+.about-visual-card:not(.about-visual-card--navy) {
+  background: var(--color-surface);
+}
+
+.about-visual-card:not(.about-visual-card--navy) .about-visual-card__label {
+  color: var(--color-text-tertiary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.about-visual-card:not(.about-visual-card--navy) .about-visual-card__value {
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.about-visual-card:not(.about-visual-card--navy) .about-visual-card__sub {
+  color: var(--color-text-tertiary);
+  font-size: 0.875rem;
+}
+
+/* Effet de bordure subtil au hover - VERSION CORRIGÉE SANS MASK */
+.about-visual-card {
+  position: relative;
+}
+
+.about-visual-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1.5rem;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, transparent 0%, var(--gold-300) 50%, transparent 100%) border-box;
+  -webkit-mask: none;
+  mask: none;
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.about-visual-card:hover::after {
+  opacity: 0.4;
+}
+
+.about-visual-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   5. SECTION VALEURS (CORRECTION PRIORITAIRE)
+   ========================================================================== */
+
+/* Cibler les cartes de valeurs avec une extrême spécificité */
+section.values .value-card,
+.values-grid .value-card,
+.value-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 1.5rem !important;
+  padding: 2rem 1.75rem !important;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* TITRE des cartes valeurs */
+section.values .value-card .value-card__title,
+.value-card .value-card__title {
+  color: white !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1rem !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* TEXTE des cartes valeurs */
+section.values .value-card .value-card__text,
+.value-card .value-card__text {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.7 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* NUMÉRO (01, 02, 03) */
+section.values .value-card .value-card__num,
+.value-card .value-card__num {
+  color: rgba(255, 255, 255, 0.2) !important;
+  font-size: 3.5rem !important;
+  font-family: var(--font-display) !important;
+  line-height: 1 !important;
+  margin-bottom: 1rem !important;
+  opacity: 1 !important;
+}
+
+/* ICÔNE */
+section.values .value-card .value-card__icon,
+.value-card .value-card__icon {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  border-radius: 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 1.75rem !important;
+}
+
+/* HOVER - améliorer mais garder la visibilité */
+section.values .value-card:hover,
+.value-card:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4) !important;
+}
+
+section.values .value-card:hover .value-card__icon,
+.value-card:hover .value-card__icon {
+  background: var(--gold-400) !important;
+  color: var(--navy-900) !important;
+  border-color: transparent !important;
+  transform: scale(1.1) rotate(5deg);
+}
+
+section.values .value-card:hover .value-card__num,
+.value-card:hover .value-card__num {
+  color: rgba(212, 175, 55, 0.3) !important;
+  transform: translateX(5px);
+}
+
+/* Effet de bordure doré au hover */
+.value-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1.5rem;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, transparent 0%, var(--gold-300) 50%, transparent 100%) border-box;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.value-card:hover::after {
+  opacity: 0.3;
+}
+
+/* ==========================================================================
+   6. SECTION TÉMOIGNAGES
+   ========================================================================== */
+
+.testimonial-card {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1.5rem;
+  padding: 2rem 1.75rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Assurer la visibilité du texte dans les témoignages */
+.testimonial-card .testimonial-stars {
+  color: var(--gold-400);
+  margin-bottom: 1.25rem;
+}
+
+.testimonial-card .testimonial-star {
+  color: var(--gold-400);
+}
+
+.testimonial-card .testimonial-quote {
+  color: var(--color-text-primary) !important;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.testimonial-card .testimonial-quote::before {
+  content: '"';
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: var(--gold-200);
+  position: absolute;
+  top: -1rem;
+  left: -0.5rem;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.testimonial-card .testimonial-footer {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 1.25rem;
+}
+
+.testimonial-card .testimonial-name {
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.testimonial-card .testimonial-meta {
+  color: var(--color-text-tertiary) !important;
+  font-size: 0.875rem;
+}
+
+.testimonial-card .testimonial-avatar {
+  background: linear-gradient(135deg, var(--navy-700), var(--gold-400));
+  color: white;
+}
+
+/* Hover des témoignages */
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-surface) !important;
+  border-color: var(--color-border-default);
+}
+
+/* ==========================================================================
+   7. BOUTONS 
+   ========================================================================== */
+
+.btn {
+  padding: 0.875rem 2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 3rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Effet de shine au survol */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  z-index: -1;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 100%);
+  box-shadow: 0 10px 20px -8px rgba(10, 37, 64, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 30px -10px rgba(10, 37, 64, 0.4);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold-400) 0%, var(--gold-300) 100%);
+  color: var(--navy-900);
+  box-shadow: 0 10px 20px -8px rgba(212, 175, 55, 0.3);
+}
+
+.btn-gold:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 30px -10px rgba(212, 175, 55, 0.4);
+}
+
+.btn-outline {
+  border: 2px solid var(--color-border-default);
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.btn-outline:hover {
+  border-color: var(--gold-400);
+  color: var(--gold-400);
+  background: transparent;
+  transform: translateY(-2px);
+}
+
+/* Animation de la flèche */
+.btn .btn-arrow,
+.btn i:last-child {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn:hover .btn-arrow,
+.btn:hover i:last-child {
+  transform: translateX(6px) scale(1.1);
+}
+
+/* ==========================================================================
+   8. FORMULAIRES
+   ========================================================================== */
+
+.form-input,
+.form-select,
+.form-textarea,
+.testimonial-input,
+.testimonial-textarea {
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  border: 2px solid var(--color-border-subtle);
+  background: var(--color-bg-base);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+  border-color: var(--color-border-strong);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+  outline: none;
+  background: var(--color-surface);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* Checkbox stylisée */
+.checkbox-wrapper {
+  padding: 0.5rem 0;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.375rem;
+  border: 2px solid var(--color-border-default);
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked {
+  background: var(--gold-400);
+  border-color: var(--gold-400);
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   9. MICRO-INTERACTIONS ET ANIMATIONS
+   ========================================================================== */
+
+/* Animation de révélation plus douce */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Effet de parallaxe subtil sur le hero */
+.hero::before {
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+/* Animation de pulse plus élégante pour le badge */
+.hero__badge-dot {
+  animation: elegant-pulse 3s ease-in-out infinite;
+}
+
+@keyframes elegant-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.2);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    transform: scale(1.2);
+  }
+}
+
+/* ==========================================================================
+   10. HEADER
+   ========================================================================== */
+
+.cc-header {
+  background: rgba(7, 21, 38, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  transition: all 0.3s ease;
+}
+
+.cc-header.is-scrolled {
+  background: rgba(7, 21, 38, 0.95);
+  backdrop-filter: blur(30px) saturate(200%);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.cc-nav-link {
+  position: relative;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.cc-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cc-nav-link:hover::after,
+.cc-nav-link.is-active::after {
+  width: 80%;
+}
+
+.cc-header__phone-number {
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, var(--gold-300));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cc-theme-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cc-theme-toggle:hover {
+  transform: rotate(180deg) scale(1.1);
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
+  color: var(--gold-400);
+}
+
+/* ==========================================================================
+   11. FOOTER
+   ========================================================================== */
+
+.cc-footer {
+  background: linear-gradient(180deg, #0A1120 0%, #040D18 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cc-footer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 80%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cc-footer__col-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.cc-footer__col-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-400), transparent);
+}
+
+.cc-footer__link {
+  position: relative;
+  transition: all 0.3s ease;
+  padding-left: 0;
+}
+
+.cc-footer__link:hover {
+  transform: translateX(8px);
+  color: var(--gold-400);
+}
+
+.cc-footer__contact li {
+  transition: transform 0.3s ease;
+}
+
+.cc-footer__contact li:hover {
+  transform: translateX(5px);
+}
+
+.cc-footer__contact i {
+  transition: all 0.3s ease;
+}
+
+.cc-footer__contact li:hover i {
+  transform: scale(1.2);
+  color: var(--gold-300);
+}
+
+.cc-footer__status-dot {
+  animation: elegant-pulse 3s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   12. DARK MODE 
+   ========================================================================== */
+
+[data-theme="dark"] .about-visual-card:not(.about-visual-card--navy) {
+  background: rgba(17, 29, 46, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .about-visual-card:not(.about-visual-card--navy) .about-visual-card__value {
+  color: white;
+}
+
+[data-theme="dark"] .about-visual-card:not(.about-visual-card--navy) .about-visual-card__label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .about-visual-card:not(.about-visual-card--navy) .about-visual-card__sub {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .value-card {
+  background: rgba(10, 20, 35, 0.6) !important;
+}
+
+[data-theme="dark"] .testimonial-card {
+  background: rgba(17, 29, 46, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .testimonial-card .testimonial-quote,
+[data-theme="dark"] .testimonial-card .testimonial-name {
+  color: white !important;
+}
+
+[data-theme="dark"] .testimonial-card .testimonial-meta {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="dark"] .testimonial-card:hover {
+  background: rgba(17, 29, 46, 0.95) !important;
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+/* ==========================================================================
+   13. RESPONSIVE 
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .feature-card,
+  .service-card,
+  .value-card,
+  .testimonial-card,
+  .about-visual-card {
+    padding: 1.75rem 1.5rem;
+  }
+  
+  .feature-card__icon,
+  .service-card__icon,
+  .value-card__icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+  
+  .section-header h2 {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+  
+  .hero__heading {
+    font-size: clamp(2.25rem, 8vw, 3.5rem);
+  }
+  
+  .value-card {
+    padding: 1.75rem 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-card,
+  .service-card,
+  .value-card,
+  .testimonial-card,
+  .about-visual-card {
+    padding: 1.5rem 1.25rem;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .value-card {
+    padding: 1.5rem 1.25rem !important;
+  }
+}

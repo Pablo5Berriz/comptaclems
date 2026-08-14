@@ -1,0 +1,51 @@
+/* web/public/assets-css/admin/documents.css */
+
+:root {
+  --primary:       var(--navy-800);
+  --primary-light: var(--navy-700);
+  --primary-dark:  var(--navy-900);
+  --accent:        var(--gold-400);
+  --accent-hover:  var(--gold-500);
+  --success:       #10b981;
+  --danger:        #ef4444;
+  --warning:       #f59e0b;
+  --info:          #3b82f6;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+}
+
+.modal .bg-black\/50 {
+    backdrop-filter: blur(4px);
+}
+
+/* Drawer animation */
+.drawer {
+    transition: transform 0.3s ease-in-out;
+}
+
+.translate-x-full {
+    transform: translateX(100%);
+}
+
+/* File input styling */
+.border-dashed {
+    border-style: dashed;
+}
+
+/* Loading spinner */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,89 @@
+:root {
+      --navy-900: #0A2540;
+      --gold-400: #D4AF37;
+      --green-600: #16a34a;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --radius: 12px;
+    }
+    [data-theme="dark"] {
+      --surface: #1e293b; --surface-2: #0f172a;
+      --border: #334155; --text: #f1f5f9; --text-muted: #94a3b8;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface-2); color: var(--text); margin: 0; }
+
+    .factures-container { max-width: 900px; margin: 100px auto 60px; padding: 0 20px; }
+    .page-title { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--navy-900); margin-bottom: 8px; }
+    [data-theme="dark"] .page-title { color: var(--gold-400); }
+    .page-subtitle { color: var(--text-muted); margin-bottom: 32px; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy-900); }
+    [data-theme="dark"] .stat-value { color: var(--gold-400); }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+    /* Interac box */
+    .interac-box {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius);
+      padding: 24px; margin-bottom: 32px;
+    }
+    [data-theme="dark"] .interac-box { background: #052e16; border-color: #166534; }
+    .interac-box h3 { margin: 0 0 16px; color: var(--green-600); font-size: 1.1rem; }
+    .interac-detail { display: grid; grid-template-columns: 180px 1fr; gap: 6px 12px; font-size: 14px; }
+    .interac-key { font-weight: 600; color: var(--text-muted); }
+    .interac-val { color: var(--text); }
+
+    /* Factures */
+    .invoices-list { display: flex; flex-direction: column; gap: 12px; }
+    .invoice-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .invoice-card.paid   { border-left: 4px solid var(--green-600); }
+    .invoice-card.pending { border-left: 4px solid #f59e0b; }
+    .invoice-card.cancelled { border-left: 4px solid #94a3b8; opacity: .7; }
+
+    .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .inv-number { font-size: 1.1rem; font-weight: 700; }
+    .inv-amount { font-size: 1.4rem; font-weight: 800; color: var(--navy-900); }
+    [data-theme="dark"] .inv-amount { color: var(--gold-400); }
+
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 99px;
+      font-size: 12px; font-weight: 600;
+    }
+    .badge-paid      { background: #dcfce7; color: #15803d; }
+    .badge-pending   { background: #fef3c7; color: #92400e; }
+    .badge-cancelled { background: #f1f5f9; color: #64748b; }
+
+    .inv-ref   { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .inv-desc  { font-size: 14px; margin-bottom: 8px; }
+    .inv-dates { font-size: 12px; color: var(--text-muted); }
+
+    /* Instructions paiement */
+    .payment-instructions {
+      background: var(--surface-2); border: 1px dashed var(--border);
+      border-radius: 8px; padding: 14px 16px; margin-top: 14px; font-size: 13px;
+    }
+    .payment-instructions strong { color: var(--navy-900); }
+    [data-theme="dark"] .payment-instructions strong { color: var(--gold-400); }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: .4; }
+
+    #loadingIndicator { text-align: center; padding: 40px; color: var(--text-muted); }
+    /* Bouton télécharger facture PDF */
+    .inv-actions { margin-top: 14px; }
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #4f46e5; color: #ffffff;
+      padding: 9px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-download:hover  { background: #4338ca; transform: translateY(-1px); }
+    .btn-download:active { transform: translateY(0); }
+    [data-theme="dark"] .btn-download { background: #6366f1; }
+    [data-theme="dark"] .btn-download:hover { background: #4f46e5; }
