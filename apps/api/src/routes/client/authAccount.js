@@ -206,6 +206,7 @@ router.post('/login', async (req, res) => {
       SELECT ca.id AS account_id,
              ca.password_hash,
              ca.email_verified,
+             ca.is_active,
              c.id AS client_id,
              c.first_name,
              c.last_name
@@ -225,6 +226,10 @@ router.post('/login', async (req, res) => {
 
     if (!match) {
       return res.status(401).json({ error: 'Identifiants invalides' });
+    }
+
+    if (!account.is_active) {
+      return res.status(403).json({ error: 'Ce compte est désactivé.' });
     }
 
     await db.query(
