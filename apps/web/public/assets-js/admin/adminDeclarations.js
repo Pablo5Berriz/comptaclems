@@ -897,8 +897,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const response = await apiFetch(`/api/admin/declarations/${id}/documents`);
           
           if (response.success) {
-            const token = getToken();
-            const docsHtml = generateAdminDocumentsView(response.documents, id, token);
+            const docsHtml = generateAdminDocumentsView(response.documents, id);
             docsWindow.document.open();
             docsWindow.document.write(docsHtml);
             docsWindow.document.close();
@@ -1343,7 +1342,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 9. GÉNÉRATION VUE DOCUMENTS
   // ====================================
 
-  function generateAdminDocumentsView(documents, declarationId, token) {
+  function generateAdminDocumentsView(documents, declarationId) {
     const stats = {
       total: documents.length,
       pending: documents.filter(d => d.status === 'pending').length,
@@ -1408,7 +1407,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          ${documents.length === 0 ? generateEmptyDocuments() : generateDocumentsList(documents, token)}
+          ${documents.length === 0 ? generateEmptyDocuments() : generateDocumentsList(documents)}
           
           <div class="text-center mt-8 no-print">
             <button onclick="window.close()" 
@@ -1423,7 +1422,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
-  function generateDocumentsList(documents, token) {
+  function generateDocumentsList(documents) {
     const groupedByType = documents.reduce((acc, doc) => {
       const type = doc.document_type_label || 'Autres documents';
       if (!acc[type]) acc[type] = [];
@@ -1484,13 +1483,13 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
             <div class="flex gap-2 ml-4">
-              <button onclick="previewDocument(${docId}, '${token}')"
-                      class="px-4 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 no-print">
+              <button type="button" class="doc-preview-btn px-4 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-slate-700 no-print"
+                      data-doc-id="${escapeHtml(String(docId))}">
                 <i class="fas fa-eye"></i>
                 Aperçu
               </button>
-              <button onclick="downloadDocument(${docId}, '${fileName}', '${token}')"
-                      class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2 shadow-md download-btn">
+              <button type="button" class="doc-download-btn px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2 shadow-md download-btn"
+                      data-doc-id="${escapeHtml(String(docId))}" data-filename="${escapeHtml(fileName)}">
                 <i class="fas fa-download"></i>
                 Télécharger
               </button>
@@ -1509,55 +1508,96 @@ document.addEventListener('DOMContentLoaded', () => {
     html += `
       </div>
       <script>
-        function downloadDocument(docId, filename, token) {
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', '/api/admin/declarations/documents/' + docId + '/download', true);
+        // Sécurité (fix XSS admin) : ni fileName ni JWT ne sont jamais interpolés
+        // dans du HTML/JS généré. docId/fileName passent par data-* (texte inerte,
+        // lu via .dataset, jamais exécuté). Le JWT n'est JAMAIS écrit dans ce markup :
+        // cette fenêtre est same-origin avec l'admin (about:blank hérite de l'origine
+        // de l'opener), donc on relit le token directement depuis localStorage au
+        // moment du clic, exactement comme getToken() le fait dans adminDeclarations.js.
+        function getAdminToken() {
+          try {
+            var raw = localStorage.getItem('cc_admin_auth');
+            if (!raw) return null;
+            var parsed = JSON.parse(raw);
+            return parsed.token || null;
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function downloadDocument(docId, filename) {
+          var token = getAdminToken();
+          if (!token) {
+            alert('Session expirée. Fermez cette fenêtre et reconnectez-vous.');
+            return;
+          }
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '/api/admin/declarations/documents/' + encodeURIComponent(docId) + '/download', true);
           xhr.setRequestHeader('Authorization', 'Bearer ' + token);
           xhr.responseType = 'blob';
-          
+
           xhr.onload = function() {
             if (this.status === 200) {
-              const blob = this.response;
-              const link = document.createElement('a');
+              var blob = this.response;
+              var link = document.createElement('a');
               link.href = window.URL.createObjectURL(blob);
               link.download = filename;
+              document.body.appendChild(link);
               link.click();
+              link.remove();
               window.URL.revokeObjectURL(link.href);
             } else {
               alert('Erreur lors du téléchargement (code ' + this.status + ')');
             }
           };
-          
+
           xhr.onerror = function() {
             alert('Erreur réseau lors du téléchargement');
           };
-          
+
           xhr.send();
         }
-        
-        function previewDocument(docId, token) {
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', '/api/admin/declarations/documents/' + docId + '/download?preview=1', true);
+
+        function previewDocument(docId) {
+          var token = getAdminToken();
+          if (!token) {
+            alert('Session expirée. Fermez cette fenêtre et reconnectez-vous.');
+            return;
+          }
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '/api/admin/declarations/documents/' + encodeURIComponent(docId) + '/download?preview=1', true);
           xhr.setRequestHeader('Authorization', 'Bearer ' + token);
           xhr.responseType = 'blob';
-          
+
           xhr.onload = function() {
             if (this.status === 200) {
-              const blob = this.response;
-              const url = window.URL.createObjectURL(blob);
+              var blob = this.response;
+              var url = window.URL.createObjectURL(blob);
               window.open(url, '_blank');
               window.URL.revokeObjectURL(url);
             } else {
               alert('Erreur lors de l\\'aperçu (code ' + this.status + ')');
             }
           };
-          
+
           xhr.onerror = function() {
             alert('Erreur réseau lors de l\\'aperçu');
           };
-          
+
           xhr.send();
         }
+
+        document.querySelectorAll('.doc-preview-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            previewDocument(btn.dataset.docId);
+          });
+        });
+
+        document.querySelectorAll('.doc-download-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            downloadDocument(btn.dataset.docId, btn.dataset.filename);
+          });
+        });
       </script>
     `;
 
