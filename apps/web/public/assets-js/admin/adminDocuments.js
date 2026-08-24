@@ -271,6 +271,16 @@
     // RENDU
     // ============================================
     
+    function escapeHtml(text) {
+        if (!text && text !== 0) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     function renderDocuments(documents) {
         const tbody = document.getElementById('documentsTbody');
         if (!tbody) return;
@@ -294,14 +304,14 @@
                             <i class="fas ${getFileIcon(doc.mime_type)}"></i>
                         </div>
                         <div class="min-w-0">
-                            <p class="font-medium text-slate-900 truncate">${doc.original_name || 'Sans nom'}</p>
+                            <p class="font-medium text-slate-900 truncate">${escapeHtml(doc.original_name) || 'Sans nom'}</p>
                             <p class="text-xs text-slate-500">${doc.file_name || ''}</p>
                         </div>
                     </div>
                 </td>
                 <td class="px-6 py-4">
-                    <p class="font-medium text-slate-900">${doc.client_name || 'N/A'}</p>
-                    <p class="text-xs text-slate-500">${doc.client_email || ''}</p>
+                    <p class="font-medium text-slate-900">${escapeHtml(doc.client_name) || 'N/A'}</p>
+                    <p class="text-xs text-slate-500">${escapeHtml(doc.client_email)}</p>
                 </td>
                 <td class="px-6 py-4">
                     <span class="px-3 py-1 bg-slate-100 rounded-full text-sm font-medium">${doc.tax_year || 'N/A'}</span>
