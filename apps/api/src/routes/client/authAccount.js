@@ -151,13 +151,15 @@ router.post('/register', async (req, res) => {
       RETURNING id
     `;
 
-    await db.query(insertAccount, [createdClient.id, email, passwordHash]);
+    const accountResult = await db.query(insertAccount, [createdClient.id, email, passwordHash]);
+    const accountId = accountResult.rows[0].id;
 
     await db.query('COMMIT');
 
     const token = jwt.sign(
       {
         sub: String(createdClient.id),
+        aid: accountId,
         type: 'client',
         email,
         first_name: createdClient.first_name,
@@ -240,6 +242,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       {
         sub: String(account.client_id),
+        aid: account.account_id,
         type: 'client',
         email,
         first_name: account.first_name,
