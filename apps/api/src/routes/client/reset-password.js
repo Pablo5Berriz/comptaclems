@@ -86,10 +86,14 @@ router.post('/', async (req, res) => {
     // Hacher le nouveau mot de passe (bcrypt, 12 rounds)
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Mettre à jour le mot de passe dans client_accounts
+    // Mettre à jour le mot de passe dans client_accounts. token_version
+    // incrémenté dans le même UPDATE (lot 007F-B) : invalide immédiatement
+    // TOUS les JWT client émis avant ce reset, quel que soit leur état
+    // is_active/aid par ailleurs valide (ALL PREVIOUS CLIENT JWTs INVALID).
     const updated = await db.query(
       `UPDATE comptaclems.client_accounts
        SET password_hash = $1,
+           token_version = token_version + 1,
            updated_at    = NOW()
        WHERE client_id = $2
        RETURNING id`,

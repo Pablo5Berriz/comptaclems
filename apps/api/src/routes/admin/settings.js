@@ -396,10 +396,17 @@ router.put('/profile/password', authAdmin, async (req, res) => {
     }
 
     const newHash = await bcrypt.hash(new_password, 12);
-    await db.query(
-      'UPDATE comptaclems.admin SET password_hash = $1, updated_at = now() WHERE id = $2',
+    // token_version incrémenté dans le même UPDATE (lot 007F-B) : révoque
+    // immédiatement toute session JWT admin émise avant ce changement, y
+    // compris la session courante (FORCE RELOGIN).
+    const updated = await db.query(
+      'UPDATE comptaclems.admin SET password_hash = $1, token_version = token_version + 1, updated_at = now() WHERE id = $2 RETURNING token_version',
       [newHash, req.admin.id]
     );
+
+    if (!updated.rowCount) {
+      return res.status(404).json({ success: false, error: 'Admin introuvable' });
+    }
 
     console.log('[SETTINGS] Mot de passe modifié par admin', req.admin.id);
     return res.json({ success: true, message: 'Mot de passe modifié avec succès' });

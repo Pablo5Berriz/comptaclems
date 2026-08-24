@@ -100,16 +100,25 @@ router.post('/verify', authAdmin, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Code invalide. Vérifiez l\'heure de votre téléphone.' });
     }
 
-    // Activer le 2FA : déplacer le secret temporaire vers le définitif
-    await db.query(
+    // Activer le 2FA : déplacer le secret temporaire vers le définitif.
+    // token_version incrémenté dans le même UPDATE (lot 007F-B) : l'activation
+    // de la 2FA devient effective ici (pas au /setup) → révoque toute session
+    // JWT admin émise avant cette activation.
+    const activated = await db.query(
       `UPDATE comptaclems.admin
        SET totp_secret = totp_secret_temp,
            totp_secret_temp = NULL,
            totp_enabled = TRUE,
+           token_version = token_version + 1,
            updated_at = NOW()
-       WHERE id = $1`,
+       WHERE id = $1
+       RETURNING token_version`,
       [adminId]
     );
+
+    if (!activated.rowCount) {
+      return res.status(404).json({ success: false, error: 'Compte admin introuvable' });
+    }
 
     return res.json({
       success: true,
@@ -155,13 +164,20 @@ router.post('/disable', authAdmin, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Code invalide' });
     }
 
-    await db.query(
+    // token_version incrémenté dans le même UPDATE (lot 007F-B) : désactivation
+    // de la 2FA → révoque toute session JWT admin émise avant ce changement.
+    const disabled = await db.query(
       `UPDATE comptaclems.admin
        SET totp_secret = NULL, totp_secret_temp = NULL,
-           totp_enabled = FALSE, updated_at = NOW()
-       WHERE id = $1`,
+           totp_enabled = FALSE, token_version = token_version + 1, updated_at = NOW()
+       WHERE id = $1
+       RETURNING token_version`,
       [adminId]
     );
+
+    if (!disabled.rowCount) {
+      return res.status(404).json({ success: false, error: 'Compte admin introuvable' });
+    }
 
     return res.json({ success: true, message: 'Double authentification désactivée' });
   } catch (e) {
@@ -217,9 +233,10 @@ router.post('/validate-login', async (req, res) => {
       return res.status(401).json({ success: false, error: 'Token invalide' });
     }
 
-    // Récupérer le secret TOTP de l'admin
+    // Récupérer le secret TOTP de l'admin (token_version pour le claim tv du
+    // JWT final — lot 007F-B, ce point d'émission n'était pas encore couvert)
     const result = await db.query(
-      `SELECT id, totp_secret, role, email, first_name, last_name
+      `SELECT id, totp_secret, role, email, first_name, last_name, token_version
        FROM comptaclems.admin WHERE id = $1 AND is_active = TRUE`,
       [payload.sub]
     );
@@ -241,13 +258,15 @@ router.post('/validate-login', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Code invalide. Réessayez.' });
     }
 
-    // Générer le vrai token JWT admin
+    // Générer le vrai token JWT admin — troisième point d'émission finale
+    // (avec login direct et bootstrap/register), doit porter tv comme les 2 autres.
     const token = jwt.sign(
       {
         sub:   String(admin.id),
         type:  'admin',
         role:  admin.role,
         email: admin.email,
+        tv:    admin.token_version,
       },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }

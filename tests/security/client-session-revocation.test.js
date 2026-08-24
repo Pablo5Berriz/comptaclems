@@ -1,12 +1,15 @@
 'use strict';
 
 /**
- * BEHAVIORAL SECURITY REGRESSION TEST — SESSION-REVOCATION-007F-A (client)
+ * BEHAVIORAL SECURITY REGRESSION TEST — SESSION-REVOCATION-007F-A/007F-B (client)
  *
- * Cible : apps/api/src/middleware/authClient.js — composant A de l'architecture
- * de révocation validée aux lots 007E/007E-R1 : après jwt.verify(), le compte
- * (client_accounts) désigné par sub (clients.id) + aid (client_accounts.id) est
- * revalidé en DB à chaque requête (existence, appartenance, is_active).
+ * Cible : apps/api/src/middleware/authClient.js
+ *   COMPOSANT A (007F-A) : après jwt.verify(), le compte (client_accounts)
+ *   désigné par sub (clients.id) + aid (client_accounts.id) est revalidé en DB
+ *   à chaque requête (existence, appartenance, is_active).
+ *   COMPOSANT B (007F-B) : la même requête compare aussi payload.tv à
+ *   client_accounts.token_version — révoque les sessions dont le mot de passe
+ *   a changé depuis l'émission du JWT, même si le compte reste actif.
  *
  * Ce test exécute le VRAI middleware authClient.js (pas une réimplémentation),
  * avec db.js mocké via require.cache et de VRAIS JWT signés avec jsonwebtoken
@@ -48,13 +51,13 @@ async function runTests() {
 }
 
 /* =====================================================================
-   MOCK db.js — modélise fidèlement la requête réelle :
-   SELECT ca.id, ca.client_id, ca.is_active
+   MOCK db.js — modélise fidèlement la requête réelle (007F-B) :
+   SELECT ca.id, ca.client_id, ca.is_active, ca.token_version
    FROM comptaclems.client_accounts ca
    WHERE ca.id = $1 AND ca.client_id = $2
    ===================================================================== */
 const state = {
-  accountRow: null,   // { id, client_id, is_active } ou null
+  accountRow: null,   // { id, client_id, is_active, token_version } ou null
   dbError: false,
 };
 
@@ -122,11 +125,11 @@ async function callAuthClient(req, res) {
 }
 
 /* =====================================================================
-   1. Cas nominal : JWT valide + aid/sub valides + compte actif → next()
+   1. Cas nominal : JWT valide + aid/sub valides + tv==DB + compte actif => next()
    ===================================================================== */
-test('JWT valide + aid/sub cohérents + compte actif => next() appelé, req.client correctement peuplé', async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true } });
-  const token = signClientJwt({ sub: '42', aid: 501, email: 'a@b.com', first_name: 'Jean' });
+test('JWT valide + aid/sub cohérents + tv==DB + compte actif => next() appelé, req.client correctement peuplé', async () => {
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 3 } });
+  const token = signClientJwt({ sub: '42', aid: 501, tv: 3, email: 'a@b.com', first_name: 'Jean' });
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -142,8 +145,8 @@ test('JWT valide + aid/sub cohérents + compte actif => next() appelé, req.clie
    2. Claim aid manquant (JWT émis avant 007F-A) => refus, pas de repli
    ===================================================================== */
 test("JWT valide mais SANS claim aid (ancien JWT pré-007F-A) => refus, aucun repli ambigu", async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true } });
-  const token = signClientJwt({ sub: '42', email: 'a@b.com' }); // pas de aid
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
+  const token = signClientJwt({ sub: '42', tv: 1, email: 'a@b.com' }); // pas de aid
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -157,8 +160,8 @@ test("JWT valide mais SANS claim aid (ancien JWT pré-007F-A) => refus, aucun re
    3. aid ne correspond à aucune ligne (mauvais aid) => refus
    ===================================================================== */
 test('aid ne correspond à aucun compte existant => refus (401)', async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true } });
-  const token = signClientJwt({ sub: '42', aid: 999999 }); // aid inexistant
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
+  const token = signClientJwt({ sub: '42', aid: 999999, tv: 1 }); // aid inexistant
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -172,8 +175,8 @@ test('aid ne correspond à aucun compte existant => refus (401)', async () => {
    4. aid existe mais appartient à un AUTRE client (client_id différent) => refus
    ===================================================================== */
 test("aid existe mais appartient à un autre client (client_id ≠ sub) => refus (401)", async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true } }); // compte réel = client 42
-  const token = signClientJwt({ sub: '43', aid: 501 }); // sub falsifié = 43, aid réel = 501 (client 42)
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } }); // compte réel = client 42
+  const token = signClientJwt({ sub: '43', aid: 501, tv: 1 }); // sub falsifié = 43, aid réel = 501 (client 42)
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -184,11 +187,12 @@ test("aid existe mais appartient à un autre client (client_id ≠ sub) => refus
 });
 
 /* =====================================================================
-   5. Compte inactif => refus 403
+   5. Compte inactif + tv cohérent => refus 403 (prouve que le check is_active
+      fonctionne indépendamment du check tv, pas un faux-négatif dû à tv)
    ===================================================================== */
-test('compte client désactivé (is_active=false) + JWT existant => refus (403)', async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: false } });
-  const token = signClientJwt({ sub: '42', aid: 501 });
+test('compte client désactivé (is_active=false) + tv==DB + JWT existant => refus (403)', async () => {
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: false, token_version: 5 } });
+  const token = signClientJwt({ sub: '42', aid: 501, tv: 5 });
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -204,7 +208,7 @@ test('compte client désactivé (is_active=false) + JWT existant => refus (403)'
    ===================================================================== */
 test('compte client supprimé (aucune ligne client_accounts pour aid+sub) => refus (401)', async () => {
   resetState({ accountRow: null }); // aucune ligne, quel que soit aid/sub
-  const token = signClientJwt({ sub: '42', aid: 501 });
+  const token = signClientJwt({ sub: '42', aid: 501, tv: 1 });
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -218,8 +222,8 @@ test('compte client supprimé (aucune ligne client_accounts pour aid+sub) => ref
    7. Erreur DB pendant la revalidation => refus (fail-closed), jamais next()
    ===================================================================== */
 test('erreur DB pendant la revalidation de session => refus (503), next() jamais appelé', async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true }, dbError: true });
-  const token = signClientJwt({ sub: '42', aid: 501 });
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 }, dbError: true });
+  const token = signClientJwt({ sub: '42', aid: 501, tv: 1 });
   const req = makeReq({ cookieToken: token });
   const res = makeRes();
 
@@ -233,8 +237,8 @@ test('erreur DB pendant la revalidation de session => refus (503), next() jamais
    8. JWT invalide (signature erronée) => refus
    ===================================================================== */
 test('JWT signé avec un secret différent (signature invalide) => refus (401)', async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true } });
-  const forgedToken = jwt.sign({ sub: '42', aid: 501, type: 'client' }, 'wrong-secret-not-real', { expiresIn: '1d' });
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
+  const forgedToken = jwt.sign({ sub: '42', aid: 501, tv: 1, type: 'client' }, 'wrong-secret-not-real', { expiresIn: '1d' });
   const req = makeReq({ cookieToken: forgedToken });
   const res = makeRes();
 
@@ -248,7 +252,7 @@ test('JWT signé avec un secret différent (signature invalide) => refus (401)',
    9. Aucun cookie => refus (comportement pré-existant, non-régression)
    ===================================================================== */
 test('aucun cookie cc_auth => refus (401), comportement inchangé', async () => {
-  resetState({ accountRow: { id: 501, client_id: 42, is_active: true } });
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
   const req = makeReq({ cookieToken: null });
   const res = makeRes();
 
@@ -256,6 +260,79 @@ test('aucun cookie cc_auth => refus (401), comportement inchangé', async () => 
 
   assert.strictEqual(nextCalled, false);
   assert.strictEqual(res.statusCode, 401);
+});
+
+/* =====================================================================
+   10. [007F-B] Claim tv manquant (JWT émis avant 007F-B, aid présent) => refus
+   ===================================================================== */
+test('JWT valide + aid présent mais SANS claim tv (JWT pré-007F-B) => refus (401), force relogin', async () => {
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
+  const token = signClientJwt({ sub: '42', aid: 501 }); // pas de tv
+  const req = makeReq({ cookieToken: token });
+  const res = makeRes();
+
+  const nextCalled = await callAuthClient(req, res);
+
+  assert.strictEqual(nextCalled, false, 'next() ne doit jamais être appelé sans claim tv');
+  assert.strictEqual(res.statusCode, 401, `attendu 401, obtenu ${res.statusCode}`);
+});
+
+/* =====================================================================
+   11. [007F-B] tv du JWT ne correspond pas à token_version en DB => refus
+   ===================================================================== */
+test('tv du JWT (1) != token_version DB (2) => refus (401)', async () => {
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 2 } });
+  const token = signClientJwt({ sub: '42', aid: 501, tv: 1 }); // JWT émis avant le dernier changement de mdp
+  const req = makeReq({ cookieToken: token });
+  const res = makeRes();
+
+  const nextCalled = await callAuthClient(req, res);
+
+  assert.strictEqual(nextCalled, false, 'un tv obsolète ne doit jamais passer');
+  assert.strictEqual(res.statusCode, 401, `attendu 401, obtenu ${res.statusCode}`);
+});
+
+/* =====================================================================
+   12. [007F-B] Scénario réaliste : token_version incrémenté en DB APRÈS
+       l'émission du JWT (ex. changement de mot de passe) => la session
+       déjà émise est bloquée à la requête suivante
+   ===================================================================== */
+test('token_version incrémenté en DB après émission du JWT (changement de mdp) => session déjà émise bloquée', async () => {
+  // Étape 1 : JWT émis quand token_version valait 1 (login normal)
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
+  const tokenEmisAvant = signClientJwt({ sub: '42', aid: 501, tv: 1 });
+
+  // Vérifie que ce JWT fonctionnait bien à ce moment-là
+  const reqAvant = makeReq({ cookieToken: tokenEmisAvant });
+  const resAvant = makeRes();
+  assert.strictEqual(await callAuthClient(reqAvant, resAvant), true, 'le JWT devait être valide avant le changement de mdp');
+
+  // Étape 2 : changement de mot de passe → token_version passe à 2 en DB
+  // (même requête que le nouveau JWT, mais l'ancien JWT n'est jamais réémis)
+  state.accountRow = { id: 501, client_id: 42, is_active: true, token_version: 2 };
+
+  // Étape 3 : la MÊME session (ancien cookie, tv=1) est maintenant rejetée
+  const reqApres = makeReq({ cookieToken: tokenEmisAvant });
+  const resApres = makeRes();
+  const nextCalled = await callAuthClient(reqApres, resApres);
+
+  assert.strictEqual(nextCalled, false, 'la session émise avant le changement de mdp doit être révoquée');
+  assert.strictEqual(resApres.statusCode, 401, `attendu 401, obtenu ${resApres.statusCode}`);
+});
+
+/* =====================================================================
+   13. [007F-B] tv non numérique => refus
+   ===================================================================== */
+test('tv non numérique dans le JWT => refus (401)', async () => {
+  resetState({ accountRow: { id: 501, client_id: 42, is_active: true, token_version: 1 } });
+  const token = signClientJwt({ sub: '42', aid: 501, tv: 'not-a-number' });
+  const req = makeReq({ cookieToken: token });
+  const res = makeRes();
+
+  const nextCalled = await callAuthClient(req, res);
+
+  assert.strictEqual(nextCalled, false, 'un tv non numérique ne doit jamais passer');
+  assert.strictEqual(res.statusCode, 401, `attendu 401, obtenu ${res.statusCode}`);
 });
 
 runTests().then(() => {

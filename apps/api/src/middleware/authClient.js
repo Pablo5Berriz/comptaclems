@@ -11,10 +11,19 @@
  * après l'émission de son JWT gardait un accès valide jusqu'à expiration) ainsi que
  * le cas d'un compte supprimé.
  *
- * Un JWT client sans claim `aid` (émis avant ce lot) est refusé — aucun repli
- * ambigu par résolution `client_id` seul (voir rapport 007E-R1 : client_accounts
- * n'a pas de contrainte UNIQUE(client_id), une résolution par client_id seul serait
- * ambiguë et n'est jamais utilisée ici).
+ * COMPOSANT B (lot 007F-B) : la revalidation compare aussi payload.tv (claim JWT)
+ * à client_accounts.token_version (DB), dans la même requête que le composant A
+ * (CLIENT_DB_QUERIES_PER_AUTH = 1, aucune requête supplémentaire). Ferme les
+ * événements qui ne touchent ni is_active ni l'existence de la ligne : changement
+ * de mot de passe, reset de mot de passe — tout incrément de token_version rend
+ * immédiatement invalide toute session émise avant l'incrément, y compris une
+ * session par ailleurs valide au sens du composant A (compte actif, aid/sub
+ * cohérents).
+ *
+ * Un JWT client sans claim `aid` OU sans claim `tv` (émis avant 007F-A / 007F-B)
+ * est refusé — aucun repli ambigu par résolution `client_id` seul (voir rapport
+ * 007E-R1 : client_accounts n'a pas de contrainte UNIQUE(client_id), une résolution
+ * par client_id seul serait ambiguë et n'est jamais utilisée ici).
  *
  * req.client.id / req.clientId restent `clients.id` (= payload.sub), inchangés
  * pour les >30 consommateurs existants. req.client.accountId (nouveau) expose
@@ -86,6 +95,7 @@ module.exports = async function authClient(req, res, next) {
 
   const sub = Number(payload.sub);
   const aid = Number(payload.aid);
+  const tv  = Number(payload.tv);
 
   if (!Number.isFinite(sub)) {
     return unauthorized();
@@ -97,10 +107,16 @@ module.exports = async function authClient(req, res, next) {
     return unauthorized();
   }
 
+  // Claim tv absent (JWT émis avant le lot 007F-B) : refusé, force la reconnexion
+  // plutôt que d'accepter une session sans preuve de version courante.
+  if (payload.tv === undefined || payload.tv === null || !Number.isFinite(tv)) {
+    return unauthorized();
+  }
+
   let account;
   try {
     const result = await db.query(
-      `SELECT ca.id, ca.client_id, ca.is_active
+      `SELECT ca.id, ca.client_id, ca.is_active, ca.token_version
        FROM comptaclems.client_accounts ca
        WHERE ca.id = $1
          AND ca.client_id = $2`,
@@ -121,6 +137,13 @@ module.exports = async function authClient(req, res, next) {
 
   if (!account.is_active) {
     return forbiddenInactive();
+  }
+
+  // token_version DB != tv du JWT : mot de passe changé/reset depuis l'émission
+  // de ce JWT (ou tout autre événement futur qui incrémente token_version) —
+  // session révoquée, même si le compte reste actif et aid/sub cohérents.
+  if (Number(account.token_version) !== tv) {
+    return unauthorized();
   }
 
   req.client = {

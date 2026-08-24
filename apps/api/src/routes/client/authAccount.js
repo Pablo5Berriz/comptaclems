@@ -148,11 +148,12 @@ router.post('/register', async (req, res) => {
       ) VALUES (
         $1, $2, $3, FALSE
       )
-      RETURNING id
+      RETURNING id, token_version
     `;
 
     const accountResult = await db.query(insertAccount, [createdClient.id, email, passwordHash]);
     const accountId = accountResult.rows[0].id;
+    const tokenVersion = accountResult.rows[0].token_version;
 
     await db.query('COMMIT');
 
@@ -160,6 +161,7 @@ router.post('/register', async (req, res) => {
       {
         sub: String(createdClient.id),
         aid: accountId,
+        tv: tokenVersion,
         type: 'client',
         email,
         first_name: createdClient.first_name,
@@ -209,6 +211,7 @@ router.post('/login', async (req, res) => {
              ca.password_hash,
              ca.email_verified,
              ca.is_active,
+             ca.token_version,
              c.id AS client_id,
              c.first_name,
              c.last_name
@@ -243,6 +246,7 @@ router.post('/login', async (req, res) => {
       {
         sub: String(account.client_id),
         aid: account.account_id,
+        tv: account.token_version,
         type: 'client',
         email,
         first_name: account.first_name,

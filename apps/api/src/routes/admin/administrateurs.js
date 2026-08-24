@@ -397,8 +397,10 @@ router.patch('/:id/password', authAdmin, async (req, res) => {
 
     const newHash = await bcrypt.hash(password, 12);
 
+    // token_version incrémenté dans le même UPDATE (lot 007F-B) : révoque
+    // immédiatement toute session JWT de l'admin ciblé émise avant ce reset.
     const r = await db.query(
-      `UPDATE comptaclems.admin SET password_hash = $1 WHERE id = $2 RETURNING id`,
+      `UPDATE comptaclems.admin SET password_hash = $1, token_version = token_version + 1 WHERE id = $2 RETURNING id`,
       [newHash, id]
     );
 

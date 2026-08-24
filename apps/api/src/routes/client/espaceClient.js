@@ -17,6 +17,16 @@ try {
 
 const router = express.Router();
 
+// Bug pré-existant découvert lot 007F-B, hors périmètre token_version mais
+// bloquant pour PUT /password (§11 de la directive) : safeText() était utilisée
+// sans jamais être définie nulle part dans ce fichier ni ailleurs dans le repo —
+// ReferenceError à CHAQUE appel (route entièrement inaccessible, 500 systématique,
+// confirmé par invocation directe du handler avant ce correctif). Fix minimal,
+// même sémantique que safeTrim() dans admin/auth.js.
+function safeText(v) {
+  return v === null || v === undefined ? '' : String(v).trim();
+}
+
 // Configuration de multer pour l'upload de fichiers
 // CORRECTION : ajout d'un fileFilter avec whitelist MIME côté serveur
 const ALLOWED_MIME_TYPES = new Set([
@@ -617,14 +627,23 @@ router.put('/password', authClient, async (req, res) => {
 
     const hash = await bcrypt.hash(newPassword, 12);
 
-    await db.query(
+    // token_version incrémenté dans le même UPDATE (lot 007F-B) : révoque
+    // immédiatement toute session émise avant ce changement de mot de passe,
+    // y compris la session courante (FORCE RELOGIN — recommandation PM).
+    const updated = await db.query(
       `
       UPDATE comptaclems.client_accounts
-      SET password_hash = $2, updated_at = NOW()
+      SET password_hash = $2, token_version = token_version + 1, updated_at = NOW()
       WHERE client_id = $1
+      RETURNING token_version
       `,
       [clientId, hash]
     );
+
+    if (!updated.rowCount) {
+      // Compte supprimé entre la vérification ci-dessus et cet UPDATE (course rare).
+      return res.status(404).json({ success: false, error: 'Compte introuvable' });
+    }
 
     return res.json({ success: true });
   } catch (e) {

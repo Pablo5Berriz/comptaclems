@@ -58,13 +58,17 @@ function isStrongEnoughPassword(password) {
     password.length <= 200;
 }
 
+// admin doit être la ligne DB brute (ou tout objet portant token_version) —
+// PAS safeAdminResponse(), qui ne l'expose pas. tv = admin.token_version
+// (lot 007F-B, composant B de la révocation de sessions).
 function signAdminToken(admin) {
   return jwt.sign(
     {
       sub: admin.id,
       type: 'admin',
       role: admin.role,
-      email: admin.email
+      email: admin.email,
+      tv: admin.token_version
     },
     JWT_SECRET,
     { expiresIn: '7d' }
@@ -159,8 +163,10 @@ router.post('/register', async (req, res) => {
       [first_name, last_name, email, phone, role, passwordHash]
     );
 
+    // signAdminToken reçoit la ligne DB brute (token_version inclus via RETURNING *),
+    // la réponse HTTP reste construite depuis safeAdminResponse (token_version non exposé).
+    const token = signAdminToken(result.rows[0]);
     const admin = safeAdminResponse(result.rows[0]);
-    const token = signAdminToken(admin);
 
     return res.status(201).json({
       message: 'Admin crÃ©Ã© avec succÃ¨s',
@@ -235,7 +241,9 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     // ── Connexion directe sans 2FA ─────────────────────────────────────────────
-    const token = signAdminToken(safeAdmin);
+    // signAdminToken reçoit la ligne DB brute `admin` (SELECT * — token_version
+    // inclus), pas `safeAdmin` qui ne l'expose pas.
+    const token = signAdminToken(admin);
     console.log(`[ADMIN LOGIN] ${safeAdmin.email} | ${safeAdmin.role}`);
 
     return res.json({

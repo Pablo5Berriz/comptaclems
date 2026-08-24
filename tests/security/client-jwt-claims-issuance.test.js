@@ -5,8 +5,9 @@
  *
  * Cible : apps/api/src/routes/client/authAccount.js, routes POST /register et
  * POST /login — prouve que les DEUX points d'émission du JWT client produisent
- * bien sub = clients.id ET aid = client_accounts.id, conformément à
- * l'architecture validée aux lots 007E/007E-R1.
+ * bien sub = clients.id, aid = client_accounts.id ET tv = client_accounts.
+ * token_version (lot 007F-B), conformément à l'architecture validée aux
+ * lots 007E/007E-R1/007F-A.
  *
  * Ce test N'EST PAS un grep sur la chaîne "aid" : il exécute les VRAIS handlers
  * de route (register/login réels, via router.stack), avec db.js/bcryptjs/
@@ -72,9 +73,9 @@ require.cache[require.resolve(DB_PATH)] = fakeModule({
     if (/INSERT INTO comptaclems\.clients/i.test(sql)) {
       return { rows: [{ id: 4242, first_name: params[0], last_name: params[1] }] };
     }
-    // /register : INSERT client_accounts ... RETURNING id
+    // /register : INSERT client_accounts ... RETURNING id, token_version
     if (/INSERT INTO comptaclems\.client_accounts/i.test(sql)) {
-      return { rows: [{ id: 7777 }] };
+      return { rows: [{ id: 7777, token_version: 1 }] };
     }
     // /login : SELECT ca.id AS account_id ... WHERE ca.email
     if (/SELECT ca\.id AS account_id/i.test(sql) && /WHERE ca\.email/i.test(sql)) {
@@ -85,6 +86,7 @@ require.cache[require.resolve(DB_PATH)] = fakeModule({
           password_hash: 'hashed',
           email_verified: true,
           is_active: true,
+          token_version: 3,
           client_id: 5151,
           first_name: 'Marie',
           last_name: 'Tremblay',
@@ -143,7 +145,7 @@ function resetState() {
 /* =====================================================================
    1. REGISTER : sub = clients.id (4242), aid = client_accounts.id (7777)
    ===================================================================== */
-test('POST /register émet un JWT avec sub = clients.id et aid = client_accounts.id', async () => {
+test('POST /register émet un JWT avec sub = clients.id, aid = client_accounts.id, tv = token_version', async () => {
   resetState();
   const req = {
     body: {
@@ -162,13 +164,14 @@ test('POST /register émet un JWT avec sub = clients.id et aid = client_accounts
   assert.ok(state.lastSignedPayload, 'aucun payload capturé');
   assert.strictEqual(state.lastSignedPayload.sub, String(4242), `sub attendu = clients.id (4242), obtenu ${state.lastSignedPayload.sub}`);
   assert.strictEqual(state.lastSignedPayload.aid, 7777, `aid attendu = client_accounts.id (7777), obtenu ${state.lastSignedPayload.aid}`);
+  assert.strictEqual(state.lastSignedPayload.tv, 1, `tv attendu = token_version RETURNING (1), obtenu ${state.lastSignedPayload.tv}`);
   assert.strictEqual(state.lastSignedPayload.type, 'client');
 });
 
 /* =====================================================================
    2. LOGIN : sub = clients.id (5151), aid = client_accounts.id (8888)
    ===================================================================== */
-test('POST /login émet un JWT avec sub = clients.id et aid = client_accounts.id', async () => {
+test('POST /login émet un JWT avec sub = clients.id, aid = client_accounts.id, tv = token_version', async () => {
   resetState();
   const req = {
     body: { email: 'existant@example.com', password: 'CorrectHorseBattery1!', rememberMe: false },
@@ -180,6 +183,7 @@ test('POST /login émet un JWT avec sub = clients.id et aid = client_accounts.id
   assert.ok(state.lastSignedPayload, 'aucun payload capturé');
   assert.strictEqual(state.lastSignedPayload.sub, String(5151), `sub attendu = clients.id (5151), obtenu ${state.lastSignedPayload.sub}`);
   assert.strictEqual(state.lastSignedPayload.aid, 8888, `aid attendu = client_accounts.id (8888), obtenu ${state.lastSignedPayload.aid}`);
+  assert.strictEqual(state.lastSignedPayload.tv, 3, `tv attendu = ca.token_version (3), obtenu ${state.lastSignedPayload.tv}`);
   assert.strictEqual(state.lastSignedPayload.type, 'client');
 });
 

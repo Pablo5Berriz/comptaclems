@@ -16,9 +16,18 @@
  * valeur d'autorisation après ce lot (peut rester présent dans le JWT à titre
  * informatif/affichage uniquement, jamais utilisé pour décider un accès).
  *
- * Fail-closed : JWT invalide, sub manquant/non numérique, admin introuvable,
- * admin inactif, erreur DB → refus. next() n'est jamais appelé hors du chemin de
- * succès complet.
+ * COMPOSANT B (lot 007F-B) : la revalidation compare aussi payload.tv (claim JWT)
+ * à admin.token_version (DB), dans la même requête que le composant A
+ * (ADMIN_DB_QUERIES_PER_AUTH = 1, aucune requête supplémentaire). Ferme les
+ * événements qui ne touchent ni is_active ni role : changement/reset de mot de
+ * passe admin, activation/désactivation/reset de la 2FA — tout incrément de
+ * token_version rend immédiatement invalide toute session émise avant l'incrément.
+ * Un JWT admin sans claim `tv` (émis avant 007F-B) est refusé — force la
+ * reconnexion, aucun repli.
+ *
+ * Fail-closed : JWT invalide, sub manquant/non numérique, tv manquant/non
+ * numérique, admin introuvable, version mismatch, admin inactif, erreur DB →
+ * refus. next() n'est jamais appelé hors du chemin de succès complet.
  */
 
 const jwt = require('jsonwebtoken');
@@ -59,10 +68,17 @@ module.exports = async function authAdmin(req, res, next) {
     return res.status(401).json({ success: false, error: 'Non autorisé' });
   }
 
+  // Claim tv absent (JWT émis avant le lot 007F-B) : refusé, force la reconnexion
+  // plutôt que d'accepter une session sans preuve de version courante.
+  const tv = Number(payload.tv);
+  if (payload.tv === undefined || payload.tv === null || !Number.isFinite(tv)) {
+    return res.status(401).json({ success: false, error: 'Non autorisé' });
+  }
+
   let admin;
   try {
     const result = await db.query(
-      `SELECT id, is_active, role, email
+      `SELECT id, is_active, role, email, token_version
        FROM comptaclems.admin
        WHERE id = $1`,
       [sub]
@@ -85,6 +101,12 @@ module.exports = async function authAdmin(req, res, next) {
 
   if (!admin.is_active) {
     return res.status(403).json({ success: false, error: 'Compte admin désactivé' });
+  }
+
+  // token_version DB != tv du JWT : mot de passe/2FA changé depuis l'émission de
+  // ce JWT — session révoquée même si le compte reste actif.
+  if (Number(admin.token_version) !== tv) {
+    return res.status(401).json({ success: false, error: 'Non autorisé' });
   }
 
   req.admin = {
