@@ -490,11 +490,65 @@
     // ACTIONS
     // ============================================
     
+    function getFilenameFromContentDisposition(header) {
+        if (!header) return null;
+        const utf8Match = /filename\*=UTF-8''([^;]+)/i.exec(header);
+        if (utf8Match && utf8Match[1]) {
+            try { return decodeURIComponent(utf8Match[1]); } catch (e) { /* ignore, fallback below */ }
+        }
+        const quotedMatch = /filename="([^"]+)"/i.exec(header);
+        if (quotedMatch && quotedMatch[1]) return quotedMatch[1];
+        const bareMatch = /filename=([^;]+)/i.exec(header);
+        if (bareMatch && bareMatch[1]) return bareMatch[1].trim();
+        return null;
+    }
+
+    // Téléchargement authentifié : le JWT admin passe uniquement par le header
+    // Authorization (jamais dans l'URL — TOKEN-IN-URL-001). Réponse convertie
+    // en Blob, ouverte via un <a download> temporaire, puis l'object URL est
+    // révoqué (même schéma que adminDeclarations.js).
     window.downloadDocument = async function(documentId) {
         const auth = JSON.parse(localStorage.getItem('cc_admin_auth') || '{}');
-        window.open(`${API_BASE_URL}/admin/documents/${documentId}/download?token=${auth.token}`, '_blank');
+        if (!auth.token) {
+            window.location.href = '/admin/adminLogin.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/documents/${documentId}/download`, {
+                headers: { 'Authorization': `Bearer ${auth.token}` }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = '/admin/adminLogin.html';
+                return;
+            }
+            if (response.status === 404) {
+                alert('Document introuvable.');
+                return;
+            }
+            if (!response.ok) {
+                alert(`Erreur lors du téléchargement (code ${response.status}).`);
+                return;
+            }
+
+            const blob = await response.blob();
+            const filename = getFilenameFromContentDisposition(response.headers.get('Content-Disposition')) || `document-${documentId}`;
+
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+        } catch (err) {
+            console.error('Erreur téléchargement document', err);
+            alert('Erreur réseau lors du téléchargement.');
+        }
     };
-    
+
     function downloadCurrentDocument() {
         if (currentViewDocument) window.downloadDocument(currentViewDocument.id);
     }

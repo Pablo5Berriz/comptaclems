@@ -4,7 +4,6 @@
 const fs = require('fs');
 const path = require('path');
 const db = require('../../db');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const authAdmin = require('../../middleware/authAdmin');
 
@@ -1013,44 +1012,14 @@ router.get('/:id/documents/stats', authAdmin, async (req, res) => {
  * GET /api/admin/declarations/documents/:docId/download
  * Télécharge un document 
  */
-router.get('/documents/:docId/download', async (req, res) => {
+router.get('/documents/:docId/download', authAdmin, async (req, res) => {
   const docId = Number(req.params.docId);
   if (!Number.isFinite(docId)) return res.status(400).json({ error: 'ID invalide' });
 
   try {
-    // Vérifier l'authentification (token dans header ou dans query)
-    let adminId = null;
-    
-    // 1. Vérifier le token dans l'en-tête Authorization
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded.type === 'admin') {
-          adminId = decoded.sub;
-        }
-      } catch (e) {
-        console.warn('Token invalide dans header:', e.message);
-      }
-    }
-    
-    // 2. Si pas de token valide dans header, vérifier dans l'URL
-    if (!adminId && req.query.token) {
-      try {
-        const decoded = jwt.verify(req.query.token, process.env.JWT_SECRET);
-        if (decoded.type === 'admin') {
-          adminId = decoded.sub;
-        }
-      } catch (e) {
-        console.warn('Token invalide dans URL:', e.message);
-      }
-    }
-    
-    // 3. Si toujours pas authentifié, retourner une erreur
-    if (!adminId) {
-      return res.status(401).json({ success: false, error: 'Non autorisé' });
-    }
+    // Authentification déléguée au middleware partagé authAdmin (Bearer
+    // Authorization header uniquement). Aucun fallback par paramètre d'URL —
+    // un JWT admin ne doit plus jamais transiter par la query string (TOKEN-IN-URL-001).
 
     // Récupérer le document (sans vérification de propriétaire car admin)
     const q = `
